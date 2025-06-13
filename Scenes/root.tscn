@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://djv0mow8t4q7x"]
+[gd_scene load_steps=5 format=3 uid="uid://djv0mow8t4q7x"]
 
 [ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
-[ext_resource type="Script" uid="uid://dvltouirjdge4" path="res://addons/statemachine/StateMachineState.gd" id="2_vnucn"]
+[ext_resource type="Script" uid="uid://dmic6pk3bjt2s" path="res://Scripts/state_intro.gd" id="2_vnucn"]
+[ext_resource type="Texture2D" uid="uid://do54ap110pdmq" path="res://Art/visibility_circle.png" id="3_c3mwy"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8pvmw"]
 font_size = 160
@@ -23,16 +24,42 @@ grow_vertical = 2
 script = ExtResource("2_vnucn")
 metadata/_custom_type_script = "uid://dvltouirjdge4"
 
-[node name="TileMapLayer" type="TileMapLayer" parent="StateMachine/Intro"]
-
-[node name="Label" type="Label" parent="StateMachine/Intro"]
+[node name="ColorRect" type="ColorRect" parent="StateMachine/Intro"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="StateMachine/Intro"]
+
+[node name="Label" type="Label" parent="StateMachine/Intro"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -476.5
+offset_top = -89.5
+offset_right = 476.5
+offset_bottom = 89.5
+grow_horizontal = 2
+grow_vertical = 2
 text = "Ninja Fishing"
 label_settings = SubResource("LabelSettings_8pvmw")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="CanvasModulate" type="CanvasModulate" parent="StateMachine/Intro"]
+color = Color(0, 0, 0, 1)
+
+[node name="LightCircle" type="Node2D" parent="StateMachine/Intro"]
+
+[node name="PointLight2D" type="PointLight2D" parent="StateMachine/Intro/LightCircle"]
+position = Vector2(137, 135)
+scale = Vector2(4, 4)
+blend_mode = 2
+texture = ExtResource("3_c3mwy")
