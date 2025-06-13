@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3 uid="uid://djv0mow8t4q7x"]
+
+[ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
+[ext_resource type="Script" uid="uid://dvltouirjdge4" path="res://addons/statemachine/StateMachineState.gd" id="2_vnucn"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8pvmw"]
+font_size = 160
+
+[node name="Root" type="Node2D"]
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("1_8pvmw")
+initial_state = NodePath("Intro")
+metadata/_custom_type_script = "uid://de448uhhi023d"
+
+[node name="Intro" type="Control" parent="StateMachine"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_vnucn")
+metadata/_custom_type_script = "uid://dvltouirjdge4"
+
+[node name="TileMapLayer" type="TileMapLayer" parent="StateMachine/Intro"]
+
+[node name="Label" type="Label" parent="StateMachine/Intro"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Ninja Fishing"
+label_settings = SubResource("LabelSettings_8pvmw")
+horizontal_alignment = 1
+vertical_alignment = 1

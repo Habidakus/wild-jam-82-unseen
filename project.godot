@@ -11,8 +11,19 @@ config_version=5
 [application]
 
 config/name="Ninja Fishing"
+run/main_scene="res://Scenes/root.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
+boot_splash/image="uid://duxtbeqrrlqk7"
 config/icon="res://icon.svg"
+boot_splash/minimum_display_time=2000
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/statemachine/plugin.cfg")
+
+[gui]
+
+theme/custom_font="uid://fdtrd74j4ocu"
 
 [rendering]
 

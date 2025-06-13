@@ -1,3 +1,5 @@
 Design: Jesse Decker
 Programming: Jason Abbott
 Engine: Godot 4
+Fonts: 
+    https://www.fontspace.com/gang-of-three-font-f46138
