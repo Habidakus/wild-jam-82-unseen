@@ -3,3 +3,6 @@ Programming: Jason Abbott
 Engine: Godot 4
 Fonts: 
     https://www.fontspace.com/gang-of-three-font-f46138
+Art:
+    https://danieldiggle.itch.io/sunnyside
+    https://shubibubi.itch.io/cozy-fishing
