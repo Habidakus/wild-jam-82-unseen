@@ -6,3 +6,4 @@ Fonts:
 Art:
     https://danieldiggle.itch.io/sunnyside
     https://shubibubi.itch.io/cozy-fishing
+    https://cyberrumor.itch.io/16-bit-assassin
