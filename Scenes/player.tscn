@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://bnd2dmybxcw2n"]
+
+[ext_resource type="Script" uid="uid://ckv5sj4yuo5" path="res://Scripts/player.gd" id="1_6t5aa"]
+[ext_resource type="Texture2D" uid="uid://c17s1rajhp1io" path="res://Art/CyberRumor/player.png" id="1_v0iea"]
+[ext_resource type="Texture2D" uid="uid://do54ap110pdmq" path="res://Art/visibility_circle.png" id="2_cvnsp"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cvnsp"]
+radius = 7.0
+height = 20.0
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_6t5aa")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_v0iea")
+offset = Vector2(0, 4)
+region_enabled = true
+region_rect = Rect2(16, 0, 16, 31)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("CapsuleShape2D_cvnsp")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="LightCircle" type="Node2D" parent="."]
+
+[node name="PointLight2D" type="PointLight2D" parent="LightCircle"]
+scale = Vector2(4, 4)
+blend_mode = 2
+texture = ExtResource("2_cvnsp")

@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://djv0mow8t4q7x"]
+[gd_scene load_steps=8 format=3 uid="uid://djv0mow8t4q7x"]
 
 [ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
 [ext_resource type="Script" uid="uid://dmic6pk3bjt2s" path="res://Scripts/state_intro.gd" id="2_vnucn"]
 [ext_resource type="PackedScene" uid="uid://lel21yqi0vex" path="res://Maps/intro_area.tscn" id="3_4g5cr"]
 [ext_resource type="Texture2D" uid="uid://do54ap110pdmq" path="res://Art/visibility_circle.png" id="3_c3mwy"]
-[ext_resource type="Script" uid="uid://dvltouirjdge4" path="res://addons/statemachine/StateMachineState.gd" id="5_4g5cr"]
+[ext_resource type="Script" uid="uid://dhiv0ub8gs8n6" path="res://Scripts/state_chapter_one.gd" id="5_4g5cr"]
+[ext_resource type="PackedScene" uid="uid://bnd2dmybxcw2n" path="res://Scenes/player.tscn" id="6_ckhy6"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8pvmw"]
 font_size = 160
@@ -64,6 +65,7 @@ visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
+_player_scene = ExtResource("6_ckhy6")
 metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="IntroArea" parent="StateMachine/ChapterOne" instance=ExtResource("3_4g5cr")]
