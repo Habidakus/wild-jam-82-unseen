@@ -1,4 +1,4 @@
-class_name fish extends Resource
+class_name Fish extends Resource
 
 @export var player_facing_name : String
 @export var texture_image : Texture
