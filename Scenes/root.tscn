@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://djv0mow8t4q7x"]
+[gd_scene load_steps=11 format=3 uid="uid://djv0mow8t4q7x"]
 
 [ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
 [ext_resource type="Script" uid="uid://dmic6pk3bjt2s" path="res://Scripts/state_intro.gd" id="2_vnucn"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bnd2dmybxcw2n" path="res://Scenes/player.tscn" id="6_ckhy6"]
 [ext_resource type="Script" uid="uid://dvdud1wowap44" path="res://Scripts/fish.gd" id="6_r3lo5"]
 [ext_resource type="Resource" uid="uid://chlgcysxe1xy" path="res://Data/Fish/minnow.tres" id="7_qtxxq"]
+[ext_resource type="AudioStream" uid="uid://5oavg5indflt" path="res://Sounds/2021-01-14_-_A_Geishas_Lament_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="9_qtxxq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8pvmw"]
 font_size = 160
@@ -69,6 +70,7 @@ anchors_preset = 0
 script = ExtResource("5_4g5cr")
 _fish = Array[ExtResource("6_r3lo5")]([ExtResource("7_qtxxq")])
 _player_scene = ExtResource("6_ckhy6")
+_music_track = ExtResource("9_qtxxq")
 metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="IntroArea" parent="StateMachine/ChapterOne" instance=ExtResource("3_4g5cr")]
@@ -76,3 +78,7 @@ position = Vector2(-64, -224)
 
 [node name="CanvasModulate" type="CanvasModulate" parent="StateMachine/ChapterOne"]
 color = Color(0, 0, 0, 1)
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+bus = &"Music"

@@ -2,6 +2,7 @@ extends StateMachineState
 
 @export var _fish : Array[Fish] = []
 @export var _player_scene : PackedScene
+@export var _music_track : AudioStream
 @onready var _map : TileMapLayer = $IntroArea
 
 var _player : Player = null
@@ -11,6 +12,15 @@ var shallows : Array[Vector2i]
 var medium : Array[Vector2i]
 var deep : Array[Vector2i]
 	
+func _on_music_finished() -> void:
+	%MusicPlayer.play()
+
+func exit_state(next_state: StateMachineState) -> void:
+	if 	%MusicPlayer.finished.is_connected(_on_music_finished):
+		%MusicPlayer.finished.disconnect(_on_music_finished)
+	
+	super.exit_state(next_state)
+	
 func enter_state() -> void:
 	super.enter_state()
 	
@@ -19,6 +29,10 @@ func enter_state() -> void:
 	_player.set_light_area(3.0)
 	_player.set_terrain(_map)
 	_map.add_child(_player)
+	
+	%MusicPlayer.stream = _music_track
+	%MusicPlayer.play()
+	%MusicPlayer.finished.connect(_on_music_finished)
 	
 	var processed : Dictionary[Vector2i, int]
 	#var water_cells : Dictionary[Vector2i, int]
@@ -69,8 +83,6 @@ func enter_state() -> void:
 			medium.append(cell)
 		elif dist == 4 or dist == 5:
 			deep.append(cell)
-
-	print(shallows.size(), ",", medium.size(),",", deep.size())
 
 	for cell in shallows:
 		var dot : Node2D = _debug_dot_scene.instantiate()
