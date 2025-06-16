@@ -7,7 +7,7 @@
 script = ExtResource("1_x53cx")
 player_facing_name = "Minnow"
 texture_image = ExtResource("2_du7m8")
-texture_region = Rect2(16, 0, 0, 0)
+texture_region = Rect2(16, 0, 16, 16)
 mini_game = 0
 distance_from_shore = 0
 requirement_to_spawn = 0

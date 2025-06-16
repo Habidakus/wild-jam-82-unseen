@@ -8,6 +8,7 @@ extends StateMachineState
 var _player : Player = null
 var _player_scene : PackedScene = preload("res://Scenes/player.tscn")
 var _debug_dot_scene : PackedScene = preload("res://Scenes/debug_dot.tscn")
+var _fish_spawn_scene : PackedScene = preload("res://Scenes/fish_spawn.tscn")
 
 var shallows : Array[Vector2i]
 var medium : Array[Vector2i]
@@ -103,7 +104,10 @@ var _spawned_fish : Dictionary[Vector2i, Node2D] = {}
 var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
 
 func _select_spawn_spot(spots : Array[Vector2i]) -> Vector2i:
+	var count : int = 0
 	while true:
+		count += 1
+		assert(count < 1000, "Caught in spin loop in _select_spawn_spot");
 		var spot = spots[_rnd.randi() % spots.size()]
 		var good_spot : bool = true
 		for already_spawned_spot in _spawned_fish.keys():
@@ -115,9 +119,10 @@ func _select_spawn_spot(spots : Array[Vector2i]) -> Vector2i:
 	assert(false, "We should never reach this code")
 	return Vector2i.ZERO
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	while _spawned_fish.size() < _number_of_fish:
 		var fish_type : Fish = _fish[_rnd.randi() % _fish.size()]
+		assert(fish_type.texture_region.size.x * fish_type.texture_region.size.y > 0, "Fish texture region is size zero")
 		var viable_cells : Array[Vector2i]
 		match fish_type.distance_from_shore:
 			Fish.DistanceFromShore.Shallows:
@@ -130,8 +135,11 @@ func _process(delta: float) -> void:
 				assert(false, "Unknown distance from shore %s" % [fish_type.distance_from_shore])
 		var spawn_spot : Vector2i = _select_spawn_spot(viable_cells)
 		
-		var dot : Node2D = _debug_dot_scene.instantiate()
-		dot.position = _map.map_to_local(spawn_spot)
-		(dot.get_child(0) as Polygon2D).modulate = Color.ORANGE_RED
-		_map.add_child(dot)
-		_spawned_fish.set(spawn_spot, dot)
+		var spawn : Node2D = _fish_spawn_scene.instantiate()
+		spawn.position = _map.map_to_local(spawn_spot)
+		var spawn_sprite : Sprite2D = spawn.get_child(0) as Sprite2D
+		spawn_sprite.texture = fish_type.texture_image
+		spawn_sprite.region_enabled = true
+		spawn_sprite.region_rect = fish_type.texture_region
+		_map.add_child(spawn)
+		_spawned_fish.set(spawn_spot, spawn)
