@@ -1,11 +1,12 @@
 extends StateMachineState
 
 @export var _fish : Array[Fish] = []
-@export var _player_scene : PackedScene
 @export var _music_track : AudioStream
+@export var _number_of_fish : int = 5
 @onready var _map : TileMapLayer = $IntroArea
 
 var _player : Player = null
+var _player_scene : PackedScene = preload("res://Scenes/player.tscn")
 var _debug_dot_scene : PackedScene = preload("res://Scenes/debug_dot.tscn")
 
 var shallows : Array[Vector2i]
@@ -35,7 +36,6 @@ func enter_state() -> void:
 	%MusicPlayer.finished.connect(_on_music_finished)
 	
 	var processed : Dictionary[Vector2i, int]
-	#var water_cells : Dictionary[Vector2i, int]
 	var unprocessed : Dictionary[Vector2i, int]
 	for cell in _map.get_used_cells():
 		var tile_data : TileData = _map.get_cell_tile_data(cell)
@@ -84,17 +84,54 @@ func enter_state() -> void:
 		elif dist == 4 or dist == 5:
 			deep.append(cell)
 
-	for cell in shallows:
+	#for cell in shallows:
+		#var dot : Node2D = _debug_dot_scene.instantiate()
+		#dot.position = _map.map_to_local(cell)
+		#_map.add_child(dot)
+	#for cell in medium:
+		#var dot : Node2D = _debug_dot_scene.instantiate()
+		#dot.position = _map.map_to_local(cell)
+		#(dot.get_child(0) as Polygon2D).modulate = Color.BROWN
+		#_map.add_child(dot)
+	#for cell in deep:
+		#var dot : Node2D = _debug_dot_scene.instantiate()
+		#dot.position = _map.map_to_local(cell)
+		#(dot.get_child(0) as Polygon2D).modulate = Color.ORANGE_RED
+		#_map.add_child(dot)
+
+var _spawned_fish : Dictionary[Vector2i, Node2D] = {}
+var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
+
+func _select_spawn_spot(spots : Array[Vector2i]) -> Vector2i:
+	while true:
+		var spot = spots[_rnd.randi() % spots.size()]
+		var good_spot : bool = true
+		for already_spawned_spot in _spawned_fish.keys():
+			if abs(spot.x - already_spawned_spot.x) + abs(spot.y - already_spawned_spot.y) < 6:
+				good_spot = false
+		if good_spot == true:
+			return spot
+			
+	assert(false, "We should never reach this code")
+	return Vector2i.ZERO
+
+func _process(delta: float) -> void:
+	while _spawned_fish.size() < _number_of_fish:
+		var fish_type : Fish = _fish[_rnd.randi() % _fish.size()]
+		var viable_cells : Array[Vector2i]
+		match fish_type.distance_from_shore:
+			Fish.DistanceFromShore.Shallows:
+				viable_cells = shallows
+			Fish.DistanceFromShore.Anywhere:
+				viable_cells = medium
+			Fish.DistanceFromShore.Far:
+				viable_cells = deep
+			_:
+				assert(false, "Unknown distance from shore %s" % [fish_type.distance_from_shore])
+		var spawn_spot : Vector2i = _select_spawn_spot(viable_cells)
+		
 		var dot : Node2D = _debug_dot_scene.instantiate()
-		dot.position = _map.map_to_local(cell)
-		_map.add_child(dot)
-	for cell in medium:
-		var dot : Node2D = _debug_dot_scene.instantiate()
-		dot.position = _map.map_to_local(cell)
-		(dot.get_child(0) as Polygon2D).modulate = Color.BROWN
-		_map.add_child(dot)
-	for cell in deep:
-		var dot : Node2D = _debug_dot_scene.instantiate()
-		dot.position = _map.map_to_local(cell)
+		dot.position = _map.map_to_local(spawn_spot)
 		(dot.get_child(0) as Polygon2D).modulate = Color.ORANGE_RED
 		_map.add_child(dot)
+		_spawned_fish.set(spawn_spot, dot)
