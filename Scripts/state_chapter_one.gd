@@ -143,3 +143,14 @@ func _process(_delta: float) -> void:
 		spawn_sprite.region_rect = fish_type.texture_region
 		_map.add_child(spawn)
 		_spawned_fish.set(spawn_spot, spawn)
+		var expire_tween : Tween = spawn_sprite.create_tween()
+		expire_tween.tween_interval(_rnd.randf_range(fish_type.min_duration_in_seconds, fish_type.max_duration_in_seconds))
+		expire_tween.tween_callback(Callable.create(self, "_expire_spawn_spot").bind(spawn_spot))
+
+func _expire_spawn_spot(spot : Vector2i) -> void:
+	if not _spawned_fish.has(spot):
+		# spot already gone
+		return
+	
+	_spawned_fish[spot].queue_free()
+	_spawned_fish.erase(spot)

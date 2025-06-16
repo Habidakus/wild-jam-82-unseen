@@ -12,3 +12,6 @@ enum DistanceFromShore { Shallows, Anywhere, Far }
 
 enum RequirementToSpawn { None, Silence, Meditation }
 @export var requirement_to_spawn : RequirementToSpawn = RequirementToSpawn.None
+
+@export_range(5.0,120.0) var min_duration_in_seconds : float = 25
+@export_range(10.0,240.0) var max_duration_in_seconds : float = 45
