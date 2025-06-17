@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bnd2dmybxcw2n"]
+[gd_scene load_steps=7 format=3 uid="uid://bnd2dmybxcw2n"]
 
 [ext_resource type="Script" uid="uid://ckv5sj4yuo5" path="res://Scripts/player.gd" id="1_6t5aa"]
 [ext_resource type="Texture2D" uid="uid://c17s1rajhp1io" path="res://Art/CyberRumor/player.png" id="1_v0iea"]
 [ext_resource type="Texture2D" uid="uid://do54ap110pdmq" path="res://Art/visibility_circle.png" id="2_cvnsp"]
+[ext_resource type="AudioStream" uid="uid://bonapkdwx4hxp" path="res://Sounds/zapsplat_foley_footsteps_running.mp3" id="2_fkybt"]
+[ext_resource type="AudioStream" uid="uid://8mw0wf1k7h4g" path="res://Sounds/zapsplat_foley_footsteps_walking.mp3" id="3_x3wgy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cvnsp"]
 radius = 7.0
@@ -10,6 +12,8 @@ height = 20.0
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_6t5aa")
+_footsteps_running = ExtResource("2_fkybt")
+_footsteps_walking = ExtResource("3_x3wgy")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_v0iea")
@@ -29,3 +33,6 @@ shape = SubResource("CapsuleShape2D_cvnsp")
 scale = Vector2(4, 4)
 blend_mode = 2
 texture = ExtResource("2_cvnsp")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"Ambient"

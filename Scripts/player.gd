@@ -5,6 +5,10 @@ const SPEED : float = 200
 var _terrain : TileMapLayer 
 var _goal_light_size : float = 0
 
+enum MoveState { Running, Walking, Sneaking, StandingStill }
+var _move_state : MoveState = MoveState.StandingStill
+@export var _footsteps_running : AudioStream
+@export var _footsteps_walking : AudioStream
 var _fishing_pole_scene : PackedScene = preload("res://Scenes/fishing_pole.tscn")
 var _fishing_pole : FishingPole = null
 
@@ -15,9 +19,13 @@ func _process_input():
     
     var speed = SPEED
     if Input.is_action_pressed("sneak"):
+        _move_state = MoveState.Sneaking
         speed = SPEED / 4
     elif Input.is_action_pressed("walk"):
+        _move_state = MoveState.Walking
         speed = SPEED / 2
+    else:
+        _move_state = MoveState.Running
     
     # Get input (example using Input Map)
     if Input.is_action_pressed("move_right"):
@@ -33,8 +41,11 @@ func _process_input():
         velocity.y = -speed
     else:
         velocity.y = 0
+    
+    if velocity.x == 0 && velocity.y == 0:
+        _move_state = MoveState.StandingStill
         
-    if velocity.x != 0 || velocity.y != 0:
+    if _move_state != MoveState.StandingStill:
         if _fishing_pole != null:
             _fishing_pole.hide()
             _fishing_pole.queue_free();
@@ -88,6 +99,19 @@ func _physics_process(delta : float):
                 position.x = current_pos.x
             if rollback_y:
                 position.y = current_pos.y
+
+    var movement_sound : AudioStream = null;
+    match _move_state:
+        MoveState.Walking:
+            movement_sound = _footsteps_walking
+        MoveState.Running:
+            movement_sound = _footsteps_running
+    
+    if $AudioStreamPlayer.stream != movement_sound:
+        $AudioStreamPlayer.stream = movement_sound
+        $AudioStreamPlayer.play()
+    elif $AudioStreamPlayer.playing == false:
+        $AudioStreamPlayer.play()
     
     var _current_scale : float = $LightCircle/PointLight2D.scale.x
     if _current_scale != _goal_light_size:
