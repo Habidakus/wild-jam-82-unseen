@@ -1,0 +1,105 @@
+[gd_resource type="TileSet" load_steps=9 format=3 uid="uid://4o0kgm3uehu8"]
+
+[ext_resource type="Texture2D" uid="uid://dwwolsvhyhndm" path="res://Art/fantasy_terrain_free/Water_Tile.png" id="1_pq14b"]
+[ext_resource type="Texture2D" uid="uid://bp0frhc4t4moi" path="res://Art/fantasy_terrain_free/Path_Tile.png" id="2_hc7km"]
+[ext_resource type="Texture2D" uid="uid://dw1u8bj53sg42" path="res://Art/fantasy_terrain_free/Beach_Tile.png" id="3_756px"]
+[ext_resource type="Texture2D" uid="uid://cug6c6s6h86pw" path="res://Art/fantasy_terrain_free/Cliff_Tile.png" id="4_hc7km"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uf1bc"]
+texture = ExtResource("1_pq14b")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+1:1/0/custom_data_0 = true
+2:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+0:5/0 = 0
+0:5/0/custom_data_0 = true
+1:5/0 = 0
+1:5/0/custom_data_0 = true
+2:5/0 = 0
+2:5/0/custom_data_0 = true
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hf3nj"]
+texture = ExtResource("2_hc7km")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+2:5/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o10n3"]
+texture = ExtResource("3_756px")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_756px"]
+texture = ExtResource("4_hc7km")
+0:0/0 = 0
+0:0/0/custom_data_1 = true
+1:0/0 = 0
+1:0/0/custom_data_1 = true
+2:0/0 = 0
+2:0/0/custom_data_1 = true
+0:1/0 = 0
+0:1/0/custom_data_1 = true
+1:1/0 = 0
+2:1/0 = 0
+2:1/0/custom_data_1 = true
+0:2/0 = 0
+0:2/0/custom_data_1 = true
+1:2/0 = 0
+1:2/0/custom_data_1 = true
+2:2/0 = 0
+2:2/0/custom_data_1 = true
+0:3/0 = 0
+0:3/0/custom_data_1 = true
+1:3/0 = 0
+1:3/0/custom_data_1 = true
+0:4/0 = 0
+0:4/0/custom_data_1 = true
+1:4/0 = 0
+1:4/0/custom_data_1 = true
+0:5/0 = 0
+1:5/0 = 0
+2:5/0 = 0
+
+[resource]
+custom_data_layer_0/name = "Water"
+custom_data_layer_0/type = 1
+custom_data_layer_1/name = "Wall"
+custom_data_layer_1/type = 1
+sources/1 = SubResource("TileSetAtlasSource_uf1bc")
+sources/3 = SubResource("TileSetAtlasSource_hf3nj")
+sources/4 = SubResource("TileSetAtlasSource_o10n3")
+sources/5 = SubResource("TileSetAtlasSource_756px")

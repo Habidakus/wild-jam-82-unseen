@@ -3,7 +3,7 @@ extends StateMachineState
 @export var _fish : Array[Fish] = []
 @export var _music_track : AudioStream
 @export var _number_of_fish : int = 5
-@onready var _map : TileMapLayer = $IntroArea
+@onready var _map : TileMapLayer = $sensei_area
 
 var _player : Player = null
 var _player_scene : PackedScene = preload("res://Scenes/player.tscn")
