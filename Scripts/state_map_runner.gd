@@ -3,12 +3,15 @@ extends StateMachineState
 @export var _fish : Array[Fish] = []
 @export var _music_track : AudioStream
 @export var _number_of_fish : int = 5
-@onready var _map : TileMapLayer = $sensei_area
 
+var _map : TileMapLayer = null
 var _player : Player = null
 var _player_scene : PackedScene = preload("res://Scenes/player.tscn")
 var _debug_dot_scene : PackedScene = preload("res://Scenes/debug_dot.tscn")
 var _fish_spawn_scene : PackedScene = preload("res://Scenes/fish_spawn.tscn")
+
+var _spawned_fish : Dictionary[Vector2i, Node2D] = {}
+var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
 
 var shallows : Array[Vector2i]
 var medium : Array[Vector2i]
@@ -25,6 +28,10 @@ func exit_state(next_state: StateMachineState) -> void:
     
 func enter_state() -> void:
     super.enter_state()
+    
+    for child in get_children():
+        if child is TileMapLayer:
+            _map = child as TileMapLayer
     
     _player = _player_scene.instantiate();
     _player.position = _map.map_to_local(Vector2i(7, 7))
@@ -99,9 +106,6 @@ func enter_state() -> void:
         #dot.position = _map.map_to_local(cell)
         #(dot.get_child(0) as Polygon2D).modulate = Color.ORANGE_RED
         #_map.add_child(dot)
-
-var _spawned_fish : Dictionary[Vector2i, Node2D] = {}
-var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
 
 func _select_spawn_spot(spots : Array[Vector2i]) -> Vector2i:
     var count : int = 0
