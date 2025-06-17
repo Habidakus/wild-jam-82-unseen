@@ -52,10 +52,17 @@ func _handle_event(event : InputEvent) -> void:
         
     if _leave_tween == null:
         if event.is_released():
+            var next_state : String = "SenseiHub"
             if event is InputEventKey:
-                our_state_machine.switch_state("SenseiHub")
+                var keycode : Key = (event as InputEventKey).keycode
+                match keycode:
+                    Key.KEY_1:
+                        next_state = "BeginnerFishing"
+                    Key.KEY_2:
+                        next_state = "AdvancedFishing"
+                our_state_machine.switch_state(next_state)
             if event is InputEventMouseButton:
-                our_state_machine.switch_state("SenseiHub")
+                our_state_machine.switch_state(next_state)
 
 func exit_state(next_state: StateMachineState) -> void:
     if _leave_tween != null && _leave_tween.is_running():
