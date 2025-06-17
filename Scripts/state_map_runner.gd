@@ -1,4 +1,4 @@
-extends StateMachineState
+class_name MapRunner extends StateMachineState
 
 @export var _fish : Array[Fish] = []
 @export var _music_track : AudioStream
@@ -7,8 +7,8 @@ extends StateMachineState
 var _map : TileMapLayer = null
 var _player : Player = null
 var _player_scene : PackedScene = preload("res://Scenes/player.tscn")
-var _debug_dot_scene : PackedScene = preload("res://Scenes/debug_dot.tscn")
-var _fish_spawn_scene : PackedScene = preload("res://Scenes/fish_spawn.tscn")
+#var _debug_dot_scene : PackedScene = preload("res://Scenes/debug_dot.tscn")
+#var _fish_spawn_scene : PackedScene = preload("res://Scenes/fish_spawn.tscn")
 
 var _spawned_fish : Dictionary[Vector2i, Node2D] = {}
 var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
@@ -150,17 +150,26 @@ func _process(_delta: float) -> void:
             # bump the fish type in case we didn't get a valid spot
             fish_type_index = (fish_type_index + 1) % _fish.size()
         
-        var spawn : Node2D = _fish_spawn_scene.instantiate()
+        #var spawn : Node2D = _fish_spawn_scene.instantiate()
+        var spawn : MiniGame = fish_type.mini_game.instantiate() as MiniGame
         spawn.position = _map.map_to_local(spawn_spot)
-        var spawn_sprite : Sprite2D = spawn.get_child(0) as Sprite2D
-        spawn_sprite.texture = fish_type.texture_image
-        spawn_sprite.region_enabled = true
-        spawn_sprite.region_rect = fish_type.texture_region
+        spawn.set_fish_type(fish_type, _rnd.randi(), self)
+        #var spawn_sprite : Sprite2D = spawn.get_child(0) as Sprite2D
+        #spawn_sprite.texture = fish_type.texture_image
+        #spawn_sprite.region_enabled = true
+        #spawn_sprite.region_rect = fish_type.texture_region
         _map.add_child(spawn)
         _spawned_fish.set(spawn_spot, spawn)
-        var expire_tween : Tween = spawn_sprite.create_tween()
+        var expire_tween : Tween = spawn.create_tween()
         expire_tween.tween_interval(_rnd.randf_range(fish_type.min_duration_in_seconds, fish_type.max_duration_in_seconds))
         expire_tween.tween_callback(Callable.create(self, "_expire_spawn_spot").bind(spawn_spot))
+
+
+func mark_mini_game_removed(mini_game : MiniGame) -> void:
+    var mini_game_cell : Vector2i = _map.local_to_map(mini_game.position)
+    if not _spawned_fish.erase(mini_game_cell):
+        assert(false, "mini game expired but was not listed as valid")
+    mini_game.queue_free()
 
 func _expire_spawn_spot(spot : Vector2i) -> void:
     if not _spawned_fish.has(spot):

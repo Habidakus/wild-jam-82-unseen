@@ -9,9 +9,13 @@ class_name FishingPole extends Node2D
 
 const GRAVITY : Vector2 = Vector2.DOWN * 200.0
 
+var _line_slack : bool = true
+var _mini_game : MiniGame = null
 var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
 var _mouse_click_pos : Vector2
 var _map_cell : Vector2i
+var _map : TileMapLayer
+var _player : Player
 var _parabolic_velocity : Vector2
 var _parabolic_time_remaining : float = 0
 var _bobbing_depth : float = -1
@@ -20,9 +24,14 @@ func _ready() -> void:
     $Floater.hide()
     $FishingLine.hide()
 
+func get_floater_position() -> Vector2:
+    return position + $Floater.position
+
 func cast_line(player : Player, map : TileMapLayer) -> void:
     position = player.position
     _mouse_click_pos = map.get_local_mouse_position()
+    _map = map
+    _player = player
     _map_cell = map.local_to_map(_mouse_click_pos)
     var tween : Tween = create_tween()
     var current_end : Vector2 = $PoleLine.get_point_position(1)
@@ -69,10 +78,17 @@ func _invoke_new_bobbing() -> void:
     _bobbing_tween.tween_callback(Callable(self, "_invoke_new_bobbing"))
 
 func _set_bobbing_depth(depth : float) -> void:
-    #var old_depth = 5.0 - $Floater/Sprite2D.region_rect.size.y
     $Floater/Sprite2D.region_rect.size.y = 5.0 - depth
     $Floater.position.y += (depth - _bobbing_depth)
     _bobbing_depth = depth
+
+func _register_mini_game(mg : MiniGame) -> void:
+    _mini_game = mg
+
+func go_tight() -> void:
+    _bobbing_tween.kill()
+    create_tween().tween_method(Callable(self, "_set_bobbing_depth"), _bobbing_depth, 5, 0.25)
+    _line_slack = false
 
 func _process(delta: float) -> void:
     if not $FishingLine.visible:
@@ -90,6 +106,14 @@ func _process(delta: float) -> void:
             $AudioStreamPlayer2D.play()
             _bobbing_depth = 0
             _invoke_new_bobbing()
+            
+            for child in _map.get_children():
+                if child is MiniGame:
+                    var mg : MiniGame = child as MiniGame
+                    var dist = (mg.position - _mouse_click_pos).length()
+                    if mg.register_pole(self):
+                        _register_mini_game(mg)
+                        break
         else:
             var elapsed_time : float = casting_hang_time - _parabolic_time_remaining
             $Floater.position = pole_end + _parabolic_velocity * elapsed_time + GRAVITY * elapsed_time * elapsed_time / 2
@@ -106,7 +130,11 @@ func _process(delta: float) -> void:
     line_pos.append($Floater.position)
     _prev_pos[number_of_line_segments] = $Floater.position
     
-    var total_line_length : float = 1.1 * (floater_final_pos - pole_end).length()
+    var total_line_length : float = (floater_final_pos - pole_end).length()
+    if _line_slack == true:
+        total_line_length *= 1.1
+    else:
+        total_line_length /= 1.2
     var max_line_seg_length : float = total_line_length / number_of_line_segments
     
     for j in range(10):
