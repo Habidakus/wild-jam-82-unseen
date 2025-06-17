@@ -134,9 +134,9 @@ func _physics_process(delta : float):
     #	velocity = velocity.bounce(collision.get_normal()) # Or other collision logic
 
     # Example of accessing slide collisions
-    for i in get_slide_collision_count():
-        var collision = get_slide_collision(i)
-        print("I collided with ", collision.get_collider().name, " on the ", collision.get_normal())
+    #for i in get_slide_collision_count():
+        #var collision = get_slide_collision(i)
+        #print("I collided with ", collision.get_collider().name, " on the ", collision.get_normal())
 
     #Example of accessing last collision
     #var last_collision = get_last_slide_collision()

@@ -5,6 +5,8 @@ class_name FishingPole extends Node2D
 @export var casting_line_segments : int = 20
 @export var casting_hang_time : float = 0.75
 
+@export var _sound_floater_hits_water : AudioStream
+
 const GRAVITY : Vector2 = Vector2.DOWN * 200.0
 
 var _mouse_click_pos : Vector2
@@ -67,6 +69,8 @@ func _process(delta: float) -> void:
         _parabolic_time_remaining -= delta
         if _parabolic_time_remaining < 0:
             $Floater.position = floater_final_pos
+            $AudioStreamPlayer2D.stream = _sound_floater_hits_water
+            $AudioStreamPlayer2D.play()
         else:
             var elapsed_time : float = casting_hang_time - _parabolic_time_remaining
             $Floater.position = pole_end + _parabolic_velocity * elapsed_time + GRAVITY * elapsed_time * elapsed_time / 2
