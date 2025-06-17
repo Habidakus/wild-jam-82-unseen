@@ -28,7 +28,7 @@ width = 0.5
 [node name="Sprite2D" type="Sprite2D" parent="Floater"]
 texture = ExtResource("2_lrj5g")
 region_enabled = true
-region_rect = Rect2(48, 48, 16, 16)
+region_rect = Rect2(54, 53, 5, 5)
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 bus = &"Ambient"

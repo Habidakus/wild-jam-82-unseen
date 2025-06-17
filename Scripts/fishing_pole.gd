@@ -9,10 +9,12 @@ class_name FishingPole extends Node2D
 
 const GRAVITY : Vector2 = Vector2.DOWN * 200.0
 
+var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
 var _mouse_click_pos : Vector2
 var _map_cell : Vector2i
 var _parabolic_velocity : Vector2
 var _parabolic_time_remaining : float = 0
+var _bobbing_depth : float = -1
 
 func _ready() -> void:
     $Floater.hide()
@@ -57,6 +59,21 @@ func _fly_floater() -> void:
     _parabolic_velocity = Vector2(vx, vy)
     _parabolic_time_remaining = casting_hang_time
 
+var _bobbing_tween : Tween
+func _invoke_new_bobbing() -> void:
+    _bobbing_tween = create_tween()
+    var bob_transition_time : float = _rnd.randf_range(0.5, 1.5)
+    var next_depth : float = _rnd.randf_range(0, 3.5)
+    _bobbing_tween.tween_method(Callable(self, "_set_bobbing_depth"), _bobbing_depth, next_depth, bob_transition_time)
+    _bobbing_tween.tween_interval(0.1)
+    _bobbing_tween.tween_callback(Callable(self, "_invoke_new_bobbing"))
+
+func _set_bobbing_depth(depth : float) -> void:
+    #var old_depth = 5.0 - $Floater/Sprite2D.region_rect.size.y
+    $Floater/Sprite2D.region_rect.size.y = 5.0 - depth
+    $Floater.position.y += (depth - _bobbing_depth)
+    _bobbing_depth = depth
+
 func _process(delta: float) -> void:
     if not $FishingLine.visible:
         return
@@ -71,6 +88,8 @@ func _process(delta: float) -> void:
             $Floater.position = floater_final_pos
             $AudioStreamPlayer2D.stream = _sound_floater_hits_water
             $AudioStreamPlayer2D.play()
+            _bobbing_depth = 0
+            _invoke_new_bobbing()
         else:
             var elapsed_time : float = casting_hang_time - _parabolic_time_remaining
             $Floater.position = pole_end + _parabolic_velocity * elapsed_time + GRAVITY * elapsed_time * elapsed_time / 2
