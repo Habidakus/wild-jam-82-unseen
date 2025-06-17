@@ -3,9 +3,14 @@ class_name FishingPole extends Node2D
 @export var casting_draw_back_time : float = 0.5
 @export var casting_forward_time : float = 0.125
 @export var casting_line_segments : int = 20
+@export var casting_hang_time : float = 0.75
+
+const GRAVITY : Vector2 = Vector2.DOWN * 200.0
 
 var _mouse_click_pos : Vector2
 var _map_cell : Vector2i
+var _parabolic_velocity : Vector2
+var _parabolic_time_remaining : float = 0
 
 func _ready() -> void:
     $Floater.hide()
@@ -36,21 +41,37 @@ func _fly_floater() -> void:
         $FishingLine.add_point(current_end)
         _prev_pos.append(current_end)
     $Floater.position = current_end
-    var tween : Tween = create_tween()
     
-    # TODO: This should not be a constant time on a linear path
-    #       - this should travel in a parabolic arc at a constant speed
-    tween.tween_property($Floater, "position", _mouse_click_pos - position, 1)
+    var target_pos : Vector2 = _mouse_click_pos - position
 
-const GRAVITY : Vector2 = Vector2.DOWN * 32.0
+    #var tween : Tween = create_tween()
+    #tween.tween_property($Floater, "position", target_pos, casting_hang_time)
+
+    # parabolic arc from end of fishing pole to target position    
+    var dx : float = target_pos.x - current_end.x
+    var dy : float = target_pos.y - current_end.y
+    var vx : float = dx / casting_hang_time
+    var vy : float = (dy - GRAVITY.y * casting_hang_time * casting_hang_time / 2) / casting_hang_time
+    _parabolic_velocity = Vector2(vx, vy)
+    _parabolic_time_remaining = casting_hang_time
 
 func _process(delta: float) -> void:
     if not $FishingLine.visible:
         return
-    
+        
+    var floater_final_pos : Vector2 = _mouse_click_pos - position
     var delta_squared : float = delta * delta
-    var line_pos : Array[Vector2]
     var pole_end : Vector2 = $PoleLine.get_point_position(1)
+        
+    if _parabolic_time_remaining > 0:
+        _parabolic_time_remaining -= delta
+        if _parabolic_time_remaining < 0:
+            $Floater.position = floater_final_pos
+        else:
+            var elapsed_time : float = casting_hang_time - _parabolic_time_remaining
+            $Floater.position = pole_end + _parabolic_velocity * elapsed_time + GRAVITY * elapsed_time * elapsed_time / 2
+    
+    var line_pos : Array[Vector2]
     var number_of_line_segments : int = $FishingLine.get_point_count() - 1
     line_pos.append(pole_end)
     _prev_pos[0] = pole_end
@@ -62,7 +83,6 @@ func _process(delta: float) -> void:
     line_pos.append($Floater.position)
     _prev_pos[number_of_line_segments] = $Floater.position
     
-    var floater_final_pos : Vector2 = _mouse_click_pos - position
     var total_line_length : float = 1.1 * (floater_final_pos - pole_end).length()
     var max_line_seg_length : float = total_line_length / number_of_line_segments
     
