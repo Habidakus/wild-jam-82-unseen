@@ -2,6 +2,7 @@ class_name Player extends CharacterBody2D
 
 const SPEED : float = 200
 
+var _map_runner : MapRunner
 var _terrain : TileMapLayer 
 var _goal_light_size : float = 0
 
@@ -55,17 +56,19 @@ func _process_input():
             if _fishing_pole == null:
                 _fishing_pole = _fishing_pole_scene.instantiate() as FishingPole
                 _terrain.add_child(_fishing_pole)
-                _fishing_pole.cast_line(self, _terrain)
+                _fishing_pole.cast_line(self, _map_runner)
             else:
                 _fishing_pole.on_click()
 
 func cancel_fishing_pole() -> void:
-    _fishing_pole.hide()
-    _fishing_pole.queue_free();
-    _fishing_pole = null
+    if _fishing_pole != null:
+        _fishing_pole.hide()
+        _fishing_pole.queue_free();
+        _fishing_pole = null
 
-func set_terrain(terrain : TileMapLayer):
-    _terrain = terrain
+func set_map_runner(map_runner : MapRunner):
+    _map_runner = map_runner
+    _terrain = _map_runner.get_map()
 
 func set_light_area(s : float):
     _goal_light_size = s

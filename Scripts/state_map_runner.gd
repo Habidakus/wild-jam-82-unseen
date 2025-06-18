@@ -36,7 +36,7 @@ func enter_state() -> void:
     _player = _player_scene.instantiate();
     _player.position = _map.map_to_local(Vector2i(7, 7))
     _player.set_light_area(3.0)
-    _player.set_terrain(_map)
+    _player.set_map_runner(self)
     _map.add_child(_player)
     
     %MusicPlayer.stream = _music_track
@@ -92,25 +92,10 @@ func enter_state() -> void:
         elif dist == 4 or dist == 5:
             deep.append(cell)
 
-    #for cell in shallows:
-        #var dot : Node2D = _debug_dot_scene.instantiate()
-        #dot.position = _map.map_to_local(cell)
-        #_map.add_child(dot)
-    #for cell in medium:
-        #var dot : Node2D = _debug_dot_scene.instantiate()
-        #dot.position = _map.map_to_local(cell)
-        #(dot.get_child(0) as Polygon2D).modulate = Color.BROWN
-        #_map.add_child(dot)
-    #for cell in deep:
-        #var dot : Node2D = _debug_dot_scene.instantiate()
-        #dot.position = _map.map_to_local(cell)
-        #(dot.get_child(0) as Polygon2D).modulate = Color.ORANGE_RED
-        #_map.add_child(dot)
-
 func _select_spawn_spot(spots : Array[Vector2i]) -> Vector2i:
+    # TODO: Remove spot if it was the same spot as the player just fished at
     var count : int = 0
     while true:
-
         # it could be a particular type of fish could not be placed on the map
         # MAX is a sentinel value to try again with a different fish.
         count += 1
@@ -128,27 +113,38 @@ func _select_spawn_spot(spots : Array[Vector2i]) -> Vector2i:
     assert(false, "We should never reach this code")
     return Vector2i.MAX
 
+func get_map() -> TileMapLayer:
+    return _map
+
 func _process(_delta: float) -> void:
+    var count : int = 0
     while _spawned_fish.size() < _number_of_fish:
         var spawn_spot : Vector2i = Vector2i.MAX
         var fish_type_index = _rnd.randi() % _fish.size()
         var fish_type : Fish
-        while spawn_spot == Vector2i.MAX:
+        while spawn_spot == Vector2i.MAX && count < 100:
+            count += 1
             fish_type = _fish[fish_type_index]
             assert(fish_type.texture_region.size.x * fish_type.texture_region.size.y > 0, "Fish texture region is size zero")
             var viable_cells : Array[Vector2i]
             match fish_type.distance_from_shore:
                 Fish.DistanceFromShore.Shallows:
                     viable_cells = shallows
-                Fish.DistanceFromShore.Anywhere:
-                    viable_cells = medium + shallows + deep
+                Fish.DistanceFromShore.Medium:
+                    viable_cells = medium
                 Fish.DistanceFromShore.Far:
                     viable_cells = deep
+                Fish.DistanceFromShore.Anywhere:
+                    viable_cells = medium + shallows + deep
                 _:
                     assert(false, "Unknown distance from shore %s" % [fish_type.distance_from_shore])
             spawn_spot = _select_spawn_spot(viable_cells)
             # bump the fish type in case we didn't get a valid spot
             fish_type_index = (fish_type_index + 1) % _fish.size()
+
+        if spawn_spot == Vector2i.MAX:
+            print("Failed to spawn fish %s of %s" % [_spawned_fish.size() + 1, _number_of_fish] )
+            return
         
         #var spawn : Node2D = _fish_spawn_scene.instantiate()
         var spawn : MiniGame = fish_type.mini_game.instantiate() as MiniGame

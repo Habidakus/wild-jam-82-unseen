@@ -10,7 +10,7 @@ func set_fish_type(fish_type : Fish, rnd_seed : int, map_runner : MapRunner) -> 
     _rnd = RandomNumberGenerator.new()
     _rnd.seed = rnd_seed
 
-func register_pole(pole : FishingPole) -> bool:
+func register_pole(_pole : FishingPole) -> bool:
     print("ERROR: %s needs to implement register_pole()" % name)
     return false
 

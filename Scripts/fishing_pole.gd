@@ -23,6 +23,8 @@ var _parabolic_time_span : float
 var _bobbing_depth : float = -1
 var _bobbing_tween : Tween
 var _bobbing_image_height : float = 5.0
+var _map_runner : MapRunner
+var _hooked_fish_floater_offset : Vector2 = Vector2.ZERO
 
 func _ready() -> void:
     $Floater.hide()
@@ -31,12 +33,18 @@ func _ready() -> void:
 func get_floater_position() -> Vector2:
     return position + $Floater.position
 
-func cast_line(player : Player, map : TileMapLayer) -> void:
+func update_floater_offset(offset : Vector2) -> void:
+    $Floater.position -= _hooked_fish_floater_offset
+    _hooked_fish_floater_offset = offset
+    $Floater.position += _hooked_fish_floater_offset
+
+func cast_line(player : Player, map_runner : MapRunner) -> void:
     position = player.position
-    _mouse_click_pos = map.get_local_mouse_position()
-    _map = map
+    _map_runner = map_runner
+    _map = map_runner.get_map()
     _player = player
-    _map_cell = map.local_to_map(_mouse_click_pos)
+    _mouse_click_pos = _map.get_local_mouse_position()
+    _map_cell = _map.local_to_map(_mouse_click_pos)
     var tween : Tween = create_tween()
     var current_end : Vector2 = $PoleLine.get_point_position(1)
     var snap_pos : Vector2 = Vector2(0 - current_end.x, current_end.y)
@@ -123,11 +131,17 @@ func retract() -> void:
     tween.tween_method(Callable(self, "_adjust_end_pos"), current_end, snap_pos, duration)
     tween.tween_callback(Callable(_player, "cancel_fishing_pole"))
     
+    if _mini_game != null:
+        var cell : Vector2i = _map.local_to_map(_mini_game.position)
+        _map_runner._expire_spawn_spot(cell)
+        _mini_game = null
+    
 func retract_with_fish(fish_type : Fish) -> void:
     $Floater/Sprite2D.texture = fish_type.texture_image
     $Floater/Sprite2D.region_enabled = true
     $Floater/Sprite2D.region_rect = fish_type.texture_region
     _bobbing_image_height = fish_type.texture_region.size.y
+    print("Player caught a %s" % fish_type.player_facing_name)
     retract()
 
 func on_fish_escaped() -> void:

@@ -6,8 +6,8 @@ class_name Fish extends Resource
 
 @export var mini_game : PackedScene = preload("res://Scenes/MiniGames/mini_game_default_easy.tscn")
 
-enum DistanceFromShore { Shallows, Anywhere, Far }
-@export var distance_from_shore : DistanceFromShore = DistanceFromShore.Anywhere
+enum DistanceFromShore { Shallows, Medium, Far, Anywhere }
+@export var distance_from_shore : DistanceFromShore = DistanceFromShore.Shallows
 
 enum RequirementToSpawn { None, Silence, Meditation }
 @export var requirement_to_spawn : RequirementToSpawn = RequirementToSpawn.None

@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://ceob5u3sp36vr"]
+[gd_scene load_steps=5 format=3 uid="uid://brt4sjj8mwnw7"]
 
-[ext_resource type="Script" uid="uid://d0k17vettmdb4" path="res://Scripts/MiniGames/mini_game_default.gd" id="1_ywwb3"]
-[ext_resource type="Texture2D" uid="uid://do54ap110pdmq" path="res://Art/visibility_circle.png" id="2_vkmxm"]
+[ext_resource type="Script" uid="uid://bp7bd0tn6fkn4" path="res://Scripts/MiniGames/mini_game_capture.gd" id="1_t7gn0"]
+[ext_resource type="Texture2D" uid="uid://do54ap110pdmq" path="res://Art/visibility_circle.png" id="2_f2qt8"]
 
 [sub_resource type="Curve" id="Curve_akk64"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.361607, 0.752809), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
@@ -9,15 +9,17 @@ point_count = 3
 
 [sub_resource type="Gradient" id="Gradient_6xf85"]
 offsets = PackedFloat32Array(0, 0.87, 1)
-colors = PackedColorArray(0.635107, 0.904054, 1, 1, 0.635294, 0.905882, 1, 1, 1, 1, 1, 0)
+colors = PackedColorArray(0.635107, 0.904054, 1, 1, 0.980843, 0.338325, 0.774799, 1, 1, 1, 1, 0)
 
-[node name="MiniGameDefaultHard" type="Node2D"]
-script = ExtResource("1_ywwb3")
+[node name="MiniGameCapture" type="Node2D"]
+script = ExtResource("1_t7gn0")
 failure_time = 1.5
-min_nibble_seconds = 4.0
+fish_speed = 25.0
+max_nibble_seconds = 8.0
+min_player_accuracy = 0.75
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
-texture = ExtResource("2_vkmxm")
+texture = ExtResource("2_f2qt8")
 lifetime = 5.0
 preprocess = 0.5
 randomness = 1.0
