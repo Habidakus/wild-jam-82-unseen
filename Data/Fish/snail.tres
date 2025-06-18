@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="Fish" load_steps=3 format=3 uid="uid://ctb1n7uk5u2v"]
+[gd_resource type="Resource" script_class="Fish" load_steps=4 format=3 uid="uid://ctb1n7uk5u2v"]
 
+[ext_resource type="PackedScene" uid="uid://ceob5u3sp36vr" path="res://Scenes/MiniGames/mini_game_default_hard.tscn" id="1_3xeh6"]
 [ext_resource type="Script" uid="uid://dvdud1wowap44" path="res://Scripts/fish.gd" id="1_6a8xv"]
 [ext_resource type="Texture2D" uid="uid://cukb4vabnqi5v" path="res://Art/fishing_free/global.png" id="2_3xeh6"]
 
@@ -8,7 +9,9 @@ script = ExtResource("1_6a8xv")
 player_facing_name = "Snail"
 texture_image = ExtResource("2_3xeh6")
 texture_region = Rect2(32, 16, 16, 16)
-mini_game = 0
+mini_game = ExtResource("1_3xeh6")
 distance_from_shore = 1
 requirement_to_spawn = 0
+min_duration_in_seconds = 25.0
+max_duration_in_seconds = 45.0
 metadata/_custom_type_script = "uid://dvdud1wowap44"

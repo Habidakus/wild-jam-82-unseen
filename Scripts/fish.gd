@@ -4,7 +4,7 @@ class_name Fish extends Resource
 @export var texture_image : Texture
 @export var texture_region : Rect2
 
-@export var mini_game : PackedScene = preload("res://Scenes/MiniGames/mini_game_default.tscn")
+@export var mini_game : PackedScene = preload("res://Scenes/MiniGames/mini_game_default_easy.tscn")
 
 enum DistanceFromShore { Shallows, Anywhere, Far }
 @export var distance_from_shore : DistanceFromShore = DistanceFromShore.Anywhere

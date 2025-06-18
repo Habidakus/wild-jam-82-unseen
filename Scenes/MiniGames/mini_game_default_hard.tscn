@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://b2rf445xl4n14"]
+[gd_scene load_steps=5 format=3 uid="uid://ceob5u3sp36vr"]
 
-[ext_resource type="Script" uid="uid://bqseq0tikt0gv" path="res://Scripts/mini_game.gd" id="1_akk64"]
-[ext_resource type="Texture2D" uid="uid://do54ap110pdmq" path="res://Art/visibility_circle.png" id="1_atedn"]
+[ext_resource type="Script" uid="uid://bqseq0tikt0gv" path="res://Scripts/mini_game.gd" id="1_ywwb3"]
+[ext_resource type="Texture2D" uid="uid://do54ap110pdmq" path="res://Art/visibility_circle.png" id="2_vkmxm"]
 
 [sub_resource type="Curve" id="Curve_akk64"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.361607, 0.752809), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
@@ -12,10 +12,10 @@ offsets = PackedFloat32Array(0, 0.87, 1)
 colors = PackedColorArray(0.635107, 0.904054, 1, 1, 0.635294, 0.905882, 1, 1, 1, 1, 1, 0)
 
 [node name="MiniGameDefault" type="Node2D"]
-script = ExtResource("1_akk64")
+script = ExtResource("1_ywwb3")
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
-texture = ExtResource("1_atedn")
+texture = ExtResource("2_vkmxm")
 lifetime = 5.0
 preprocess = 0.5
 randomness = 1.0
