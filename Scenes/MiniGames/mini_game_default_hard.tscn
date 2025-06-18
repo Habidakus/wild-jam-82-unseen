@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://ceob5u3sp36vr"]
 
-[ext_resource type="Script" uid="uid://bqseq0tikt0gv" path="res://Scripts/mini_game.gd" id="1_ywwb3"]
+[ext_resource type="Script" uid="uid://d0k17vettmdb4" path="res://Scripts/MiniGames/mini_game_default.gd" id="1_ywwb3"]
 [ext_resource type="Texture2D" uid="uid://do54ap110pdmq" path="res://Art/visibility_circle.png" id="2_vkmxm"]
 
 [sub_resource type="Curve" id="Curve_akk64"]
@@ -13,6 +13,9 @@ colors = PackedColorArray(0.635107, 0.904054, 1, 1, 0.635294, 0.905882, 1, 1, 1,
 
 [node name="MiniGameDefault" type="Node2D"]
 script = ExtResource("1_ywwb3")
+medium_distance = 9.0
+failure_time = 1.5
+min_nibble_seconds = 4.0
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
 texture = ExtResource("2_vkmxm")

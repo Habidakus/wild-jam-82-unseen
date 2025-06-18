@@ -1,24 +1,21 @@
-class_name MiniGame extends Node2D
+class_name MiniGame_Default extends MiniGame
 
+## if the player places their floater within this distance of the center of the bubbles, time-to-nibble will be normal
 @export var medium_distance : float = 12.0
+## if the player places their floater far from the center of the bubbles, but still within this distance, time-to-nibble will be multiplied by max_distance_slowness
 @export var maximum_distance : float = 24.0
-@export var failure_time : float = 2.5
+## the nibble wait time will be multiplied by this value if the player places their floater too far from the center of the bubbles
 @export var max_distance_slowness : float = 4.0
+## number of seconds the player has to react to the nibble before the fish escapes
+@export var failure_time : float = 2.5
+## minimum time the player will have to wait before the nibbles start
 @export var min_nibble_seconds : float = 2
+## maximum time the player will have to wait before the nibbles start
 @export var max_nibble_seconds : float = 10
 
-var _rnd : RandomNumberGenerator
-var _map_runner : MapRunner
-var _fish_type : Fish
 var _nibble_wait : float = -1
 var _failure_countdown : float = -1
 var _pole : FishingPole
-
-func set_fish_type(fish_type : Fish, rnd_seed : int, map_runner : MapRunner) -> void:
-    _fish_type = fish_type
-    _map_runner = map_runner
-    _rnd = RandomNumberGenerator.new()
-    _rnd.seed = rnd_seed
 
 func close_enough(dist : float) -> bool:
     return dist < maximum_distance
