@@ -11,6 +11,7 @@ radius = 7.0
 height = 20.0
 
 [node name="Player" type="CharacterBody2D"]
+motion_mode = 1
 script = ExtResource("1_6t5aa")
 _footsteps_running = ExtResource("2_fkybt")
 _footsteps_walking = ExtResource("3_x3wgy")

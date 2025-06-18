@@ -84,7 +84,7 @@ func _physics_process(delta : float):
         var rollback : bool = true
         if _terrain.get_cell_source_id(cell) != -1:
             var tile_data : TileData = _terrain.get_cell_tile_data(cell)
-            var water_data = tile_data.get_custom_data("Water") || tile_data.get_custom_data("Wall")
+            var water_data = tile_data.get_custom_data("Water") || tile_data.get_custom_data("Wall") || tile_data.get_custom_data("Coast")
             if water_data == null || water_data as bool == false:
                 rollback = false
 
@@ -93,7 +93,7 @@ func _physics_process(delta : float):
             var rollback_x = true
             if _terrain.get_cell_source_id(cell_x) != -1:
                 var tile_data : TileData = _terrain.get_cell_tile_data(cell_x)
-                var water_data = tile_data.get_custom_data("Water") || tile_data.get_custom_data("Wall")
+                var water_data = tile_data.get_custom_data("Water") || tile_data.get_custom_data("Wall") || tile_data.get_custom_data("Coast")
                 if water_data == null || water_data as bool == false:
                     rollback_x = false
 
@@ -101,7 +101,7 @@ func _physics_process(delta : float):
             var rollback_y = true
             if _terrain.get_cell_source_id(cell_y) != -1:
                 var tile_data : TileData = _terrain.get_cell_tile_data(cell_y)
-                var water_data = tile_data.get_custom_data("Water") || tile_data.get_custom_data("Wall")
+                var water_data = tile_data.get_custom_data("Water") || tile_data.get_custom_data("Wall") || tile_data.get_custom_data("Coast")
                 if water_data == null || water_data as bool == false:
                     rollback_y = false
 
