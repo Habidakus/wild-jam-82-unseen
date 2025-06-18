@@ -51,6 +51,7 @@ func _process(delta: float) -> void:
         _failure_countdown -= delta
         if _failure_countdown < 0:
             _map_runner.mark_mini_game_removed(self)
+            _pole.on_fish_escaped()
             return
             
     if _nibble_wait < 0:

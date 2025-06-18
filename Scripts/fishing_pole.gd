@@ -130,6 +130,11 @@ func retract_with_fish(fish_type : Fish) -> void:
     _bobbing_image_height = fish_type.texture_region.size.y
     retract()
 
+func on_fish_escaped() -> void:
+    _line_slack = true
+    _mini_game = null
+    _invoke_new_bobbing()
+
 func _process(delta: float) -> void:
     if not $FishingLine.visible:
         return
