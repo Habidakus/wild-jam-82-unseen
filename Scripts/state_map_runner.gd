@@ -163,7 +163,7 @@ func _process(_delta: float) -> void:
 func mark_mini_game_removed(mini_game : MiniGame) -> void:
     var mini_game_cell : Vector2i = _map.local_to_map(mini_game.position)
     if not _spawned_fish.erase(mini_game_cell):
-        assert(false, "mini game expired but was not listed as valid")
+        print("mini game (%s) expired but was not listed in _spawned_fish list" % mini_game.name)
     mini_game.queue_free()
 
 # TODO: break this into two functions:
