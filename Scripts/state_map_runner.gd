@@ -1,6 +1,8 @@
 class_name MapRunner extends StateMachineState
 
 @export var _fish : Array[Fish] = []
+@export var _enemy : Array[PackedScene] = []
+@export var _player_spawn_spot : Vector2i = Vector2i(7,7)
 @export var _music_track : AudioStream
 @export var _number_of_fish : int = 5
 
@@ -11,11 +13,13 @@ var _player_scene : PackedScene = preload("res://Scenes/player.tscn")
 #var _fish_spawn_scene : PackedScene = preload("res://Scenes/fish_spawn.tscn")
 
 var _spawned_fish : Dictionary[Vector2i, Node2D] = {}
+var _spawned_enemy : Array[Enemy] = []
 var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
 
 var shallows : Array[Vector2i]
 var medium : Array[Vector2i]
 var deep : Array[Vector2i]
+var ground : Array[Vector2i]
     
 func _on_music_finished() -> void:
     %MusicPlayer.play()
@@ -24,6 +28,16 @@ func exit_state(next_state: StateMachineState) -> void:
     if 	%MusicPlayer.finished.is_connected(_on_music_finished):
         %MusicPlayer.finished.disconnect(_on_music_finished)
     
+    _player.queue_free()
+    
+    for fish : Node2D in _spawned_fish.values():
+        fish.queue_free()
+    _spawned_fish.clear()
+    
+    for enemy : Node2D in _spawned_enemy:
+        enemy.queue_free()
+    _spawned_enemy.clear()
+        
     super.exit_state(next_state)
     
 func enter_state() -> void:
@@ -34,7 +48,7 @@ func enter_state() -> void:
             _map = child as TileMapLayer
     
     _player = _player_scene.instantiate();
-    _player.position = _map.map_to_local(Vector2i(7, 7))
+    _player.position = _map.map_to_local(_player_spawn_spot)
     _player.set_light_area(3.0)
     _player.set_map_runner(self)
     _map.add_child(_player)
@@ -42,18 +56,63 @@ func enter_state() -> void:
     %MusicPlayer.stream = _music_track
     %MusicPlayer.play()
     %MusicPlayer.finished.connect(_on_music_finished)
+
+    _find_water_cells()
+    _spawn_enemies()
+
+func get_enemy_spawn_spot(avoid_player : bool) -> Vector2i:
+    var valid_spots : Array[Vector2i]
+    var player_cell : Vector2i = _map.local_to_map(_player.position)
+    for cell in ground:
+        if avoid_player:
+            if abs(cell.x - player_cell.x) + abs(cell.y - player_cell.y) < 10:
+                continue
+        var enemy_too_close : bool = false
+        for e in _spawned_enemy:
+            var e_cell : Vector2i = _map.local_to_map(e.position)
+            if abs(cell.x - e_cell.x) + abs(cell.y - e_cell.y) < 2:
+                enemy_too_close = true
+                break
+        if enemy_too_close:
+            continue
+        
+        valid_spots.append(cell)
+    
+    return valid_spots[_rnd.randi() % valid_spots.size()]
+
+func _spawn_enemies() -> void:
+    _spawned_enemy.clear()
+    for enemy_scene in _enemy:
+        var enemy = enemy_scene.instantiate() as Enemy
+        enemy.set_map_runner(self)
+        enemy.position = _map.map_to_local(get_enemy_spawn_spot(true))
+        enemy.scale = Vector2.ONE * 2.0
+        _map.add_child(enemy)
+        _spawned_enemy.append(enemy)
+
+func go_back_to_sensei() -> void:
+    our_state_machine.switch_state("SenseiHub")
+
+func _find_water_cells() -> void:
+    ground.clear()
+    shallows.clear()
+    medium.clear()
+    deep.clear()
     
     var processed : Dictionary[Vector2i, int]
     var unprocessed : Dictionary[Vector2i, int]
     for cell in _map.get_used_cells():
         var tile_data : TileData = _map.get_cell_tile_data(cell)
         var water_data = tile_data.get_custom_data("Water")
-        if water_data == null:
-            processed.set(cell, 0)
-        elif water_data as bool == false:
+        var wall_data = tile_data.get_custom_data("Wall")
+        var is_water : bool = water_data != null && (water_data as bool) == true
+        if not is_water:
             processed.set(cell, 0)
         else:
             unprocessed.set(cell, 0)
+        var is_wall : bool = wall_data != null && (wall_data as bool) == true
+        if not is_wall and not is_water:
+            ground.append(cell)
 
     const MAX_DIST : int = 1000
     while not unprocessed.is_empty():

@@ -144,9 +144,18 @@ func _physics_process(delta : float):
     #	velocity = velocity.bounce(collision.get_normal()) # Or other collision logic
 
     # Example of accessing slide collisions
-    #for i in get_slide_collision_count():
-        #var collision = get_slide_collision(i)
-        #print("I collided with ", collision.get_collider().name, " on the ", collision.get_normal())
+    for i in get_slide_collision_count():
+        var collider = get_slide_collision(i).get_collider()
+        while collider is not Enemy:
+            collider = collider.get_parent()
+            if collider == null:
+                break
+        
+        if collider is Enemy:
+            #var enemy : Enemy = collider as Enemy
+            _map_runner.go_back_to_sensei()
+        else:
+            print(collider)
 
     #Example of accessing last collision
     #var last_collision = get_last_slide_collision()

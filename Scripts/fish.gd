@@ -1,5 +1,6 @@
 class_name Fish extends Resource
 
+## This is what the player will see if we ever print the name of this catch on the screen
 @export var player_facing_name : String
 @export var texture_image : Texture
 @export var texture_region : Rect2
