@@ -22,6 +22,7 @@ var _parabolic_time_remaining : float = 0
 var _parabolic_time_span : float
 var _bobbing_depth : float = -1
 var _bobbing_tween : Tween
+var _bobbing_image_height : float = 5.0
 
 func _ready() -> void:
     $Floater.hide()
@@ -80,7 +81,7 @@ func _invoke_new_bobbing() -> void:
     _bobbing_tween.tween_callback(Callable(self, "_invoke_new_bobbing"))
 
 func _set_bobbing_depth(depth : float) -> void:
-    $Floater/Sprite2D.region_rect.size.y = 5.0 - depth
+    $Floater/Sprite2D.region_rect.size.y = _bobbing_image_height - depth
     $Floater.position.y += (depth - _bobbing_depth)
     _bobbing_depth = depth
 
@@ -123,7 +124,10 @@ func retract() -> void:
     tween.tween_callback(Callable(_player, "cancel_fishing_pole"))
     
 func retract_with_fish(fish_type : Fish) -> void:
-    print("TODO: implement replace floater with %s" % fish_type.player_facing_name)
+    $Floater/Sprite2D.texture = fish_type.texture_image
+    $Floater/Sprite2D.region_enabled = true
+    $Floater/Sprite2D.region_rect = fish_type.texture_region
+    _bobbing_image_height = fish_type.texture_region.size.y
     retract()
 
 func _process(delta: float) -> void:
