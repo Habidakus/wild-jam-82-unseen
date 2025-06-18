@@ -6,6 +6,8 @@ class_name MapRunner extends StateMachineState
 @export var _music_track : AudioStream
 @export var _number_of_fish : int = 5
 
+#var _navigation_region : NavigationRegion2D
+
 var _map : TileMapLayer = null
 var _player : Player = null
 var _player_scene : PackedScene = preload("res://Scenes/player.tscn")
@@ -19,7 +21,7 @@ var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
 var shallows : Array[Vector2i]
 var medium : Array[Vector2i]
 var deep : Array[Vector2i]
-var ground : Array[Vector2i]
+var ground : Dictionary[Vector2i, int]
     
 func _on_music_finished() -> void:
     %MusicPlayer.play()
@@ -60,10 +62,38 @@ func enter_state() -> void:
     _find_water_cells()
     _spawn_enemies()
 
+
+func generate_move_path(from : Vector2i, to : Vector2i) -> Array[Vector2i]:
+    var ret_val : Array[Vector2i]
+    
+    if ground.has(from) and ground.has(to):
+        var from_id = ground[from]
+        var to_id = ground[to]
+        var astar_path = _astar.get_point_path(from_id, to_id)
+        if astar_path.size() > 0:
+            for fpoint in astar_path:
+                ret_val.append(Vector2i(fpoint))
+            return ret_val
+    
+    print("Can't find an astar path from %s to %s" % [from, to])
+    var cursor = from
+    while cursor != to:
+        if cursor.x < to.x:
+            cursor.x += 1
+        elif cursor.x > to.x:
+            cursor.x -= 1
+        if cursor.y < to.y:
+            cursor.y += 1
+        elif cursor.y > to.y:
+            cursor.y -= 1
+        ret_val.append(cursor)
+    
+    return ret_val
+
 func get_enemy_spawn_spot(avoid_player : bool) -> Vector2i:
     var valid_spots : Array[Vector2i]
     var player_cell : Vector2i = _map.local_to_map(_player.position)
-    for cell in ground:
+    for cell in ground.keys():
         if avoid_player:
             if abs(cell.x - player_cell.x) + abs(cell.y - player_cell.y) < 10:
                 continue
@@ -93,12 +123,32 @@ func _spawn_enemies() -> void:
 func go_back_to_sensei() -> void:
     our_state_machine.switch_state("SenseiHub")
 
+var _astar : AStar2D
 func _find_water_cells() -> void:
     ground.clear()
     shallows.clear()
     medium.clear()
     deep.clear()
     
+    _astar = AStar2D.new()
+    
+    #var new_navigation_mesh = NavigationPolygon.new()
+    #var new_vertices = PackedVector2Array([Vector2(0, 0), Vector2(0, 50), Vector2(50, 50), Vector2(50, 0)])
+    #new_navigation_mesh.vertices = new_vertices
+    #var new_polygon_indices = PackedInt32Array([0, 1, 2, 3])
+    #new_navigation_mesh.add_polygon(new_polygon_indices)
+    #$NavigationRegion2D.navigation_polygon = new_navigation_mesh
+    
+    #if _navigation_region != null:
+        #_navigation_region.queue_free()
+        #_navigation_region = null
+    
+    #var nav_poly : NavigationPolygon = NavigationPolygon.new()
+    
+    #var poly_verticies : Array[Vector2] = []
+    #var vert_index : Array[int] = []
+    #var vi : int = 0
+    var ground_index : int = 0
     var processed : Dictionary[Vector2i, int]
     var unprocessed : Dictionary[Vector2i, int]
     for cell in _map.get_used_cells():
@@ -112,7 +162,45 @@ func _find_water_cells() -> void:
             unprocessed.set(cell, 0)
         var is_wall : bool = wall_data != null && (wall_data as bool) == true
         if not is_wall and not is_water:
-            ground.append(cell)
+            ground.set(cell, ground_index)
+            _astar.add_point(ground_index, cell)
+            
+            if ground.has(cell + Vector2i.UP):
+                _astar.connect_points(ground_index, ground[cell + Vector2i.UP])
+            if ground.has(cell + Vector2i.DOWN):
+                _astar.connect_points(ground_index, ground[cell + Vector2i.DOWN])
+            if ground.has(cell + Vector2i.LEFT):
+                _astar.connect_points(ground_index, ground[cell + Vector2i.LEFT])
+            if ground.has(cell + Vector2i.RIGHT):
+                _astar.connect_points(ground_index, ground[cell + Vector2i.RIGHT])
+
+            ground_index += 1
+            
+            #var top_left = _map.map_to_local(cell)
+            #var top_right = top_left + Vector2(16, 0)
+            #var bottom_left = top_left + Vector2(0, 16)
+            #var bottom_right = top_left + Vector2(16, 16)
+            #poly_verticies.push_back(top_left)
+            #poly_verticies.push_back(top_right)
+            #poly_verticies.push_back(bottom_right)
+            #poly_verticies.push_back(bottom_left)
+            #vert_index.push_back(vi)
+            #vert_index.push_back(vi + 1)
+            #vert_index.push_back(vi + 2)
+            #vert_index.push_back(vi + 3)
+            #vi += 4
+            
+    #nav_poly.set_vertices(poly_verticies)
+    #var i : int = 0
+    #while i < poly_verticies.size():
+        #var poly_verts = PackedInt32Array(vert_index.slice(i, i + 4)) 
+        #nav_poly.add_polygon(poly_verts)
+        #i += 4
+
+    #_navigation_region = NavigationRegion2D.new()
+    #_navigation_region.navigation_polygon = nav_poly
+    #_map.add_child(_navigation_region)
+    #_navigation_region.bake_navigation_polygon()
 
     const MAX_DIST : int = 1000
     while not unprocessed.is_empty():

@@ -10,7 +10,7 @@ class_name Enemy extends Node2D
 var _next_frame_countdown : float = 0
 var _sprite : Sprite2D
 var _map_runner : MapRunner
-@onready var _nav_agent : NavigationAgent2D = $NavigationAgent2D
+var _movement_path : Array[Vector2i]
 
 func set_map_runner(map_runner : MapRunner) -> void:
     _map_runner = map_runner
@@ -20,23 +20,30 @@ func _ready() -> void:
         if child is Sprite2D:
             _sprite = child as Sprite2D
 
-    _pick_random_destination()
-
-func _pick_random_destination() -> void:
-    var cell : Vector2i = _map_runner.get_enemy_spawn_spot(false)
-    var map : TileMapLayer = _map_runner.get_map()
-    _nav_agent.set_target_position(map.to_global(map.map_to_local(cell)))
-
-func _physics_process(_delta: float) -> void:
-    if _nav_agent.is_navigation_finished():
-        _pick_random_destination()
-    
-    var next_global_pos = _nav_agent.get_next_path_position()
-    var direction = global_position.direction_to(next_global_pos)
-    position += direction * speed
-
 func _process(delta: float) -> void:
     _next_frame_countdown -= delta
     if _next_frame_countdown < 0:
         _sprite.frame = (_sprite.frame + 1) % _sprite.hframes
         _next_frame_countdown = idle_rate
+
+    if _map_runner == null:
+        return
+    
+    if _movement_path == null || _movement_path.size() == 0:
+        var target_cell : Vector2i = _map_runner.get_enemy_spawn_spot(false)
+        var our_cell : Vector2i = _map_runner.get_map().local_to_map(position)
+        _movement_path = _map_runner.generate_move_path(our_cell, target_cell)
+
+    var dest_cell : Vector2i = _movement_path[0]
+    var dest_pos : Vector2 = _map_runner.get_map().map_to_local(dest_cell)
+    
+    var move_dist : float = speed * delta
+    var delta_to_dest = dest_pos - position
+    $Sprite2D.flip_h = delta_to_dest.x < 0
+    if delta_to_dest.length() <= move_dist:
+        # pop the first value off
+        position = dest_pos
+        _movement_path = _movement_path.slice(1)
+        return
+    
+    position += delta_to_dest.normalized() * move_dist

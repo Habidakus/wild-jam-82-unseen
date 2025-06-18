@@ -10,7 +10,7 @@ height = 12.0
 [node name="PitBalor" type="Node2D"]
 script = ExtResource("1_raf6r")
 player_facing_name = "Oni"
-speed = 0.5
+speed = 32.0
 idle_rate = 0.5
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
