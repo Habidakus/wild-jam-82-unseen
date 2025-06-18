@@ -160,13 +160,15 @@ func _process(_delta: float) -> void:
         expire_tween.tween_interval(_rnd.randf_range(fish_type.min_duration_in_seconds, fish_type.max_duration_in_seconds))
         expire_tween.tween_callback(Callable.create(self, "_expire_spawn_spot").bind(spawn_spot))
 
-
 func mark_mini_game_removed(mini_game : MiniGame) -> void:
     var mini_game_cell : Vector2i = _map.local_to_map(mini_game.position)
     if not _spawned_fish.erase(mini_game_cell):
         assert(false, "mini game expired but was not listed as valid")
     mini_game.queue_free()
 
+# TODO: break this into two functions:
+#      _force_remove_mini_game(MiniGame) which always removes a spawn spot (often called by a fishing pole or the spawn spot itself)
+#      _time_out_spawn_spot(spot) which will only remove the given spot if it isn't currently being fished by the player
 func _expire_spawn_spot(spot : Vector2i) -> void:
     if not _spawned_fish.has(spot):
         # spot already gone
