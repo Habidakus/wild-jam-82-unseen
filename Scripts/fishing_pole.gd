@@ -19,6 +19,7 @@ var _player : Player
 var _parabolic_velocity : Vector2
 var _parabolic_time_remaining : float = 0
 var _bobbing_depth : float = -1
+var _bobbing_tween : Tween
 
 func _ready() -> void:
     $Floater.hide()
@@ -68,7 +69,6 @@ func _fly_floater() -> void:
     _parabolic_velocity = Vector2(vx, vy)
     _parabolic_time_remaining = casting_hang_time
 
-var _bobbing_tween : Tween
 func _invoke_new_bobbing() -> void:
     _bobbing_tween = create_tween()
     var bob_transition_time : float = _rnd.randf_range(0.5, 1.5)
@@ -85,10 +85,38 @@ func _set_bobbing_depth(depth : float) -> void:
 func _register_mini_game(mg : MiniGame) -> void:
     _mini_game = mg
 
+func on_click() -> void:
+    if _parabolic_time_remaining > 0:
+        # still casting     
+        print("TODO: implement cancel parabolic casting")
+        _player.cancel_fishing_pole()
+        return
+    
+    if _mini_game == null:
+        retract()
+        return
+    
+    _mini_game.on_click()
+
 func go_tight() -> void:
     _bobbing_tween.kill()
     create_tween().tween_method(Callable(self, "_set_bobbing_depth"), _bobbing_depth, 5, 0.25)
     _line_slack = false
+
+func retract() -> void:
+    _line_slack = false
+    _bobbing_tween.kill()
+    _set_bobbing_depth(0)
+    var tween : Tween = create_tween()
+    var current_end : Vector2 = $PoleLine.get_point_position(1)
+    var snap_pos : Vector2 = Vector2(0 - current_end.x, current_end.y)
+    print("TODO: implement floater or fish flying back to player in %s seconds" % casting_forward_time)
+    tween.tween_method(Callable(self, "_adjust_end_pos"), current_end, snap_pos, casting_forward_time)
+    tween.tween_callback(Callable(_player, "cancel_fishing_pole"))
+    
+func retract_with_fish(fish_type : Fish) -> void:
+    print("TODO: implement player acquired a %s" % fish_type.player_facing_name)
+    retract()
 
 func _process(delta: float) -> void:
     if not $FishingLine.visible:
@@ -110,7 +138,6 @@ func _process(delta: float) -> void:
             for child in _map.get_children():
                 if child is MiniGame:
                     var mg : MiniGame = child as MiniGame
-                    var dist = (mg.position - _mouse_click_pos).length()
                     if mg.register_pole(self):
                         _register_mini_game(mg)
                         break

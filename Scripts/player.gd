@@ -51,11 +51,18 @@ func _process_input():
             _fishing_pole.queue_free();
             _fishing_pole = null
     else:
-        if _fishing_pole == null:
-            if Input.is_action_just_released("click"):
+        if Input.is_action_just_released("click"):
+            if _fishing_pole == null:
                 _fishing_pole = _fishing_pole_scene.instantiate() as FishingPole
                 _terrain.add_child(_fishing_pole)
                 _fishing_pole.cast_line(self, _terrain)
+            else:
+                _fishing_pole.on_click()
+
+func cancel_fishing_pole() -> void:
+    _fishing_pole.hide()
+    _fishing_pole.queue_free();
+    _fishing_pole = null
 
 func set_terrain(terrain : TileMapLayer):
     _terrain = terrain
