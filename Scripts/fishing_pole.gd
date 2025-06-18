@@ -16,8 +16,10 @@ var _mouse_click_pos : Vector2
 var _map_cell : Vector2i
 var _map : TileMapLayer
 var _player : Player
+var _parabolic_start_point : Vector2
 var _parabolic_velocity : Vector2
 var _parabolic_time_remaining : float = 0
+var _parabolic_time_span : float
 var _bobbing_depth : float = -1
 var _bobbing_tween : Tween
 
@@ -57,17 +59,17 @@ func _fly_floater() -> void:
     $Floater.position = current_end
     
     var target_pos : Vector2 = _mouse_click_pos - position
-
-    #var tween : Tween = create_tween()
-    #tween.tween_property($Floater, "position", target_pos, casting_hang_time)
-
-    # parabolic arc from end of fishing pole to target position    
-    var dx : float = target_pos.x - current_end.x
-    var dy : float = target_pos.y - current_end.y
-    var vx : float = dx / casting_hang_time
-    var vy : float = (dy - GRAVITY.y * casting_hang_time * casting_hang_time / 2) / casting_hang_time
-    _parabolic_velocity = Vector2(vx, vy)
+    _parabolic_start_point = current_end
+    _parabolic_velocity = _calculate_parabolic_velocity(target_pos, current_end, casting_hang_time)
+    _parabolic_time_span = casting_hang_time
     _parabolic_time_remaining = casting_hang_time
+
+func _calculate_parabolic_velocity(target_pos : Vector2, start_pos : Vector2, duration : float) -> Vector2:
+    var dx : float = target_pos.x - start_pos.x
+    var dy : float = target_pos.y - start_pos.y
+    var vx : float = dx / duration
+    var vy : float = (dy - GRAVITY.y * duration * duration / 2) / duration
+    return Vector2(vx, vy)
 
 func _invoke_new_bobbing() -> void:
     _bobbing_tween = create_tween()
@@ -109,13 +111,19 @@ func retract() -> void:
     _set_bobbing_depth(0)
     var tween : Tween = create_tween()
     var current_end : Vector2 = $PoleLine.get_point_position(1)
+    var duration : float = casting_draw_back_time
+    
+    _parabolic_velocity = _calculate_parabolic_velocity(Vector2.ZERO, $Floater.position, duration)
+    _parabolic_start_point = $Floater.position
+    _parabolic_time_span = duration
+    _parabolic_time_remaining = duration
+    
     var snap_pos : Vector2 = Vector2(0 - current_end.x, current_end.y)
-    print("TODO: implement floater or fish flying back to player in %s seconds" % casting_forward_time)
-    tween.tween_method(Callable(self, "_adjust_end_pos"), current_end, snap_pos, casting_forward_time)
+    tween.tween_method(Callable(self, "_adjust_end_pos"), current_end, snap_pos, duration)
     tween.tween_callback(Callable(_player, "cancel_fishing_pole"))
     
 func retract_with_fish(fish_type : Fish) -> void:
-    print("TODO: implement player acquired a %s" % fish_type.player_facing_name)
+    print("TODO: implement replace floater with %s" % fish_type.player_facing_name)
     retract()
 
 func _process(delta: float) -> void:
@@ -142,8 +150,8 @@ func _process(delta: float) -> void:
                         _register_mini_game(mg)
                         break
         else:
-            var elapsed_time : float = casting_hang_time - _parabolic_time_remaining
-            $Floater.position = pole_end + _parabolic_velocity * elapsed_time + GRAVITY * elapsed_time * elapsed_time / 2
+            var elapsed_time : float = _parabolic_time_span - _parabolic_time_remaining
+            $Floater.position = _parabolic_start_point + _parabolic_velocity * elapsed_time + GRAVITY * elapsed_time * elapsed_time / 2
     
     var line_pos : Array[Vector2]
     var number_of_line_segments : int = $FishingLine.get_point_count() - 1
