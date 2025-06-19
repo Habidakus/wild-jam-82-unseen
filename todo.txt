@@ -6,15 +6,13 @@ Things I think we need before we can call it beta:
 - D - at least two more mini-games
 - A - reduce vision cone when sneaking
 - A - double cast time when sneaking
-- A - change fishing "meditation" to "sneaking" and have the mini-games auto-vanish if the player isn't sneaking when casting or at any time mid-game
 - A - player should stop fishing and bark to return to the sensei when they have five fishes
-- D - Oni should emit a sound when they hear you and start tracking you
+- A - Oni should emit a sound when they hear you and start tracking you
 - A - Farthest Oni from you should start tracking you when you complete a fishing game successfully
 - D - credit screen (something we can click on in game) - will need in map art, background for text art
 - D - unlocking fishing areas (report cards unlock progressively harder maps)
 - A - swap the direction of the fishing pole if casting to the left
 - A - hook up smoke bomb (art and sound)
-- D - find smoke bomb sound
 - A - extend map so that it doesn't look that janky when the player reaches the edge and there's just grey
 
 Stretch goals:
