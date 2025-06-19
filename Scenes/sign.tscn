@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://bupptcogatnsi"]
+
+[ext_resource type="Script" uid="uid://dq5jd2l864pi3" path="res://Scripts/sign.gd" id="1_m6mpx"]
+[ext_resource type="Texture2D" uid="uid://bjdp4cj1apt5a" path="res://Art/Programmer/sign.png" id="2_hqvqy"]
+
+[node name="Sign" type="Node2D"]
+script = ExtResource("1_m6mpx")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_hqvqy")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -10.0
+offset_top = -9.0
+offset_right = 12.0
+tooltip_text = "This is a sign"
+mouse_default_cursor_shape = 16
