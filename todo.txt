@@ -2,6 +2,7 @@ Things I think we need before we can call it beta:
 - sensei (sprite, code, dialog & dialog progression logic)
 - report cards from sensei (categories: summary of fish caught, stealthy grade, hint for any challenges encountered but failed), this will need art for the text to appear on?
 - hook up the ninja's animation
+- hook up a settings page
 - at least two more mini-games
 - simplify walking & sneaking into one movement (and possibly we don't do meditation, but you need to be sneaking to make sure that some fish games don't vanish on you)
 - fix the running sound
