@@ -1,18 +1,19 @@
 Things I think we need before we can call it beta:
-- sensei (sprite, code, dialog & dialog progression logic)
-- report cards from sensei (categories: summary of fish caught, stealthy grade, hint for any challenges encountered but failed), this will need art for the text to appear on?
-- hook up a settings page
-- at least two more mini-games
-- simplify walking & sneaking into one movement (and possibly we don't do meditation, but you need to be sneaking to make sure that some fish games don't vanish on you)
-- fix the running sound
-- player should stop fishing and bark to return to the sensei when they have five fishes
-- Oni should emit a sound when they hear you and start tracking you
-- Farthest Oni from you should start tracking you when you complete a fishing game successfully
-- credit screen (something we can click on in game) - will need in map art, background for text art
-- unlocking fishing areas (report cards unlock progressively harder maps)
-- swap the direction of the fishing pole if casting to the left
-- hook up smoke bomb (art and sound)
-- extend map so that it doesn't look that janky when the player reaches the edge and there's just grey
+- D - sensei (sprite, code, dialog & dialog progression logic)
+- A - report cards from sensei (categories: summary of fish caught, stealthy grade, hint for any challenges encountered but failed)
+- D - report cards from sensei - this will need art for the text to appear on
+- A - hook up a settings page
+- D - at least two more mini-games
+- A - simplify walking & sneaking into one movement (and possibly we don't do meditation, but you need to be sneaking to make sure that some fish games don't vanish on you)
+- A - player should stop fishing and bark to return to the sensei when they have five fishes
+- D - Oni should emit a sound when they hear you and start tracking you
+- A - Farthest Oni from you should start tracking you when you complete a fishing game successfully
+- D - credit screen (something we can click on in game) - will need in map art, background for text art
+- D - unlocking fishing areas (report cards unlock progressively harder maps)
+- A - swap the direction of the fishing pole if casting to the left
+- A - hook up smoke bomb (art and sound)
+- D - find smoke bomb sound
+- A - extend map so that it doesn't look that janky when the player reaches the edge and there's just grey
 
 Stretch goals:
 - add your third map with more fish and more mini-games
