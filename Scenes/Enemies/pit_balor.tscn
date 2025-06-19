@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://lv2uevjg6ya2"]
+[gd_scene load_steps=5 format=3 uid="uid://lv2uevjg6ya2"]
 
 [ext_resource type="Script" uid="uid://cakau8mtx4ppu" path="res://Scripts/enemy.gd" id="1_raf6r"]
 [ext_resource type="Texture2D" uid="uid://dytrr3jg3m38d" path="res://Art/demon asset pack/Basic Demon Animations/pit balor/PitBalor.png" id="1_yopq1"]
+[ext_resource type="AudioStream" uid="uid://8mw0wf1k7h4g" path="res://Sounds/zapsplat_foley_footsteps_walking.mp3" id="2_04tfn"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_raf6r"]
 radius = 5.0
@@ -12,6 +13,7 @@ script = ExtResource("1_raf6r")
 player_facing_name = "Oni"
 speed = 32.0
 idle_rate = 0.5
+footstep_sound = ExtResource("2_04tfn")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_yopq1")

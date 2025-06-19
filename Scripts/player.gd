@@ -1,17 +1,15 @@
 class_name Player extends CharacterBody2D
 
-const SPEED : float = 200
-
 var _map_runner : MapRunner
 var _terrain : TileMapLayer 
 var _goal_light_size : float = 0
 
-enum MoveState { Running, Walking, Sneaking, StandingStill }
+enum MoveState { Fast, Slow, Still }
 var _movement_before_next_frame : float = 0
-var _move_state : MoveState = MoveState.StandingStill
+var _move_state : MoveState = MoveState.Still
+@export var _speed : float = 200
 @export var _distance_before_advancing_a_frame : float = 16
-@export var _footsteps_running : AudioStream
-@export var _footsteps_walking : AudioStream
+@export var _footsteps_fast : AudioStream
 var _fishing_pole_scene : PackedScene = preload("res://Scenes/fishing_pole.tscn")
 var _fishing_pole : FishingPole = null
 var _sprite : Sprite2D
@@ -23,16 +21,13 @@ func _ready() -> void:
 func _process_input():
         
     var _sprite_y_increase_if_running : int = 0
-    var speed = SPEED
+    var speed = _speed
 
-    if Input.is_action_pressed("sneak"):
-        _move_state = MoveState.Sneaking
-        speed = SPEED / 4
-    elif Input.is_action_pressed("walk"):
-        _move_state = MoveState.Walking
-        speed = SPEED / 2
+    if Input.is_action_pressed("walk"):
+        _move_state = MoveState.Slow
+        speed = _speed / 2
     else:
-        _move_state = MoveState.Running
+        _move_state = MoveState.Fast
         _sprite_y_increase_if_running = 3
     
     # Get input (example using Input Map)
@@ -59,9 +54,9 @@ func _process_input():
         _sprite.frame_coords.y = 0 + _sprite_y_increase_if_running
     
     if velocity.x == 0 && velocity.y == 0:
-        _move_state = MoveState.StandingStill
+        _move_state = MoveState.Still
         
-    if _move_state != MoveState.StandingStill:
+    if _move_state != MoveState.Still:
         if _fishing_pole != null:
             _fishing_pole.hide()
             _fishing_pole.queue_free();
@@ -74,6 +69,11 @@ func _process_input():
                 _fishing_pole.cast_line(self, _map_runner)
             else:
                 _fishing_pole.on_click()
+    
+    if Input.is_action_just_pressed("Music"):
+        var music_bus_index : int = AudioServer.get_bus_index("Music")
+        var music_bus_muteness : bool = AudioServer.is_bus_mute(music_bus_index)
+        AudioServer.set_bus_mute(music_bus_index, !music_bus_muteness)
 
 func cancel_fishing_pole() -> void:
     if _fishing_pole != null:
@@ -138,10 +138,8 @@ func _physics_process(delta : float):
 
     var movement_sound : AudioStream = null;
     match _move_state:
-        MoveState.Walking:
-            movement_sound = _footsteps_walking
-        MoveState.Running:
-            movement_sound = _footsteps_running
+        MoveState.Fast:
+            movement_sound = _footsteps_fast
     
     if $AudioStreamPlayer.stream != movement_sound:
         $AudioStreamPlayer.stream = movement_sound

@@ -10,12 +10,12 @@ class_name Enemy extends Node2D
 @export var footprint_cooldown_min : float = 1.0
 ## maximum seconds between refreshes in the darkness of where the oni is
 @export var footprint_cooldown_max : float = 5.0
+## Sound to play when enemy makes a footstep
+@export var footstep_sound : AudioStream
 ## If the player is ever within this many squares of the Oni, it will just go right at them
 @export var max_dist_see_player : int = 6
-## Occassionally the Oni will stop and listen, and if the player is walking, they will hear them within this range
-@export var max_dist_hear_walking : int = 9
-## Occassionally the Oni will stop and listen, and if the player is running, they will hear them within this range
-@export var max_dist_hear_running : int = 12
+## Occassionally the Oni will stop and listen, and if the player is moving fast, they will hear them within this range
+@export var max_dist_hear_moving_fast : int = 12
 
 var _next_frame_countdown : float = 0
 var _sprite : Sprite2D
@@ -23,6 +23,7 @@ var _map_runner : MapRunner
 var _movement_path : Array[Vector2i]
 var _footprint : Node2D
 var _footprint_material : Material
+var _footprint_texture : TextureRect
 var _footprint_direction : Vector2 = Vector2.ZERO
 var _footprint_scene : PackedScene = preload("res://Scenes/guard_footsteps.tscn")
 var _radar : CanvasLayer
@@ -46,12 +47,8 @@ func _get_target_cell() -> Vector2i:
     var player_cell : Vector2i = _map_runner.get_map().local_to_map(player.position)
     var our_cell : Vector2i = _map_runner.get_map().local_to_map(position)
     var player_dist : int = abs(player_cell.x - our_cell.x) + abs(player_cell.y - our_cell.y)
-    if player_dist < max_dist_hear_walking:
-        if player_move_state == Player.MoveState.Walking || player_move_state == Player.MoveState.Running:
-            emit_growl()
-            return player_cell
-    if player_dist < max_dist_hear_running:
-        if player_move_state == Player.MoveState.Running:
+    if player_dist < max_dist_hear_moving_fast:
+        if player_move_state == Player.MoveState.Fast:
             emit_growl()
             return player_cell
     return _map_runner.get_enemy_spawn_spot(false)
@@ -59,28 +56,40 @@ func _get_target_cell() -> Vector2i:
 func emit_growl() -> void:
     print("TODO: %s should growl now" % player_facing_name)
 
+func _stop_footprint() -> void:
+    _footprint_texture.hide()
+    var footprint_player : AudioStreamPlayer2D = (_footprint.find_child("AudioStreamPlayer2D") as AudioStreamPlayer2D)
+    footprint_player.stop()
+
 func _process(delta: float) -> void:
     if _footprint == null:
         if _radar != null:
             _footprint = _footprint_scene.instantiate()
             _radar.add_child(_footprint)
-            var footprint_texture_rect = _footprint.find_child("TextureRect") as TextureRect
-            _footprint_material = footprint_texture_rect.material
-            _footprint.hide()
+            _footprint_texture = _footprint.find_child("TextureRect") as TextureRect
+            _footprint_material = _footprint_texture.material
+            _footprint_texture.hide()
     else:
         _footprint_cooldown -= delta
         if _footprint_cooldown < 0 && _footprint != null:
-            _footprint_cooldown = _map_runner._rnd.randf_range(footprint_cooldown_min, footprint_cooldown_max)
+            var max_range : float = footprint_cooldown_max
             if not _map_runner._player.is_in_light_area(global_position):
-                _footprint.show()
+                _footprint_texture.show()
                 _footprint_material.set_shader_parameter("direction", _footprint_direction)
-                var vec : Vector2 = _map_runner.get_vector_from_player_to_local(position)
-                _footprint.position = get_viewport().get_visible_rect().size / 2 - vec * 2
                 var tween : Tween = create_tween()
                 tween.tween_method(
                     func(value) : _footprint_material.set_shader_parameter("fraction", value), 0.0, 1.0, 0.5
                 )
-                tween.tween_callback(func(): _footprint.hide())
+                tween.tween_callback(func(): _stop_footprint())
+            else:
+                max_range = max_range / 2.0
+            _footprint_cooldown = _map_runner._rnd.randf_range(footprint_cooldown_min, footprint_cooldown_max)
+            var vec : Vector2 = _map_runner.get_vector_from_player_to_local(position)
+            _footprint.position = get_viewport().get_visible_rect().size / 2 - vec * 2
+            if footstep_sound != null:
+                var footprint_player : AudioStreamPlayer2D = (_footprint.find_child("AudioStreamPlayer2D") as AudioStreamPlayer2D)
+                footprint_player.stream = footstep_sound
+                footprint_player.play()
         
     _next_frame_countdown -= delta
     if _next_frame_countdown < 0:
@@ -115,4 +124,3 @@ func _process(delta: float) -> void:
     var movement_direction : Vector2 = delta_to_dest.normalized();
     position += movement_direction * move_dist
     _footprint_direction = (_footprint_direction * 10.0 + movement_direction * delta) / (10.0 + delta);
-    
