@@ -4,7 +4,9 @@ Things I think we need before we can call it beta:
 - D - report cards from sensei - this will need art for the text to appear on
 - A - hook up a settings page
 - D - at least two more mini-games
-- A - simplify walking & sneaking into one movement (and possibly we don't do meditation, but you need to be sneaking to make sure that some fish games don't vanish on you)
+- A - reduce vision cone when sneaking
+- A - double cast time when sneaking
+- A - change fishing "meditation" to "sneaking" and have the mini-games auto-vanish if the player isn't sneaking when casting or at any time mid-game
 - A - player should stop fishing and bark to return to the sensei when they have five fishes
 - D - Oni should emit a sound when they hear you and start tracking you
 - A - Farthest Oni from you should start tracking you when you complete a fishing game successfully
