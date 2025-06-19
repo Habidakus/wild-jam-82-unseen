@@ -43,13 +43,14 @@ func cast_line(player : Player, map_runner : MapRunner) -> void:
     _map_runner = map_runner
     _map = map_runner.get_map()
     _player = player
+    var speed_multiple : float = _get_speed_multiple()
     _mouse_click_pos = _map.get_local_mouse_position()
     _map_cell = _map.local_to_map(_mouse_click_pos)
     var tween : Tween = create_tween()
     var current_end : Vector2 = $PoleLine.get_point_position(1)
     var snap_pos : Vector2 = Vector2(0 - current_end.x, current_end.y)
-    tween.tween_method(Callable(self, "_adjust_end_pos"), current_end, snap_pos, casting_draw_back_time)
-    tween.tween_method(Callable(self, "_adjust_end_pos"), snap_pos, current_end, casting_forward_time)
+    tween.tween_method(Callable(self, "_adjust_end_pos"), current_end, snap_pos, casting_draw_back_time * speed_multiple)
+    tween.tween_method(Callable(self, "_adjust_end_pos"), snap_pos, current_end, casting_forward_time * speed_multiple)
     tween.tween_callback(Callable(self, "_fly_floater"))
 
 func _adjust_end_pos(pos : Vector2) -> void:
@@ -68,10 +69,11 @@ func _fly_floater() -> void:
     $Floater.position = current_end
     
     var target_pos : Vector2 = _mouse_click_pos - position
+    var hang_time : float = casting_hang_time * _get_speed_multiple()
     _parabolic_start_point = current_end
-    _parabolic_velocity = _calculate_parabolic_velocity(target_pos, current_end, casting_hang_time)
-    _parabolic_time_span = casting_hang_time
-    _parabolic_time_remaining = casting_hang_time
+    _parabolic_velocity = _calculate_parabolic_velocity(target_pos, current_end, hang_time)
+    _parabolic_time_span = hang_time
+    _parabolic_time_remaining = hang_time
 
 func _calculate_parabolic_velocity(target_pos : Vector2, start_pos : Vector2, duration : float) -> Vector2:
     var dx : float = target_pos.x - start_pos.x
@@ -123,6 +125,12 @@ func go_tight() -> void:
     _bobbing_tween.kill()
     create_tween().tween_method(Callable(self, "_set_bobbing_depth"), _bobbing_depth, 5, 0.25)
     _line_slack = false
+    
+func _get_speed_multiple() -> float:
+    if _player._stealth_state:
+        return 1.75
+    else:
+        return 1.0
 
 func retract() -> void:
     _line_slack = false
@@ -130,7 +138,7 @@ func retract() -> void:
     _set_bobbing_depth(0)
     var tween : Tween = create_tween()
     var current_end : Vector2 = $PoleLine.get_point_position(1)
-    var duration : float = casting_draw_back_time
+    var duration : float = casting_draw_back_time * _get_speed_multiple()
     
     _parabolic_velocity = _calculate_parabolic_velocity(Vector2.ZERO, $Floater.position, duration)
     _parabolic_start_point = $Floater.position

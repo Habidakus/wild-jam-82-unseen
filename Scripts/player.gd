@@ -11,6 +11,9 @@ var _stealth_state : bool = false
 @export var _speed : float = 200
 @export var _distance_before_advancing_a_frame : float = 16
 @export var _footsteps_fast : AudioStream
+@export var _light_area_delta_speed : float = 3
+@export var _light_area_size_normal : float = 3
+@export var _light_area_size_stealthed : float = 2.25
 var _fishing_pole_scene : PackedScene = preload("res://Scenes/fishing_pole.tscn")
 var _fishing_pole : FishingPole = null
 var _sprite : Sprite2D
@@ -87,15 +90,16 @@ func set_map_runner(map_runner : MapRunner):
     _map_runner = map_runner
     _terrain = _map_runner.get_map()
 
-func set_light_area(s : float):
-    _goal_light_size = s
-
 func is_in_light_area(global_pos : Vector2) -> bool:
     var f : PointLight2D = $LightCircle/PointLight2D
     var radius : float = (f.texture.get_size() * f.scale).x
     return (global_pos - global_position).length() < radius
 
 func _process(delta: float) -> void:
+    if _stealth_state:
+        _goal_light_size = _light_area_size_stealthed
+    else:
+        _goal_light_size = _light_area_size_normal
     
     if _fishing_pole != null:
         if _stealth_state == false:
@@ -113,7 +117,7 @@ func _process(delta: float) -> void:
     
     var current_scale : float = $LightCircle/PointLight2D.scale.x
     if current_scale != _goal_light_size:
-        var scale_speed = 4 * delta
+        var scale_speed = _light_area_delta_speed * delta
         if current_scale < _goal_light_size:
             if current_scale + scale_speed > _goal_light_size:
                 current_scale = _goal_light_size
