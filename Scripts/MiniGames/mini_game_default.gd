@@ -62,6 +62,7 @@ func _process(delta: float) -> void:
     if _nibble_wait > 0:
         return
     
-    _pole.go_tight()
-    _failure_countdown = failure_time
+    if _pole != null:
+        _pole.go_tight()
+        _failure_countdown = failure_time
     

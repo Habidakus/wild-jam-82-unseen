@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://djv0mow8t4q7x"]
+[gd_scene load_steps=27 format=3 uid="uid://djv0mow8t4q7x"]
 
 [ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
 [ext_resource type="Script" uid="uid://dmic6pk3bjt2s" path="res://Scripts/state_intro.gd" id="2_vnucn"]
@@ -6,15 +6,25 @@
 [ext_resource type="Texture2D" uid="uid://do54ap110pdmq" path="res://Art/visibility_circle.png" id="3_c3mwy"]
 [ext_resource type="Script" uid="uid://dhiv0ub8gs8n6" path="res://Scripts/state_map_runner.gd" id="5_4g5cr"]
 [ext_resource type="Script" uid="uid://dvdud1wowap44" path="res://Scripts/fish.gd" id="6_r3lo5"]
+[ext_resource type="Resource" uid="uid://bx40i6jks7g37" path="res://Data/Fish/sea_spider.tres" id="7_hv1ua"]
 [ext_resource type="Resource" uid="uid://chlgcysxe1xy" path="res://Data/Fish/minnow.tres" id="7_qtxxq"]
 [ext_resource type="Resource" uid="uid://ctb1n7uk5u2v" path="res://Data/Fish/snail.tres" id="8_qtxxq"]
 [ext_resource type="PackedScene" uid="uid://lv2uevjg6ya2" path="res://Scenes/Enemies/pit_balor.tscn" id="9_imcog"]
 [ext_resource type="AudioStream" uid="uid://5oavg5indflt" path="res://Sounds/2021-01-14_-_A_Geishas_Lament_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="9_qtxxq"]
 [ext_resource type="PackedScene" uid="uid://ck5e66wko1l40" path="res://Maps/sensei_map.tscn" id="10_8fnbn"]
 [ext_resource type="Resource" uid="uid://coq4p0011j0jk" path="res://Data/Fish/woolly_salmon.tres" id="11_20eh2"]
+[ext_resource type="Resource" uid="uid://ddht4w4pnisd0" path="res://Data/Fish/guppy.tres" id="11_dw4fd"]
 [ext_resource type="PackedScene" uid="uid://cwtgnut4qmdc3" path="res://Maps/three_ponds.tscn" id="11_fu36u"]
+[ext_resource type="Resource" uid="uid://u7ljfscv84dj" path="res://Data/Fish/dab.tres" id="12_642p6"]
 [ext_resource type="AudioStream" uid="uid://cvcfqdhmiy5n5" path="res://Sounds/2021-02-19_-_Zen_Garden_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="12_imcog"]
 [ext_resource type="PackedScene" uid="uid://2glo55xmcr8q" path="res://Maps/horseshoe_lake.tscn" id="12_lwnbm"]
+[ext_resource type="Resource" uid="uid://car1sin8stexd" path="res://Data/Fish/golden_tench.tres" id="14_18fmr"]
+[ext_resource type="Resource" uid="uid://ckn5gldc4reja" path="res://Data/Fish/clownfish.tres" id="15_lb85r"]
+[ext_resource type="Resource" uid="uid://cygg4xobqbw4a" path="res://Data/Fish/atlantic_bass.tres" id="19_k8rbf"]
+[ext_resource type="Resource" uid="uid://bd0hel3hq62tg" path="res://Data/Fish/blue_gill.tres" id="20_8p807"]
+[ext_resource type="Resource" uid="uid://1hym4448gr0c" path="res://Data/Fish/axolotl.tres" id="22_vdqvo"]
+[ext_resource type="Resource" uid="uid://dt1q1xi4gwiq5" path="res://Data/Fish/high_fin_shark.tres" id="23_c7unf"]
+[ext_resource type="AudioStream" uid="uid://rg2c28p5omto" path="res://Sounds/2021-01-14_-_Modern_Samurai_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="24_64fwa"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8pvmw"]
 font_size = 160
@@ -89,7 +99,7 @@ visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
-_fish = Array[ExtResource("6_r3lo5")]([ExtResource("11_20eh2")])
+_fish = Array[ExtResource("6_r3lo5")]([ExtResource("11_dw4fd"), ExtResource("12_642p6"), ExtResource("7_hv1ua"), ExtResource("14_18fmr"), ExtResource("15_lb85r")])
 _enemy = Array[PackedScene]([ExtResource("9_imcog"), ExtResource("9_imcog")])
 _music_track = ExtResource("12_imcog")
 _number_of_fish = 6
@@ -105,9 +115,9 @@ visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
-_fish = Array[ExtResource("6_r3lo5")]([ExtResource("7_qtxxq"), ExtResource("8_qtxxq")])
+_fish = Array[ExtResource("6_r3lo5")]([ExtResource("19_k8rbf"), ExtResource("20_8p807"), ExtResource("11_20eh2"), ExtResource("22_vdqvo"), ExtResource("23_c7unf")])
 _enemy = Array[PackedScene]([ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog")])
-_music_track = ExtResource("9_qtxxq")
+_music_track = ExtResource("24_64fwa")
 metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="horseshow_lake" parent="StateMachine/AdvancedFishing" instance=ExtResource("12_lwnbm")]

@@ -7,11 +7,11 @@ shader = ExtResource("1_uo4gb")
 shader_parameter/direction = Vector2(1, 1)
 shader_parameter/fraction = 0.5
 
-[sub_resource type="Gradient" id="Gradient_baa3a"]
+[sub_resource type="Gradient" id="Gradient_uo4gb"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_c7fia"]
-gradient = SubResource("Gradient_baa3a")
+gradient = SubResource("Gradient_uo4gb")
 
 [node name="GuardFootsteps" type="Node2D"]
 

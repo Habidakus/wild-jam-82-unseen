@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=3 uid="uid://bmofpfxlim0d7"]
+
+[ext_resource type="Script" uid="uid://dx1muoka1mmpc" path="res://Scripts/MiniGames/mini_game_ring.gd" id="1_o8v2s"]
+[ext_resource type="Shader" uid="uid://rpp1818nfcn3" path="res://Art/Shaders/contracting_circle.gdshader" id="2_51v1x"]
+[ext_resource type="Texture2D" uid="uid://do54ap110pdmq" path="res://Art/visibility_circle.png" id="3_51v1x"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bfjsw"]
+shader = ExtResource("2_51v1x")
+shader_parameter/fraction = 0.2
+
+[sub_resource type="Gradient" id="Gradient_baa3a"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_k7gxe"]
+gradient = SubResource("Gradient_baa3a")
+
+[sub_resource type="Curve" id="Curve_bfjsw"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.361607, 0.752809), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_k7gxe"]
+offsets = PackedFloat32Array(0, 0.87, 1)
+colors = PackedColorArray(0.635107, 0.904054, 1, 1, 0.635294, 0.905882, 1, 1, 1, 1, 1, 0)
+
+[node name="MiniGameRing" type="Node2D"]
+script = ExtResource("1_o8v2s")
+min_cycle_span = 3.5
+max_cycle_span = 3.5
+max_nibble_seconds = 8.0
+
+[node name="TextureRect" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_bfjsw")
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 48.0
+offset_bottom = 48.0
+scale = Vector2(0.5, 0.5)
+texture = SubResource("GradientTexture2D_k7gxe")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+texture = ExtResource("3_51v1x")
+lifetime = 5.0
+preprocess = 0.5
+randomness = 1.0
+lifetime_randomness = 0.49
+emission_shape = 2
+emission_sphere_radius = 8.0
+direction = Vector2(1, 1)
+spread = 180.0
+gravity = Vector2(0, 0)
+orbit_velocity_min = 0.1
+orbit_velocity_max = 0.2
+scale_amount_min = 0.05
+scale_amount_max = 0.05
+scale_amount_curve = SubResource("Curve_bfjsw")
+color_ramp = SubResource("Gradient_k7gxe")
