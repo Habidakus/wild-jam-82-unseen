@@ -17,6 +17,7 @@ var _player_scene : PackedScene = preload("res://Scenes/player.tscn")
 var _spawned_fish : Dictionary[Vector2i, Node2D] = {}
 var _spawned_enemy : Array[Enemy] = []
 var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
+var _last_mini_game_spot : Vector2i = Vector2i.MAX / 2
 
 var shallows : Array[Vector2i]
 var medium : Array[Vector2i]
@@ -137,22 +138,6 @@ func _find_water_cells() -> void:
     
     _astar = AStar2D.new()
     
-    #var new_navigation_mesh = NavigationPolygon.new()
-    #var new_vertices = PackedVector2Array([Vector2(0, 0), Vector2(0, 50), Vector2(50, 50), Vector2(50, 0)])
-    #new_navigation_mesh.vertices = new_vertices
-    #var new_polygon_indices = PackedInt32Array([0, 1, 2, 3])
-    #new_navigation_mesh.add_polygon(new_polygon_indices)
-    #$NavigationRegion2D.navigation_polygon = new_navigation_mesh
-    
-    #if _navigation_region != null:
-        #_navigation_region.queue_free()
-        #_navigation_region = null
-    
-    #var nav_poly : NavigationPolygon = NavigationPolygon.new()
-    
-    #var poly_verticies : Array[Vector2] = []
-    #var vert_index : Array[int] = []
-    #var vi : int = 0
     var ground_index : int = 0
     var processed : Dictionary[Vector2i, int]
     var unprocessed : Dictionary[Vector2i, int]
@@ -180,32 +165,6 @@ func _find_water_cells() -> void:
                 _astar.connect_points(ground_index, ground[cell + Vector2i.RIGHT])
 
             ground_index += 1
-            
-            #var top_left = _map.map_to_local(cell)
-            #var top_right = top_left + Vector2(16, 0)
-            #var bottom_left = top_left + Vector2(0, 16)
-            #var bottom_right = top_left + Vector2(16, 16)
-            #poly_verticies.push_back(top_left)
-            #poly_verticies.push_back(top_right)
-            #poly_verticies.push_back(bottom_right)
-            #poly_verticies.push_back(bottom_left)
-            #vert_index.push_back(vi)
-            #vert_index.push_back(vi + 1)
-            #vert_index.push_back(vi + 2)
-            #vert_index.push_back(vi + 3)
-            #vi += 4
-            
-    #nav_poly.set_vertices(poly_verticies)
-    #var i : int = 0
-    #while i < poly_verticies.size():
-        #var poly_verts = PackedInt32Array(vert_index.slice(i, i + 4)) 
-        #nav_poly.add_polygon(poly_verts)
-        #i += 4
-
-    #_navigation_region = NavigationRegion2D.new()
-    #_navigation_region.navigation_polygon = nav_poly
-    #_map.add_child(_navigation_region)
-    #_navigation_region.bake_navigation_polygon()
 
     const MAX_DIST : int = 1000
     while not unprocessed.is_empty():
@@ -255,10 +214,13 @@ func _select_spawn_spot(spots : Array[Vector2i]) -> Vector2i:
             return Vector2i.MAX
 
         var spot = spots[_rnd.randi() % spots.size()]
-        var good_spot : bool = true
-        for already_spawned_spot in _spawned_fish.keys():
-            if abs(spot.x - already_spawned_spot.x) + abs(spot.y - already_spawned_spot.y) < 6:
-                good_spot = false
+        var dist_from_last_spot : int = abs(spot.x - _last_mini_game_spot.x) + abs(spot.y - _last_mini_game_spot.y)
+        var good_spot : bool = dist_from_last_spot > 6
+        if good_spot == true:
+            for already_spawned_spot in _spawned_fish.keys():
+                if abs(spot.x - already_spawned_spot.x) + abs(spot.y - already_spawned_spot.y) < 6:
+                    good_spot = false
+                    break
         if good_spot == true:
             return spot
             
@@ -316,6 +278,7 @@ func mark_mini_game_removed(mini_game : MiniGame) -> void:
     var mini_game_cell : Vector2i = _map.local_to_map(mini_game.position)
     if not _spawned_fish.erase(mini_game_cell):
         print("mini game (%s) expired but was not listed in _spawned_fish list" % mini_game.name)
+    _last_mini_game_spot = mini_game_cell
     mini_game.queue_free()
 
 func _expire_spawn_spot_if_not_being_played(spot : Vector2i) -> void:
@@ -326,6 +289,7 @@ func _expire_spawn_spot_if_not_being_played(spot : Vector2i) -> void:
     if mini_game.is_being_played():
         # Don't remove if player is currently using it
         return
+    _last_mini_game_spot = spot
     _spawned_fish[spot].queue_free()
     _spawned_fish.erase(spot)
 
@@ -334,5 +298,6 @@ func _expire_spawn_spot(spot : Vector2i) -> void:
         # spot already gone
         return
     
+    _last_mini_game_spot = spot
     _spawned_fish[spot].queue_free()
     _spawned_fish.erase(spot)
