@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="Fish" load_steps=3 format=3 uid="uid://chlgcysxe1xy"]
+[gd_resource type="Resource" script_class="Fish" load_steps=4 format=3 uid="uid://chlgcysxe1xy"]
 
+[ext_resource type="PackedScene" uid="uid://b2rf445xl4n14" path="res://Scenes/MiniGames/mini_game_default_easy.tscn" id="1_ttkpm"]
 [ext_resource type="Script" uid="uid://dvdud1wowap44" path="res://Scripts/fish.gd" id="1_x53cx"]
 [ext_resource type="Texture2D" uid="uid://cukb4vabnqi5v" path="res://Art/fishing_free/global.png" id="2_du7m8"]
 
@@ -8,7 +9,9 @@ script = ExtResource("1_x53cx")
 player_facing_name = "Minnow"
 texture_image = ExtResource("2_du7m8")
 texture_region = Rect2(16, 0, 16, 16)
-mini_game = 0
+mini_game = ExtResource("1_ttkpm")
 distance_from_shore = 0
 requirement_to_spawn = 0
+min_duration_in_seconds = 25.0
+max_duration_in_seconds = 45.0
 metadata/_custom_type_script = "uid://dvdud1wowap44"
