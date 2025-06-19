@@ -10,8 +10,11 @@ class_name Enemy extends Node2D
 @export var footprint_cooldown_min : float = 1.0
 ## maximum seconds between refreshes in the darkness of where the oni is
 @export var footprint_cooldown_max : float = 5.0
+## If the player is ever within this many squares of the Oni, it will just go right at them
 @export var max_dist_see_player : int = 6
+## Occassionally the Oni will stop and listen, and if the player is walking, they will hear them within this range
 @export var max_dist_hear_walking : int = 9
+## Occassionally the Oni will stop and listen, and if the player is running, they will hear them within this range
 @export var max_dist_hear_running : int = 12
 
 var _next_frame_countdown : float = 0
