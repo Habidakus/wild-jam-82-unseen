@@ -259,14 +259,9 @@ func _process(_delta: float) -> void:
             print("Failed to spawn fish %s of %s" % [_spawned_fish.size() + 1, _number_of_fish] )
             return
         
-        #var spawn : Node2D = _fish_spawn_scene.instantiate()
         var spawn : MiniGame = fish_type.mini_game.instantiate() as MiniGame
         spawn.position = _map.map_to_local(spawn_spot)
         spawn.set_fish_type(fish_type, _rnd.randi(), self)
-        #var spawn_sprite : Sprite2D = spawn.get_child(0) as Sprite2D
-        #spawn_sprite.texture = fish_type.texture_image
-        #spawn_sprite.region_enabled = true
-        #spawn_sprite.region_rect = fish_type.texture_region
         _map.add_child(spawn)
         _spawned_fish.set(spawn_spot, spawn)
         var expire_tween : Tween = spawn.create_tween()
@@ -275,8 +270,7 @@ func _process(_delta: float) -> void:
 
 func mark_mini_game_removed(mini_game : MiniGame) -> void:
     var mini_game_cell : Vector2i = _map.local_to_map(mini_game.position)
-    if not _spawned_fish.erase(mini_game_cell):
-        print("mini game (%s) expired but was not listed in _spawned_fish list" % mini_game.name)
+    _spawned_fish.erase(mini_game_cell)
     _last_mini_game_spot = mini_game_cell
     mini_game.queue_free()
 

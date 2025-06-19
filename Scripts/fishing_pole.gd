@@ -93,6 +93,16 @@ func _set_bobbing_depth(depth : float) -> void:
     $Floater.position.y += (depth - _bobbing_depth)
     _bobbing_depth = depth
 
+func on_player_not_stealthed() -> void:
+    if _mini_game != null:
+        if _mini_game._fish_type.requirement_to_spawn == Fish.RequirementToSpawn.Stealth:
+            _line_slack = true
+            _bobbing_tween.kill()
+            _set_bobbing_depth(0)
+            var cell : Vector2i = _map.local_to_map(_mini_game.position)
+            _map_runner._expire_spawn_spot(cell)
+            _mini_game = null
+
 func _register_mini_game(mg : MiniGame) -> void:
     _mini_game = mg
 

@@ -48,7 +48,7 @@ func _get_target_cell() -> Vector2i:
     var our_cell : Vector2i = _map_runner.get_map().local_to_map(position)
     var player_dist : int = abs(player_cell.x - our_cell.x) + abs(player_cell.y - our_cell.y)
     if player_dist < max_dist_hear_moving_fast:
-        if player_move_state == Player.MoveState.Fast:
+        if player_move_state == Player.MoveState.Moving && player._stealth_state == false:
             emit_growl()
             return player_cell
     return _map_runner.get_enemy_spawn_spot(false)

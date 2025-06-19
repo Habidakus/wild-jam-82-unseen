@@ -4,9 +4,10 @@ var _map_runner : MapRunner
 var _terrain : TileMapLayer 
 var _goal_light_size : float = 0
 
-enum MoveState { Fast, Slow, Still }
+enum MoveState { Moving, Still }
 var _movement_before_next_frame : float = 0
 var _move_state : MoveState = MoveState.Still
+var _stealth_state : bool = false
 @export var _speed : float = 200
 @export var _distance_before_advancing_a_frame : float = 16
 @export var _footsteps_fast : AudioStream
@@ -24,10 +25,10 @@ func _process_input():
     var speed = _speed
 
     if Input.is_action_pressed("walk"):
-        _move_state = MoveState.Slow
+        _stealth_state = true
         speed = _speed / 2
     else:
-        _move_state = MoveState.Fast
+        _stealth_state = false
         _sprite_y_increase_if_running = 3
     
     # Get input (example using Input Map)
@@ -52,7 +53,8 @@ func _process_input():
         _sprite.frame_coords.y = 1 + _sprite_y_increase_if_running
     else:
         _sprite.frame_coords.y = 0 + _sprite_y_increase_if_running
-    
+
+    _move_state = MoveState.Moving
     if velocity.x == 0 && velocity.y == 0:
         _move_state = MoveState.Still
         
@@ -93,7 +95,38 @@ func is_in_light_area(global_pos : Vector2) -> bool:
     var radius : float = (f.texture.get_size() * f.scale).x
     return (global_pos - global_position).length() < radius
 
-func _physics_process(delta : float):
+func _process(delta: float) -> void:
+    
+    if _fishing_pole != null:
+        if _stealth_state == false:
+            _fishing_pole.on_player_not_stealthed()
+
+    var movement_sound : AudioStream = null;
+    if _move_state == MoveState.Moving && _stealth_state == false:
+        movement_sound = _footsteps_fast
+    
+    if $AudioStreamPlayer.stream != movement_sound:
+        $AudioStreamPlayer.stream = movement_sound
+        $AudioStreamPlayer.play()
+    elif $AudioStreamPlayer.playing == false:
+        $AudioStreamPlayer.play()
+    
+    var current_scale : float = $LightCircle/PointLight2D.scale.x
+    if current_scale != _goal_light_size:
+        var scale_speed = 4 * delta
+        if current_scale < _goal_light_size:
+            if current_scale + scale_speed > _goal_light_size:
+                current_scale = _goal_light_size
+            else:
+                current_scale += scale_speed
+        else:
+            if current_scale - scale_speed < _goal_light_size:
+                current_scale = _goal_light_size
+            else:
+                current_scale -= scale_speed
+        $LightCircle/PointLight2D.scale = Vector2(current_scale, current_scale)
+
+func _physics_process(_delta : float):
     _process_input()
     var current_pos = position
     move_and_slide()
@@ -129,38 +162,15 @@ func _physics_process(delta : float):
                 position.x = current_pos.x
             if rollback_y:
                 position.y = current_pos.y
+
+    if current_pos == position:
+        _move_state = MoveState.Still
     
     var distance_covered : float = (position - current_pos).length()
     _movement_before_next_frame -= distance_covered
     if _movement_before_next_frame < 0:
         _movement_before_next_frame += _distance_before_advancing_a_frame
         _sprite.frame_coords.x = (_sprite.frame_coords.x + 1) % _sprite.hframes
-
-    var movement_sound : AudioStream = null;
-    match _move_state:
-        MoveState.Fast:
-            movement_sound = _footsteps_fast
-    
-    if $AudioStreamPlayer.stream != movement_sound:
-        $AudioStreamPlayer.stream = movement_sound
-        $AudioStreamPlayer.play()
-    elif $AudioStreamPlayer.playing == false:
-        $AudioStreamPlayer.play()
-    
-    var current_scale : float = $LightCircle/PointLight2D.scale.x
-    if current_scale != _goal_light_size:
-        var scale_speed = 4 * delta
-        if current_scale < _goal_light_size:
-            if current_scale + scale_speed > _goal_light_size:
-                current_scale = _goal_light_size
-            else:
-                current_scale += scale_speed
-        else:
-            if current_scale - scale_speed < _goal_light_size:
-                current_scale = _goal_light_size
-            else:
-                current_scale -= scale_speed
-        $LightCircle/PointLight2D.scale = Vector2(current_scale, current_scale)
 
     #Example using move_and_collide()
     #var collision = move_and_collide(velocity * delta)

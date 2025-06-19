@@ -10,7 +10,7 @@ class_name Fish extends Resource
 enum DistanceFromShore { Shallows, Medium, Far, Anywhere }
 @export var distance_from_shore : DistanceFromShore = DistanceFromShore.Shallows
 
-enum RequirementToSpawn { None, Silence, Meditation }
+enum RequirementToSpawn { None, Stealth }
 @export var requirement_to_spawn : RequirementToSpawn = RequirementToSpawn.None
 
 @export_range(5.0,120.0) var min_duration_in_seconds : float = 25
