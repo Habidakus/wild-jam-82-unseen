@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://djv0mow8t4q7x"]
+[gd_scene load_steps=29 format=3 uid="uid://djv0mow8t4q7x"]
 
 [ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
 [ext_resource type="Script" uid="uid://dmic6pk3bjt2s" path="res://Scripts/state_intro.gd" id="2_vnucn"]
@@ -26,6 +26,7 @@
 [ext_resource type="Resource" uid="uid://dt1q1xi4gwiq5" path="res://Data/Fish/high_fin_shark.tres" id="23_c7unf"]
 [ext_resource type="AudioStream" uid="uid://rg2c28p5omto" path="res://Sounds/2021-01-14_-_Modern_Samurai_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="24_64fwa"]
 [ext_resource type="PackedScene" uid="uid://bupptcogatnsi" path="res://Scenes/sign.tscn" id="26_642p6"]
+[ext_resource type="PackedScene" uid="uid://ujhe778ee4d0" path="res://Scenes/teleportation_area.tscn" id="27_18fmr"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8pvmw"]
 font_size = 160
@@ -95,6 +96,18 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 [node name="CanvasModulate" type="CanvasModulate" parent="StateMachine/SenseiHub"]
 color = Color(0, 0, 0, 1)
 
+[node name="SenseiPondSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
+position = Vector2(695, 278)
+sign_text = "Sensei's Peaceful Pond"
+
+[node name="HorseshoeLakeSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
+position = Vector2(532, 590)
+sign_text = "Horseshoe Lake (advanced)"
+
+[node name="HorseshoeLakeTeleporter" parent="StateMachine/SenseiHub" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
+position = Vector2(577, 647)
+destination_map = NodePath("../../AdvancedFishing")
+
 [node name="BeginnerFishing" type="Control" parent="StateMachine"]
 visible = false
 layout_mode = 3
@@ -125,10 +138,6 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="CanvasModulate" type="CanvasModulate" parent="StateMachine/AdvancedFishing"]
 color = Color(0, 0, 0, 1)
-
-[node name="Sign" parent="StateMachine" instance=ExtResource("26_642p6")]
-position = Vector2(695, 278)
-sign_text = "Sensei's Peaceful Pond"
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
