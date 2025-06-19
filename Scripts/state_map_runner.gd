@@ -110,11 +110,14 @@ func get_enemy_spawn_spot(avoid_player : bool) -> Vector2i:
     
     return valid_spots[_rnd.randi() % valid_spots.size()]
 
+func get_vector_from_player_to_local(local : Vector2) -> Vector2:
+    return _player.position - local
+
 func _spawn_enemies() -> void:
     _spawned_enemy.clear()
     for enemy_scene in _enemy:
         var enemy = enemy_scene.instantiate() as Enemy
-        enemy.set_map_runner(self)
+        enemy.set_map_runner(self, %Radar)
         enemy.position = _map.map_to_local(get_enemy_spawn_spot(true))
         enemy.scale = Vector2.ONE * 2.0
         _map.add_child(enemy)

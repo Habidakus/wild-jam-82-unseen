@@ -11,16 +11,32 @@ var _next_frame_countdown : float = 0
 var _sprite : Sprite2D
 var _map_runner : MapRunner
 var _movement_path : Array[Vector2i]
+var _dot : Node2D
+var _debug_scene : PackedScene = preload("res://Scenes/debug_dot.tscn")
+var _radar : CanvasLayer
 
-func set_map_runner(map_runner : MapRunner) -> void:
+func set_map_runner(map_runner : MapRunner, radar : CanvasLayer) -> void:
     _map_runner = map_runner
+    _radar = radar
  
 func _ready() -> void:
     for child in get_children():
         if child is Sprite2D:
             _sprite = child as Sprite2D
 
+func _exit_tree() -> void:
+    _dot.queue_free()
+
 func _process(delta: float) -> void:
+    if _dot == null:
+        if _radar != null:
+            _dot = _debug_scene.instantiate()
+            _radar.add_child(_dot)
+    else:
+        var vec : Vector2 = _map_runner.get_vector_from_player_to_local(position)
+        _dot.position = get_viewport().get_visible_rect().size / 2 - vec * 2
+        #_dot.position = position
+        
     _next_frame_countdown -= delta
     if _next_frame_countdown < 0:
         _sprite.frame = (_sprite.frame + 1) % _sprite.hframes
