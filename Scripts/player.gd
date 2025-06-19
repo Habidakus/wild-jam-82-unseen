@@ -7,18 +7,24 @@ var _terrain : TileMapLayer
 var _goal_light_size : float = 0
 
 enum MoveState { Running, Walking, Sneaking, StandingStill }
+var _movement_before_next_frame : float = 0
 var _move_state : MoveState = MoveState.StandingStill
+@export var _distance_before_advancing_a_frame : float = 16
 @export var _footsteps_running : AudioStream
 @export var _footsteps_walking : AudioStream
 var _fishing_pole_scene : PackedScene = preload("res://Scenes/fishing_pole.tscn")
 var _fishing_pole : FishingPole = null
+var _sprite : Sprite2D
 
 func _ready() -> void:
     $LightCircle/PointLight2D.scale = Vector2.ZERO
+    _sprite = $Sprite2D
 
 func _process_input():
-    
+        
+    var _sprite_y_increase_if_running : int = 0
     var speed = SPEED
+
     if Input.is_action_pressed("sneak"):
         _move_state = MoveState.Sneaking
         speed = SPEED / 4
@@ -27,6 +33,7 @@ func _process_input():
         speed = SPEED / 2
     else:
         _move_state = MoveState.Running
+        _sprite_y_increase_if_running = 3
     
     # Get input (example using Input Map)
     if Input.is_action_pressed("move_right"):
@@ -42,6 +49,14 @@ func _process_input():
         velocity.y = -speed
     else:
         velocity.y = 0
+    
+    if velocity.x != 0:
+        _sprite.frame_coords.y = 2 + _sprite_y_increase_if_running
+        _sprite.flip_h = velocity.x >= 0
+    elif velocity.y < 0:
+        _sprite.frame_coords.y = 1 + _sprite_y_increase_if_running
+    else:
+        _sprite.frame_coords.y = 0 + _sprite_y_increase_if_running
     
     if velocity.x == 0 && velocity.y == 0:
         _move_state = MoveState.StandingStill
@@ -114,6 +129,12 @@ func _physics_process(delta : float):
                 position.x = current_pos.x
             if rollback_y:
                 position.y = current_pos.y
+    
+    var distance_covered : float = (position - current_pos).length()
+    _movement_before_next_frame -= distance_covered
+    if _movement_before_next_frame < 0:
+        _movement_before_next_frame += _distance_before_advancing_a_frame
+        _sprite.frame_coords.x = (_sprite.frame_coords.x + 1) % _sprite.hframes
 
     var movement_sound : AudioStream = null;
     match _move_state:

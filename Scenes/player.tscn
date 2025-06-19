@@ -19,7 +19,9 @@ _footsteps_walking = ExtResource("3_x3wgy")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_v0iea")
 offset = Vector2(0, 4)
-region_enabled = true
+hframes = 3
+vframes = 6
+frame = 10
 region_rect = Rect2(16, 0, 16, 31)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
