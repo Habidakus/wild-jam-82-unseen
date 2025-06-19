@@ -73,6 +73,11 @@ func set_map_runner(map_runner : MapRunner):
 func set_light_area(s : float):
     _goal_light_size = s
 
+func is_in_light_area(global_pos : Vector2) -> bool:
+    var f : PointLight2D = $LightCircle/PointLight2D
+    var radius : float = (f.texture.get_size() * f.scale).x
+    return (global_pos - global_position).length() < radius
+
 func _physics_process(delta : float):
     _process_input()
     var current_pos = position
@@ -123,20 +128,20 @@ func _physics_process(delta : float):
     elif $AudioStreamPlayer.playing == false:
         $AudioStreamPlayer.play()
     
-    var _current_scale : float = $LightCircle/PointLight2D.scale.x
-    if _current_scale != _goal_light_size:
+    var current_scale : float = $LightCircle/PointLight2D.scale.x
+    if current_scale != _goal_light_size:
         var scale_speed = 4 * delta
-        if _current_scale < _goal_light_size:
-            if _current_scale + scale_speed > _goal_light_size:
-                _current_scale = _goal_light_size
+        if current_scale < _goal_light_size:
+            if current_scale + scale_speed > _goal_light_size:
+                current_scale = _goal_light_size
             else:
-                _current_scale += scale_speed
+                current_scale += scale_speed
         else:
-            if _current_scale - scale_speed < _goal_light_size:
-                _current_scale = _goal_light_size
+            if current_scale - scale_speed < _goal_light_size:
+                current_scale = _goal_light_size
             else:
-                _current_scale -= scale_speed
-        $LightCircle/PointLight2D.scale = Vector2(_current_scale, _current_scale)
+                current_scale -= scale_speed
+        $LightCircle/PointLight2D.scale = Vector2(current_scale, current_scale)
 
     #Example using move_and_collide()
     #var collision = move_and_collide(velocity * delta)

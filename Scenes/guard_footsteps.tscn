@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://gx173jowv0te"]
+
+[ext_resource type="Shader" uid="uid://cdrd2dovrlp1p" path="res://Art/Shaders/footstep.gdshader" id="1_uo4gb"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_br5y5"]
+shader = ExtResource("1_uo4gb")
+shader_parameter/direction = Vector2(1, 1)
+shader_parameter/fraction = 0.5
+
+[sub_resource type="Gradient" id="Gradient_baa3a"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_c7fia"]
+gradient = SubResource("Gradient_baa3a")
+
+[node name="GuardFootsteps" type="Node2D"]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_br5y5")
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 48.0
+offset_bottom = 48.0
+scale = Vector2(0.5, 0.5)
+texture = SubResource("GradientTexture2D_c7fia")

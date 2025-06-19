@@ -6,14 +6,21 @@ class_name Enemy extends Node2D
 @export var speed : float = 50
 ## How often we switch to a new idle animation frame
 @export var idle_rate : float = 1.0
+## minimum seconds between refreshes in the darkness of where the oni is
+@export var footprint_cooldown_min : float = 1.0
+## maximum seconds between refreshes in the darkness of where the oni is
+@export var footprint_cooldown_max : float = 5.0
 
 var _next_frame_countdown : float = 0
 var _sprite : Sprite2D
 var _map_runner : MapRunner
 var _movement_path : Array[Vector2i]
-var _dot : Node2D
-var _debug_scene : PackedScene = preload("res://Scenes/debug_dot.tscn")
+var _footprint : Node2D
+var _footprint_material : Material
+var _footprint_direction : Vector2 = Vector2.ZERO
+var _footprint_scene : PackedScene = preload("res://Scenes/guard_footsteps.tscn")
 var _radar : CanvasLayer
+var _footprint_cooldown : float = footprint_cooldown_max
 
 func set_map_runner(map_runner : MapRunner, radar : CanvasLayer) -> void:
     _map_runner = map_runner
@@ -25,17 +32,30 @@ func _ready() -> void:
             _sprite = child as Sprite2D
 
 func _exit_tree() -> void:
-    _dot.queue_free()
+    _footprint.queue_free()
 
 func _process(delta: float) -> void:
-    if _dot == null:
+    if _footprint == null:
         if _radar != null:
-            _dot = _debug_scene.instantiate()
-            _radar.add_child(_dot)
+            _footprint = _footprint_scene.instantiate()
+            _radar.add_child(_footprint)
+            var footprint_texture_rect = _footprint.find_child("TextureRect") as TextureRect
+            _footprint_material = footprint_texture_rect.material
+            _footprint.hide()
     else:
-        var vec : Vector2 = _map_runner.get_vector_from_player_to_local(position)
-        _dot.position = get_viewport().get_visible_rect().size / 2 - vec * 2
-        #_dot.position = position
+        _footprint_cooldown -= delta
+        if _footprint_cooldown < 0 && _footprint != null:
+            _footprint_cooldown = _map_runner._rnd.randf_range(footprint_cooldown_min, footprint_cooldown_max)
+            if not _map_runner._player.is_in_light_area(global_position):
+                _footprint.show()
+                _footprint_material.set_shader_parameter("direction", _footprint_direction)
+                var vec : Vector2 = _map_runner.get_vector_from_player_to_local(position)
+                _footprint.position = get_viewport().get_visible_rect().size / 2 - vec * 2
+                var tween : Tween = create_tween()
+                tween.tween_method(
+                    func(value) : _footprint_material.set_shader_parameter("fraction", value), 0.0, 1.0, 0.5
+                )
+                tween.tween_callback(func(): _footprint.hide())
         
     _next_frame_countdown -= delta
     if _next_frame_countdown < 0:
@@ -62,4 +82,7 @@ func _process(delta: float) -> void:
         _movement_path = _movement_path.slice(1)
         return
     
-    position += delta_to_dest.normalized() * move_dist
+    var movement_direction : Vector2 = delta_to_dest.normalized();
+    position += movement_direction * move_dist
+    _footprint_direction = (_footprint_direction * 10.0 + movement_direction * delta) / (10.0 + delta);
+    
