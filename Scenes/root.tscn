@@ -82,7 +82,6 @@ blend_mode = 2
 texture = ExtResource("3_c3mwy")
 
 [node name="SenseiHub" type="Control" parent="StateMachine"]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
@@ -94,6 +93,7 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 [node name="sensei_area" parent="StateMachine/SenseiHub" instance=ExtResource("10_8fnbn")]
 
 [node name="CanvasModulate" type="CanvasModulate" parent="StateMachine/SenseiHub"]
+visible = false
 color = Color(0, 0, 0, 1)
 
 [node name="SenseiPondSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
@@ -105,8 +105,16 @@ position = Vector2(532, 590)
 sign_text = "Horseshoe Lake (advanced)"
 
 [node name="HorseshoeLakeTeleporter" parent="StateMachine/SenseiHub" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
-position = Vector2(577, 647)
+position = Vector2(576, 671)
 destination_map = NodePath("../../AdvancedFishing")
+
+[node name="ThreePondsSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
+position = Vector2(557, 45)
+sign_text = "Three Ponds"
+
+[node name="ThreePondsTeleportater" parent="StateMachine/SenseiHub" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
+position = Vector2(607, -28)
+destination_map = NodePath("../../BeginnerFishing")
 
 [node name="BeginnerFishing" type="Control" parent="StateMachine"]
 visible = false
