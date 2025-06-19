@@ -8,7 +8,6 @@ Things I think we need before we can call it beta:
 - A - Farthest Oni from you should start tracking you when you complete a fishing game successfully
 - D - credit screen (something we can click on in game) - will need in map art, background for text art
 - D - unlocking fishing areas (report cards unlock progressively harder maps)
-- A - swap the direction of the fishing pole if casting to the left
 - A - hook up smoke bomb (art and sound)
 - A - extend map so that it doesn't look that janky when the player reaches the edge and there's just grey
 

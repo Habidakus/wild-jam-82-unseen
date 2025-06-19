@@ -25,10 +25,12 @@ var _bobbing_tween : Tween
 var _bobbing_image_height : float = 5.0
 var _map_runner : MapRunner
 var _hooked_fish_floater_offset : Vector2 = Vector2.ZERO
+var _default_pole_endpoint : Vector2
 
 func _ready() -> void:
     $Floater.hide()
     $FishingLine.hide()
+    _default_pole_endpoint = $PoleLine.get_point_position(1)
 
 func get_floater_position() -> Vector2:
     return position + $Floater.position
@@ -47,7 +49,9 @@ func cast_line(player : Player, map_runner : MapRunner) -> void:
     _mouse_click_pos = _map.get_local_mouse_position()
     _map_cell = _map.local_to_map(_mouse_click_pos)
     var tween : Tween = create_tween()
-    var current_end : Vector2 = $PoleLine.get_point_position(1)
+    var current_end : Vector2 = _default_pole_endpoint
+    if _mouse_click_pos.x < position.x:
+        current_end.x = 0.0 - current_end.x
     var snap_pos : Vector2 = Vector2(0 - current_end.x, current_end.y)
     tween.tween_method(Callable(self, "_adjust_end_pos"), current_end, snap_pos, casting_draw_back_time * speed_multiple)
     tween.tween_method(Callable(self, "_adjust_end_pos"), snap_pos, current_end, casting_forward_time * speed_multiple)
