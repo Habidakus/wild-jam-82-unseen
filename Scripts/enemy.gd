@@ -10,6 +10,9 @@ class_name Enemy extends Node2D
 @export var footprint_cooldown_min : float = 1.0
 ## maximum seconds between refreshes in the darkness of where the oni is
 @export var footprint_cooldown_max : float = 5.0
+@export var max_dist_see_player : int = 6
+@export var max_dist_hear_walking : int = 9
+@export var max_dist_hear_running : int = 12
 
 var _next_frame_countdown : float = 0
 var _sprite : Sprite2D
@@ -33,6 +36,25 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
     _footprint.queue_free()
+
+func _get_target_cell() -> Vector2i:
+    var player = _map_runner._player
+    var player_move_state = _map_runner._player._move_state
+    var player_cell : Vector2i = _map_runner.get_map().local_to_map(player.position)
+    var our_cell : Vector2i = _map_runner.get_map().local_to_map(position)
+    var player_dist : int = abs(player_cell.x - our_cell.x) + abs(player_cell.y - our_cell.y)
+    if player_dist < max_dist_hear_walking:
+        if player_move_state == Player.MoveState.Walking || player_move_state == Player.MoveState.Running:
+            emit_growl()
+            return player_cell
+    if player_dist < max_dist_hear_running:
+        if player_move_state == Player.MoveState.Running:
+            emit_growl()
+            return player_cell
+    return _map_runner.get_enemy_spawn_spot(false)
+
+func emit_growl() -> void:
+    print("TODO: %s should growl now" % player_facing_name)
 
 func _process(delta: float) -> void:
     if _footprint == null:
@@ -65,9 +87,14 @@ func _process(delta: float) -> void:
     if _map_runner == null:
         return
     
-    if _movement_path == null || _movement_path.size() == 0:
-        var target_cell : Vector2i = _map_runner.get_enemy_spawn_spot(false)
-        var our_cell : Vector2i = _map_runner.get_map().local_to_map(position)
+    var player = _map_runner._player
+    var player_cell : Vector2i = _map_runner.get_map().local_to_map(player.position)
+    var our_cell : Vector2i = _map_runner.get_map().local_to_map(position)
+    var player_dist : int = abs(player_cell.x - our_cell.x) + abs(player_cell.y - our_cell.y)
+    if player_dist <= max_dist_see_player:
+        _movement_path = _map_runner.generate_move_path(our_cell, player_cell)
+    elif _movement_path == null || _movement_path.size() == 0:
+        var target_cell = _get_target_cell()
         _movement_path = _map_runner.generate_move_path(our_cell, target_cell)
 
     var dest_cell : Vector2i = _movement_path[0]

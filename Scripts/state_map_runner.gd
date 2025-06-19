@@ -72,7 +72,9 @@ func generate_move_path(from : Vector2i, to : Vector2i) -> Array[Vector2i]:
         var astar_path = _astar.get_point_path(from_id, to_id)
         if astar_path.size() > 0:
             for fpoint in astar_path:
-                ret_val.append(Vector2i(fpoint))
+                var ipoint : Vector2i = fpoint
+                if ipoint != from:
+                    ret_val.append(ipoint)
             return ret_val
     
     print("Can't find an astar path from %s to %s" % [from, to])
