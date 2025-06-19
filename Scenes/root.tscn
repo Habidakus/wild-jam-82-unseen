@@ -82,6 +82,7 @@ blend_mode = 2
 texture = ExtResource("3_c3mwy")
 
 [node name="SenseiHub" type="Control" parent="StateMachine"]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
@@ -93,7 +94,6 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 [node name="sensei_area" parent="StateMachine/SenseiHub" instance=ExtResource("10_8fnbn")]
 
 [node name="CanvasModulate" type="CanvasModulate" parent="StateMachine/SenseiHub"]
-visible = false
 color = Color(0, 0, 0, 1)
 
 [node name="SenseiPondSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
@@ -132,6 +132,14 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 [node name="CanvasModulate" type="CanvasModulate" parent="StateMachine/BeginnerFishing"]
 color = Color(0, 0, 0, 1)
 
+[node name="Sign" parent="StateMachine/BeginnerFishing" instance=ExtResource("26_642p6")]
+position = Vector2(43, 609)
+sign_text = "Sensei's Peaceful Pond"
+
+[node name="TeleportationArea" parent="StateMachine/BeginnerFishing" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
+position = Vector2(-28, 674)
+destination_map = NodePath("../../SenseiHub")
+
 [node name="AdvancedFishing" type="Control" parent="StateMachine"]
 visible = false
 layout_mode = 3
@@ -146,6 +154,14 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="CanvasModulate" type="CanvasModulate" parent="StateMachine/AdvancedFishing"]
 color = Color(0, 0, 0, 1)
+
+[node name="TeleportationArea" parent="StateMachine/AdvancedFishing" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
+position = Vector2(-31, 578)
+destination_map = NodePath("../../SenseiHub")
+
+[node name="Sign" parent="StateMachine/AdvancedFishing" instance=ExtResource("26_642p6")]
+position = Vector2(47, 508)
+sign_text = "Sensei's Peaceful Pond"
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
