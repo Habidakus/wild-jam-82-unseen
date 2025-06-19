@@ -22,6 +22,9 @@ var _stop_processing : bool = false
 func close_enough(dist : float) -> bool:
     return dist < radius
 
+func is_being_played() -> bool:
+    return _pole != null
+
 func register_pole(pole : FishingPole) -> bool:
     var distance : float = (pole.get_floater_position() - position).length()
     if not close_enough(distance):

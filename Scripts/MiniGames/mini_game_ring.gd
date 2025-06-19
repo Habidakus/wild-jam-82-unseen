@@ -25,6 +25,9 @@ func _ready() -> void:
     $TextureRect.hide()
     _ring_material = ($TextureRect as TextureRect).material
 
+func is_being_played() -> bool:
+    return _pole != null
+
 func close_enough(dist : float) -> bool:
     return dist < radius
 

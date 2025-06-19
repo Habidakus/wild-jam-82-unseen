@@ -310,7 +310,7 @@ func _process(_delta: float) -> void:
         _spawned_fish.set(spawn_spot, spawn)
         var expire_tween : Tween = spawn.create_tween()
         expire_tween.tween_interval(_rnd.randf_range(fish_type.min_duration_in_seconds, fish_type.max_duration_in_seconds))
-        expire_tween.tween_callback(Callable.create(self, "_expire_spawn_spot").bind(spawn_spot))
+        expire_tween.tween_callback(Callable.create(self, "_expire_spawn_spot_if_not_being_played").bind(spawn_spot))
 
 func mark_mini_game_removed(mini_game : MiniGame) -> void:
     var mini_game_cell : Vector2i = _map.local_to_map(mini_game.position)
@@ -318,9 +318,17 @@ func mark_mini_game_removed(mini_game : MiniGame) -> void:
         print("mini game (%s) expired but was not listed in _spawned_fish list" % mini_game.name)
     mini_game.queue_free()
 
-# TODO: break this into two functions:
-#      _force_remove_mini_game(MiniGame) which always removes a spawn spot (often called by a fishing pole or the spawn spot itself)
-#      _time_out_spawn_spot(spot) which will only remove the given spot if it isn't currently being fished by the player
+func _expire_spawn_spot_if_not_being_played(spot : Vector2i) -> void:
+    if not _spawned_fish.has(spot):
+        # spot already gone
+        return
+    var mini_game = _spawned_fish[spot]
+    if mini_game.is_being_played():
+        # Don't remove if player is currently using it
+        return
+    _spawned_fish[spot].queue_free()
+    _spawned_fish.erase(spot)
+
 func _expire_spawn_spot(spot : Vector2i) -> void:
     if not _spawned_fish.has(spot):
         # spot already gone
