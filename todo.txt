@@ -11,6 +11,8 @@ Things I think we need before we can call it beta:
 - credit screen (something we can click on in game) - will need in map art, background for text art
 - unlocking fishing areas (report cards unlock progressively harder maps)
 - swap the direction of the fishing pole if casting to the left
+- hook up smoke bomb (art and sound)
+- extend map so that it doesn't look that janky when the player reaches the edge and there's just grey
 
 Stretch goals:
 - add your third map with more fish and more mini-games
