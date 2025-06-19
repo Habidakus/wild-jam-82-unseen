@@ -5,6 +5,7 @@ Things I think we need before we can call it beta:
 - at least two more mini-games
 - simplify walking & sneaking into one movement (and possibly we don't do meditation, but you need to be sneaking to make sure that some fish games don't vanish on you)
 - fix the running sound
+- player should stop fishing and bark to return to the sensei when they have five fishes
 - Oni should emit a sound when they hear you and start tracking you
 - Farthest Oni from you should start tracking you when you complete a fishing game successfully
 - credit screen (something we can click on in game) - will need in map art, background for text art
