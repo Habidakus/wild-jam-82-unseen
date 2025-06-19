@@ -6,7 +6,7 @@
 
 [resource]
 script = ExtResource("2_0h324")
-player_facing_name = "Snail"
+player_facing_name = "High Fin Banded Shark"
 texture_image = ExtResource("3_irrd3")
 texture_region = Rect2(0, 32, 16, 16)
 mini_game = ExtResource("1_l5tmn")

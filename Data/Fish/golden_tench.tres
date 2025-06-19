@@ -6,9 +6,9 @@
 
 [resource]
 script = ExtResource("2_1s0sk")
-player_facing_name = "Snail"
+player_facing_name = "Golden Tench"
 texture_image = ExtResource("3_1k5yb")
-texture_region = Rect2(0, 32, 16, 16)
+texture_region = Rect2(16, 32, 16, 16)
 mini_game = ExtResource("1_0grcy")
 distance_from_shore = 1
 requirement_to_spawn = 0

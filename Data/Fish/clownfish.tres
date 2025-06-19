@@ -6,9 +6,9 @@
 
 [resource]
 script = ExtResource("2_71j06")
-player_facing_name = "Minnow"
+player_facing_name = "Clownfish"
 texture_image = ExtResource("3_p8orc")
-texture_region = Rect2(0, 0, 16, 16)
+texture_region = Rect2(16, 0, 16, 16)
 mini_game = ExtResource("1_vqbi0")
 distance_from_shore = 0
 requirement_to_spawn = 0
