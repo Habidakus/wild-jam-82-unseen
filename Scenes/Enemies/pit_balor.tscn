@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://lv2uevjg6ya2"]
+[gd_scene load_steps=6 format=3 uid="uid://lv2uevjg6ya2"]
 
 [ext_resource type="Script" uid="uid://cakau8mtx4ppu" path="res://Scripts/enemy.gd" id="1_raf6r"]
 [ext_resource type="Texture2D" uid="uid://dytrr3jg3m38d" path="res://Art/demon asset pack/Basic Demon Animations/pit balor/PitBalor.png" id="1_yopq1"]
 [ext_resource type="AudioStream" uid="uid://8mw0wf1k7h4g" path="res://Sounds/zapsplat_foley_footsteps_walking.mp3" id="2_04tfn"]
+[ext_resource type="AudioStream" uid="uid://y0usxmwer6bx" path="res://Sounds/zapsplat_horror_monster_short_growl_001_19603.mp3" id="4_ai2vt"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_raf6r"]
 radius = 5.0
@@ -27,3 +28,7 @@ position = Vector2(0, -1)
 shape = SubResource("CapsuleShape2D_raf6r")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_ai2vt")
+bus = &"Ambient"

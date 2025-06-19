@@ -54,7 +54,7 @@ func _get_target_cell() -> Vector2i:
     return _map_runner.get_enemy_spawn_spot(false)
 
 func emit_growl() -> void:
-    print("TODO: %s should growl now" % player_facing_name)
+    $AudioStreamPlayer2D.play()
 
 func _stop_footprint() -> void:
     _footprint_texture.hide()
