@@ -204,7 +204,6 @@ func _find_water_cells() -> void:
             deep.append(cell)
 
 func _select_spawn_spot(spots : Array[Vector2i]) -> Vector2i:
-    # TODO: Remove spot if it was the same spot as the player just fished at
     var count : int = 0
     while true:
         # it could be a particular type of fish could not be placed on the map
