@@ -72,9 +72,14 @@ func _process_input():
 		if Input.is_action_just_released("click"):
 			if _inhibit_mouse_release_cooldown < 0:
 				if _fishing_pole == null:
-					_fishing_pole = _fishing_pole_scene.instantiate() as FishingPole
-					_terrain.add_child(_fishing_pole)
-					_fishing_pole.cast_line(self, _map_runner)
+					var map_cell = _terrain.local_to_map(_terrain.get_local_mouse_position())
+					var tile_data : TileData = _terrain.get_cell_tile_data(map_cell)
+					var water_data = tile_data.get_custom_data("Water")
+					var is_water : bool = water_data != null && (water_data as bool) == true
+					if is_water:
+						_fishing_pole = _fishing_pole_scene.instantiate() as FishingPole
+						_terrain.add_child(_fishing_pole)
+						_fishing_pole.cast_line(self, _map_runner)
 				else:
 					_fishing_pole.on_click()
 	
@@ -193,7 +198,7 @@ func _physics_process(_delta : float):
 	# Example of accessing slide collisions
 	for i in get_slide_collision_count():
 		var collider = get_slide_collision(i).get_collider()
-		while collider is not Enemy:
+		while collider is not Enemy and collider is not NoteObject:
 			collider = collider.get_parent()
 			if collider == null:
 				break
@@ -211,6 +216,8 @@ func _physics_process(_delta : float):
 				tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.5);
 				tween.tween_interval(0.5)
 				tween.tween_callback(Callable(self, "_resolve_vanish").bind(smoke_bomb))
+		elif collider is NoteObject:
+			pass
 		else:
 			print(collider)
 
