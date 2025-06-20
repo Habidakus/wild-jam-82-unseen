@@ -26,6 +26,23 @@ var ground : Dictionary[Vector2i, int]
     
 func _on_music_finished() -> void:
     %MusicPlayer.play()
+    
+func get_report_card() -> ReportCard:
+    var node : Node = self
+    while node is not StateMachine:
+        node = node.get_parent()
+        if node == null:
+            print("Why don't we have a report card storage area?")
+            var tmp_card : ReportCard = ReportCard.new()
+            tmp_card.start(_rnd.randi())
+            return tmp_card
+    for child in node.get_children():
+        if child is ReportCard:
+            return child as ReportCard
+    var report_card : ReportCard = ReportCard.new()
+    report_card.start(_rnd.randi())
+    node.add_child(report_card)
+    return report_card
 
 func exit_state(next_state: StateMachineState) -> void:
     if 	%MusicPlayer.finished.is_connected(_on_music_finished):

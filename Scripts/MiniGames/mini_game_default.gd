@@ -38,16 +38,15 @@ func register_pole(pole : FishingPole) -> bool:
 func on_click() -> void:
     if _nibble_wait > 0:
         _map_runner.mark_mini_game_removed(self)
-        _pole.retract()
+        _pole.retract(true)
         return
     
     if _failure_countdown < 0:
         print("How is mini-game getting a click after it's failure countdown has expired?")
-        _pole.retract()
+        _pole.retract(true)
     else:
         _pole.retract_with_fish(_fish_type)
-    
-
+        
     _map_runner.mark_mini_game_removed(self)
     
 func _process(delta: float) -> void:

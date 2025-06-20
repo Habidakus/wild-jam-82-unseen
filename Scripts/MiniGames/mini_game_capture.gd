@@ -41,22 +41,22 @@ func on_click() -> void:
     
     if _nibble_wait > 0:
         _map_runner.mark_mini_game_removed(self)
-        _pole.retract()
+        _pole.retract(true)
         return
     
     if _failure_countdown < 0:
         print("How is mini-game getting a click after it's failure countdown has expired?")
-        _pole.retract()
+        _pole.retract(true)
+        return
 
     var mouse_click_pos : Vector2 = _map_runner.get_map().get_local_mouse_position()
     var click_relative_to_fish : Vector2 = (mouse_click_pos - (position + get_fish_offset())).normalized()
     var click_dot : float = _fish_dash_normal.dot(click_relative_to_fish)
     var caught_fish : bool = click_dot > min_player_accuracy
-    #print("click_offset=%s dash=%s dot=%s" % [_fish_dash_normal, click_relative_to_fish, click_dot])
     if caught_fish:
         _pole.retract_with_fish(_fish_type)
     else:
-        _pole.retract()
+        _pole.retract(true)
 
 func get_fish_offset() -> Vector2:
     return _fish_dash_normal * (failure_time - _failure_countdown) * fish_speed

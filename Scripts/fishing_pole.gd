@@ -120,7 +120,7 @@ func on_click() -> void:
         return
     
     if _mini_game == null:
-        retract()
+        retract(false)
         return
     
     _mini_game.on_click()
@@ -136,7 +136,7 @@ func _get_speed_multiple() -> float:
     else:
         return 1.0
 
-func retract() -> void:
+func retract(report_failure : bool) -> void:
     _line_slack = false
     _bobbing_tween.kill()
     _set_bobbing_depth(0)
@@ -154,6 +154,8 @@ func retract() -> void:
     tween.tween_callback(Callable(_player, "cancel_fishing_pole"))
     
     if _mini_game != null:
+        if report_failure:
+            _map_runner.get_report_card().add_failure(_mini_game._fish_type)
         var cell : Vector2i = _map.local_to_map(_mini_game.position)
         _map_runner._expire_spawn_spot(cell)
         _mini_game = null
@@ -163,12 +165,14 @@ func retract_with_fish(fish_type : Fish) -> void:
     $Floater/Sprite2D.region_enabled = true
     $Floater/Sprite2D.region_rect = fish_type.texture_region
     _bobbing_image_height = fish_type.texture_region.size.y
-    print("Player caught a %s" % fish_type.player_facing_name)
-    retract()
+    _map_runner.get_report_card().add_fish(fish_type)
+    retract(false)
 
 func on_fish_escaped() -> void:
+    if _mini_game != null:
+        _map_runner.get_report_card().add_failure(_mini_game._fish_type)
+        _mini_game = null
     _line_slack = true
-    _mini_game = null
     _invoke_new_bobbing()
 
 func _process(delta: float) -> void:

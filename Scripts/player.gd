@@ -191,6 +191,7 @@ func _physics_process(_delta : float):
         
         if collider is Enemy:
             #var enemy : Enemy = collider as Enemy
+            _map_runner.get_report_card().add_smoke_bomb_escape()
             _map_runner.go_back_to_sensei()
         else:
             print(collider)
