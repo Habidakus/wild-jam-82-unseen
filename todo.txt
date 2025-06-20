@@ -14,3 +14,4 @@ Stretch goals:
 - add your third map with more fish and more mini-games
 - add high score tracker (sensei will first need to ask you your name)
 - stop allowing casting on the ground, or at least stop the floater from bobbing when on the grass
+- when mouse clicking on land, it's a thrown rock to distract Oni
