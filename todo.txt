@@ -9,7 +9,7 @@ Things I think we need before we can call it beta:
 - D - credit screen (something we can click on in game) - will need in map art, background for text art
 - D - unlocking fishing areas (report cards unlock progressively harder maps)
 - D - add weights to all the various fish types
-- A - don't use tooltip for the sign posts, make them use the ScrollLayer like the NoteObjects do
+- A - hook up fences that vanish once a player is allowed into a particular map
 
 Stretch goals:
 - add your third map with more fish and more mini-games
