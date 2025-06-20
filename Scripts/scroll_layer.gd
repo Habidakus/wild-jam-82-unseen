@@ -19,5 +19,6 @@ func display(item : Control) -> void:
 
 func remove() -> void:
 	hide()
-	_scroll_object.queue_free()
-	_scroll_object = null
+	if _scroll_object != null:
+		_scroll_object.queue_free()
+		_scroll_object = null

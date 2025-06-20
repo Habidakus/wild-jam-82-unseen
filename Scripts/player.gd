@@ -19,10 +19,47 @@ var _smoke_bomb_scene : PackedScene = preload("res://Scenes/smoke_bomb.tscn")
 var _fishing_pole : FishingPole = null
 var _sprite : Sprite2D
 var _inhibit_mouse_release_cooldown : float = -1
+var _displaying_limit : bool = false
 
 func _ready() -> void:
 	$LightCircle/PointLight2D.scale = Vector2.ZERO
 	_sprite = $Sprite2D
+
+func _handle_mouse_click() -> void:
+	if _inhibit_mouse_release_cooldown >= 0:
+		# the player just released clicking on something else
+		return
+	
+	if _fishing_pole != null:
+		# The player is already fishing, let the pole handle this
+		_fishing_pole.on_click()
+		return
+	
+	if _displaying_limit:
+		_map_runner.get_scroll_layer().remove()
+		_displaying_limit = false
+		return
+
+	var map_cell = _terrain.local_to_map(_terrain.get_local_mouse_position())
+	var tile_data : TileData = _terrain.get_cell_tile_data(map_cell)
+	var water_data = tile_data.get_custom_data("Water")
+	var is_water : bool = water_data != null && (water_data as bool) == true
+	if not is_water:
+		# you cannot fish on dry land
+		return
+	
+	if _map_runner.get_report_card().must_return_to_sensei():
+		var label : Label = Label.new()
+		label.label_settings = LabelSettings.new()
+		label.label_settings.font_color = Color(0,0,0);
+		label.text = "You have caught your limit.\nReturn to the sensei."
+		_map_runner.get_scroll_layer().display(label)
+		_displaying_limit = true
+		return
+		
+	_fishing_pole = _fishing_pole_scene.instantiate() as FishingPole
+	_terrain.add_child(_fishing_pole)
+	_fishing_pole.cast_line(self, _map_runner)
 
 func _process_input():
 		
@@ -70,18 +107,7 @@ func _process_input():
 			_fishing_pole = null
 	else:
 		if Input.is_action_just_released("click"):
-			if _inhibit_mouse_release_cooldown < 0:
-				if _fishing_pole == null:
-					var map_cell = _terrain.local_to_map(_terrain.get_local_mouse_position())
-					var tile_data : TileData = _terrain.get_cell_tile_data(map_cell)
-					var water_data = tile_data.get_custom_data("Water")
-					var is_water : bool = water_data != null && (water_data as bool) == true
-					if is_water:
-						_fishing_pole = _fishing_pole_scene.instantiate() as FishingPole
-						_terrain.add_child(_fishing_pole)
-						_fishing_pole.cast_line(self, _map_runner)
-				else:
-					_fishing_pole.on_click()
+			_handle_mouse_click()
 	
 	if Input.is_action_just_pressed("Music"):
 		var music_bus_index : int = AudioServer.get_bus_index("Music")
