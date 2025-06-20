@@ -1,19 +1,24 @@
-[gd_scene load_steps=3 format=3 uid="uid://bupptcogatnsi"]
+[gd_scene load_steps=4 format=3 uid="uid://bupptcogatnsi"]
 
-[ext_resource type="Script" uid="uid://dq5jd2l864pi3" path="res://Scripts/sign.gd" id="1_m6mpx"]
-[ext_resource type="Texture2D" uid="uid://bjdp4cj1apt5a" path="res://Art/Programmer/sign.png" id="2_hqvqy"]
+[ext_resource type="Script" uid="uid://bwstinnqcvamn" path="res://Scripts/note_object.gd" id="1_m6mpx"]
+[ext_resource type="Texture2D" uid="uid://bpr53r0ky47oq" path="res://Art/MagicMarket/Background/Tilesets/TilesetProps.png" id="2_m6mpx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hqvqy"]
+size = Vector2(24, 28)
 
 [node name="Sign" type="Node2D"]
 script = ExtResource("1_m6mpx")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_hqvqy")
+scale = Vector2(2, 2)
+texture = ExtResource("2_m6mpx")
+region_enabled = true
+region_rect = Rect2(66, 177, 12, 14)
 
-[node name="Control" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_left = -10.0
-offset_top = -9.0
-offset_right = 12.0
-tooltip_text = "This is a sign"
-mouse_default_cursor_shape = 16
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+input_pickable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_hqvqy")
+
+[connection signal="input_event" from="StaticBody2D" to="." method="_on_area_2d_input_event"]
