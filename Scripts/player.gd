@@ -15,6 +15,7 @@ var _stealth_state : bool = false
 @export var _light_area_size_normal : float = 3
 @export var _light_area_size_stealthed : float = 2.25
 var _fishing_pole_scene : PackedScene = preload("res://Scenes/fishing_pole.tscn")
+var _smoke_bomb_scene : PackedScene = preload("res://Scenes/smoke_bomb.tscn")
 var _fishing_pole : FishingPole = null
 var _sprite : Sprite2D
 
@@ -191,8 +192,17 @@ func _physics_process(_delta : float):
         
         if collider is Enemy:
             #var enemy : Enemy = collider as Enemy
-            _map_runner.get_report_card().add_smoke_bomb_escape()
-            _map_runner.go_back_to_sensei()
+            if _vanishing == false:
+                _map_runner.get_report_card().add_smoke_bomb_escape()
+                _vanishing = true
+                var smoke_bomb : Node2D = _smoke_bomb_scene.instantiate()
+                smoke_bomb.position = position
+                (smoke_bomb.find_child("AnimatedSprite2D") as AnimatedSprite2D).play()
+                get_parent().add_child(smoke_bomb)
+                var tween : Tween = create_tween()
+                tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.5);
+                tween.tween_interval(0.5)
+                tween.tween_callback(Callable(self, "_resolve_vanish"))
         else:
             print(collider)
 
@@ -200,3 +210,7 @@ func _physics_process(_delta : float):
     #var last_collision = get_last_slide_collision()
     #if last_collision:
     #	print("Last collision normal: ", last_collision.get_normal())
+
+var _vanishing : bool = false
+func _resolve_vanish() -> void:
+    _map_runner.go_back_to_sensei()
