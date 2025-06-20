@@ -111,6 +111,8 @@ func _process(delta: float) -> void:
         var target_cell = _get_target_cell()
         _movement_path = _map_runner.generate_move_path(our_cell, target_cell)
 
+    if _movement_path == null || _movement_path.size() == 0:
+        return
     var dest_cell : Vector2i = _movement_path[0]
     var dest_pos : Vector2 = _map_runner.get_map().map_to_local(dest_cell)
     
