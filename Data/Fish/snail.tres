@@ -14,4 +14,6 @@ distance_from_shore = 1
 requirement_to_spawn = 0
 min_duration_in_seconds = 25.0
 max_duration_in_seconds = 45.0
+min_weight_in_pounds = 1.0
+max_weight_in_pounds = 5.0
 metadata/_custom_type_script = "uid://dvdud1wowap44"

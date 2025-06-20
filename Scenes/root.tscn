@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://djv0mow8t4q7x"]
+[gd_scene load_steps=31 format=3 uid="uid://djv0mow8t4q7x"]
 
 [ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
 [ext_resource type="Script" uid="uid://dmic6pk3bjt2s" path="res://Scripts/state_intro.gd" id="2_vnucn"]
@@ -18,6 +18,7 @@
 [ext_resource type="Resource" uid="uid://u7ljfscv84dj" path="res://Data/Fish/dab.tres" id="12_642p6"]
 [ext_resource type="AudioStream" uid="uid://cvcfqdhmiy5n5" path="res://Sounds/2021-02-19_-_Zen_Garden_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="12_imcog"]
 [ext_resource type="PackedScene" uid="uid://2glo55xmcr8q" path="res://Maps/horseshoe_lake.tscn" id="12_lwnbm"]
+[ext_resource type="PackedScene" uid="uid://de2t3k6gwibaa" path="res://Scenes/note_object.tscn" id="13_k8rbf"]
 [ext_resource type="Resource" uid="uid://car1sin8stexd" path="res://Data/Fish/golden_tench.tres" id="14_18fmr"]
 [ext_resource type="Resource" uid="uid://ckn5gldc4reja" path="res://Data/Fish/clownfish.tres" id="15_lb85r"]
 [ext_resource type="Resource" uid="uid://cygg4xobqbw4a" path="res://Data/Fish/atlantic_bass.tres" id="19_k8rbf"]
@@ -27,6 +28,7 @@
 [ext_resource type="AudioStream" uid="uid://rg2c28p5omto" path="res://Sounds/2021-01-14_-_Modern_Samurai_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="24_64fwa"]
 [ext_resource type="PackedScene" uid="uid://bupptcogatnsi" path="res://Scenes/sign.tscn" id="26_642p6"]
 [ext_resource type="PackedScene" uid="uid://ujhe778ee4d0" path="res://Scenes/teleportation_area.tscn" id="27_18fmr"]
+[ext_resource type="Script" uid="uid://dp6xbjnlivkmq" path="res://Scripts/scroll_layer.gd" id="28_lb85r"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8pvmw"]
 font_size = 160
@@ -39,6 +41,7 @@ offset_left = -5000.0
 offset_top = -5000.0
 offset_right = 5000.0
 offset_bottom = 5000.0
+mouse_filter = 2
 color = Color(0.243137, 0.537255, 0.282353, 1)
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
@@ -90,7 +93,6 @@ blend_mode = 2
 texture = ExtResource("3_c3mwy")
 
 [node name="SenseiHub" type="Control" parent="StateMachine"]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
@@ -100,9 +102,6 @@ _number_of_fish = 1
 metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="sensei_area" parent="StateMachine/SenseiHub" instance=ExtResource("10_8fnbn")]
-
-[node name="CanvasModulate" type="CanvasModulate" parent="StateMachine/SenseiHub"]
-color = Color(0, 0, 0, 1)
 
 [node name="SenseiPondSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
 position = Vector2(695, 278)
@@ -124,6 +123,21 @@ sign_text = "Three Ponds"
 position = Vector2(607, -28)
 destination_map = NodePath("../../BeginnerFishing")
 
+[node name="ArtCreditPilar" parent="StateMachine/SenseiHub" instance=ExtResource("13_k8rbf")]
+position = Vector2(472, 368)
+_text = "Sprites and Art from:
+
+- https://danieldiggle.itch.io/sunnyside
+- https://shubibubi.itch.io/cozy-fishing
+- https://cyberrumor.itch.io/16-bit-assassin
+- https://kenmi-art.itch.io/cute-fantasy-rpg
+- https://govfx.itch.io/realistic-smoke-fx-free-pack-v2
+"
+
+[node name="Darkness" type="CanvasModulate" parent="StateMachine/SenseiHub"]
+visible = false
+color = Color(0, 0, 0, 1)
+
 [node name="BeginnerFishing" type="Control" parent="StateMachine"]
 visible = false
 layout_mode = 3
@@ -137,9 +151,6 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="three_ponds" parent="StateMachine/BeginnerFishing" instance=ExtResource("11_fu36u")]
 
-[node name="CanvasModulate" type="CanvasModulate" parent="StateMachine/BeginnerFishing"]
-color = Color(0, 0, 0, 1)
-
 [node name="Sign" parent="StateMachine/BeginnerFishing" instance=ExtResource("26_642p6")]
 position = Vector2(43, 609)
 sign_text = "Sensei's Peaceful Pond"
@@ -147,6 +158,16 @@ sign_text = "Sensei's Peaceful Pond"
 [node name="TeleportationArea" parent="StateMachine/BeginnerFishing" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
 position = Vector2(-28, 674)
 destination_map = NodePath("../../SenseiHub")
+
+[node name="PlaytesterCreditPilar" parent="StateMachine/BeginnerFishing" instance=ExtResource("13_k8rbf")]
+position = Vector2(48, 744)
+_text = "Thanks to our playtesters:
+
+-John Hegner"
+
+[node name="Darkness" type="CanvasModulate" parent="StateMachine/BeginnerFishing"]
+visible = false
+color = Color(0, 0, 0, 1)
 
 [node name="AdvancedFishing" type="Control" parent="StateMachine"]
 visible = false
@@ -160,9 +181,6 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="horseshow_lake" parent="StateMachine/AdvancedFishing" instance=ExtResource("12_lwnbm")]
 
-[node name="CanvasModulate" type="CanvasModulate" parent="StateMachine/AdvancedFishing"]
-color = Color(0, 0, 0, 1)
-
 [node name="TeleportationArea" parent="StateMachine/AdvancedFishing" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
 position = Vector2(-31, 578)
 destination_map = NodePath("../../SenseiHub")
@@ -171,6 +189,10 @@ destination_map = NodePath("../../SenseiHub")
 position = Vector2(47, 508)
 sign_text = "Sensei's Peaceful Pond"
 
+[node name="Darkness" type="CanvasModulate" parent="StateMachine/AdvancedFishing"]
+visible = false
+color = Color(0, 0, 0, 1)
+
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
 volume_db = -18.0
@@ -178,3 +200,7 @@ bus = &"Music"
 
 [node name="Radar" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
+
+[node name="ScrollLayer" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+script = ExtResource("28_lb85r")

@@ -18,6 +18,7 @@ var _fishing_pole_scene : PackedScene = preload("res://Scenes/fishing_pole.tscn"
 var _smoke_bomb_scene : PackedScene = preload("res://Scenes/smoke_bomb.tscn")
 var _fishing_pole : FishingPole = null
 var _sprite : Sprite2D
+var _inhibit_mouse_release_cooldown : float = -1
 
 func _ready() -> void:
 	$LightCircle/PointLight2D.scale = Vector2.ZERO
@@ -69,17 +70,22 @@ func _process_input():
 			_fishing_pole = null
 	else:
 		if Input.is_action_just_released("click"):
-			if _fishing_pole == null:
-				_fishing_pole = _fishing_pole_scene.instantiate() as FishingPole
-				_terrain.add_child(_fishing_pole)
-				_fishing_pole.cast_line(self, _map_runner)
-			else:
-				_fishing_pole.on_click()
+			if _inhibit_mouse_release_cooldown < 0:
+				if _fishing_pole == null:
+					_fishing_pole = _fishing_pole_scene.instantiate() as FishingPole
+					_terrain.add_child(_fishing_pole)
+					_fishing_pole.cast_line(self, _map_runner)
+				else:
+					_fishing_pole.on_click()
 	
 	if Input.is_action_just_pressed("Music"):
 		var music_bus_index : int = AudioServer.get_bus_index("Music")
 		var music_bus_muteness : bool = AudioServer.is_bus_mute(music_bus_index)
 		AudioServer.set_bus_mute(music_bus_index, !music_bus_muteness)
+
+# NOTE: This is a crap way to implement this, but we're close to the deadline, so, we live with it
+func inhibit_mouse_release(seconds : float) -> void:
+	_inhibit_mouse_release_cooldown = seconds
 
 func cancel_fishing_pole() -> void:
 	if _fishing_pole != null:
@@ -97,6 +103,8 @@ func is_in_light_area(global_pos : Vector2) -> bool:
 	return (global_pos - global_position).length() < radius
 
 func _process(delta: float) -> void:
+	_inhibit_mouse_release_cooldown -= delta
+	
 	if _stealth_state:
 		_goal_light_size = _light_area_size_stealthed
 	else:

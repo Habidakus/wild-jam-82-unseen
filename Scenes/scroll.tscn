@@ -36,14 +36,14 @@ patch_margin_bottom = 6
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+[node name="ContentsContainer" type="MarginContainer" parent="MarginContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="Label" type="Label" parent="MarginContainer/MarginContainer"]
+[node name="Label" type="Label" parent="MarginContainer/ContentsContainer"]
 layout_mode = 2
 size_flags_vertical = 1
 text = "And
