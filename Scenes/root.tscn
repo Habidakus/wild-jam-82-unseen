@@ -106,19 +106,19 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="SenseiPondSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
 position = Vector2(695, 278)
-sign_text = "Sensei's Peaceful Pond"
+_text = "Sensei's Peaceful Pond"
 
 [node name="HorseshoeLakeSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
-position = Vector2(532, 590)
-sign_text = "Horseshoe Lake (advanced)"
+position = Vector2(544, 608)
+_text = "Horseshoe Lake"
 
 [node name="HorseshoeLakeTeleporter" parent="StateMachine/SenseiHub" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
 position = Vector2(576, 671)
 destination_map = NodePath("../../AdvancedFishing")
 
 [node name="ThreePondsSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
-position = Vector2(557, 45)
-sign_text = "Three Ponds"
+position = Vector2(584, 40)
+_text = "The Three Ponds"
 
 [node name="ThreePondsTeleportater" parent="StateMachine/SenseiHub" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
 position = Vector2(607, -28)
@@ -153,15 +153,15 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 [node name="three_ponds" parent="StateMachine/BeginnerFishing" instance=ExtResource("11_fu36u")]
 
 [node name="Sign" parent="StateMachine/BeginnerFishing" instance=ExtResource("26_642p6")]
-position = Vector2(43, 609)
-sign_text = "Sensei's Peaceful Pond"
+position = Vector2(32, 640)
+_text = "Sensei's Peaceful Pond"
 
 [node name="TeleportationArea" parent="StateMachine/BeginnerFishing" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
 position = Vector2(-28, 674)
 destination_map = NodePath("../../SenseiHub")
 
 [node name="PlaytesterCreditPilar" parent="StateMachine/BeginnerFishing" instance=ExtResource("13_k8rbf")]
-position = Vector2(48, 744)
+position = Vector2(600, 768)
 _text = "Thanks to our playtesters:
 
 -John Hegner"
@@ -186,8 +186,8 @@ position = Vector2(-31, 578)
 destination_map = NodePath("../../SenseiHub")
 
 [node name="Sign" parent="StateMachine/AdvancedFishing" instance=ExtResource("26_642p6")]
-position = Vector2(47, 508)
-sign_text = "Sensei's Peaceful Pond"
+position = Vector2(24, 552)
+_text = "Sensei's Peaceful Pond"
 
 [node name="Darkness" type="CanvasModulate" parent="StateMachine/AdvancedFishing"]
 visible = false
