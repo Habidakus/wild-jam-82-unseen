@@ -1,5 +1,37 @@
+<intro>
+You have come to me to master ninja fishing.
+I am California Sensei.
 Attend me, my dude.
-Be as silent as a Friday night in Modesto.
-Be as still at the Pacific at low tide.
-Before casting, listen closely to your inner child.
-Perhaps, bait the hook with some avacado?
+Walk to my pond just to the east.
+Return when you have caught two fish.
+
+<two fish complete>
+The real journey now begins. 
+Head north to Three Ponds area.
+Catch five fish and return.
+
+<after first smokebomb use>
+Your skills will always let you evade the Oni.
+You slip away like a tech CEO evading taxes.
+But any hit of smoke ruins the nuances of flavor found in ninja fish.
+These fish are ruined, my dude.
+
+<after smokebomb use (on any map) say random line from list>
+- Be as silent as a Friday night in Modesto.
+- Be as still at the Pacific at low tide.
+- Before casting, listen closely to your inner child.
+- Perhaps, bait the hook with some avocado? However, I am out of both avocado and toast.
+- The oni are stoked about your failure.
+<then say>
+These fish are ruined, my dude. Try again!
+
+<after catching 5 fish in three ponds>
+It is now time to fish horseshoe lake.
+It is hella difficult. Head south.
+Bring me five dank fish unruined by smoke and you will have mastered ninja fishing.
+
+<after catching 5 fish in horsehoe lake>
+You have mastered ninja fishing.
+Rad.
+
+
