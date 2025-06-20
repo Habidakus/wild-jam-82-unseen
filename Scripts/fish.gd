@@ -15,3 +15,6 @@ enum RequirementToSpawn { None, Stealth }
 
 @export_range(5.0,120.0) var min_duration_in_seconds : float = 25
 @export_range(10.0,240.0) var max_duration_in_seconds : float = 45
+
+@export_range(0.0625, 20.0) var min_weight_in_pounds : float = 1.0
+@export_range(1.0, 20.0) var max_weight_in_pounds : float = 5.0
