@@ -224,7 +224,7 @@ func _physics_process(_delta : float):
 	# Example of accessing slide collisions
 	for i in get_slide_collision_count():
 		var collider = get_slide_collision(i).get_collider()
-		while collider is not Enemy and collider is not NoteObject:
+		while collider is not Enemy and collider is not NoteObject and collider is not Sensei:
 			collider = collider.get_parent()
 			if collider == null:
 				break
@@ -243,6 +243,8 @@ func _physics_process(_delta : float):
 				tween.tween_interval(0.5)
 				tween.tween_callback(Callable(self, "_resolve_vanish").bind(smoke_bomb))
 		elif collider is NoteObject:
+			pass
+		elif collider is Sensei:
 			pass
 		else:
 			print(collider)

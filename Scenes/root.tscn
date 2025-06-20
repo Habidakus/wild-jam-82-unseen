@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://djv0mow8t4q7x"]
+[gd_scene load_steps=32 format=3 uid="uid://djv0mow8t4q7x"]
 
 [ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
 [ext_resource type="Script" uid="uid://dmic6pk3bjt2s" path="res://Scripts/state_intro.gd" id="2_vnucn"]
@@ -19,6 +19,7 @@
 [ext_resource type="AudioStream" uid="uid://cvcfqdhmiy5n5" path="res://Sounds/2021-02-19_-_Zen_Garden_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="12_imcog"]
 [ext_resource type="PackedScene" uid="uid://2glo55xmcr8q" path="res://Maps/horseshoe_lake.tscn" id="12_lwnbm"]
 [ext_resource type="PackedScene" uid="uid://de2t3k6gwibaa" path="res://Scenes/note_object.tscn" id="13_k8rbf"]
+[ext_resource type="PackedScene" uid="uid://dathvu7pw5fj0" path="res://Scenes/sensei.tscn" id="14_8p807"]
 [ext_resource type="Resource" uid="uid://car1sin8stexd" path="res://Data/Fish/golden_tench.tres" id="14_18fmr"]
 [ext_resource type="Resource" uid="uid://ckn5gldc4reja" path="res://Data/Fish/clownfish.tres" id="15_lb85r"]
 [ext_resource type="Resource" uid="uid://cygg4xobqbw4a" path="res://Data/Fish/atlantic_bass.tres" id="19_k8rbf"]
@@ -93,7 +94,6 @@ blend_mode = 2
 texture = ExtResource("3_c3mwy")
 
 [node name="SenseiHub" type="Control" parent="StateMachine"]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
@@ -135,6 +135,10 @@ _text = "Sprites and Art from:
 - https://govfx.itch.io/realistic-smoke-fx-free-pack-v2
 "
 
+[node name="Sensei" parent="StateMachine/SenseiHub" instance=ExtResource("14_8p807")]
+position = Vector2(538, 284)
+scale = Vector2(3, 3)
+
 [node name="Darkness" type="CanvasModulate" parent="StateMachine/SenseiHub"]
 visible = false
 color = Color(0, 0, 0, 1)
@@ -171,6 +175,7 @@ visible = false
 color = Color(0, 0, 0, 1)
 
 [node name="AdvancedFishing" type="Control" parent="StateMachine"]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")

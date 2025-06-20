@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://dathvu7pw5fj0"]
+
+[ext_resource type="Script" uid="uid://b4108la2xn2ul" path="res://Scripts/sensei.gd" id="1_iaujh"]
+[ext_resource type="Texture2D" uid="uid://c4n3wawk5gdev" path="res://Art/Deep Dive Humanoids II/Basic Humanoid II Animations/Overworked Villager/OverworkedVillager.png" id="2_68x5s"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_t8go5"]
+radius = 8.0
+
+[node name="Sensei" type="Node2D"]
+script = ExtResource("1_iaujh")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_68x5s")
+hframes = 4
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("CircleShape2D_t8go5")
