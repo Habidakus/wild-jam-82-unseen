@@ -14,6 +14,7 @@ script = ExtResource("1_raf6r")
 player_facing_name = "Oni"
 speed = 32.0
 idle_rate = 0.5
+footprint_cooldown_max = 2.5
 footstep_sound = ExtResource("2_04tfn")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
