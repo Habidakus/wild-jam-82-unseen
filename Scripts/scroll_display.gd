@@ -1,8 +1,12 @@
 class_name ScrollDisplay extends Node2D
 
 var _scroll_layer : ScrollLayer
+var _click_cooldown : float = 0.1;
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if _click_cooldown > 0:
+		_click_cooldown -= delta
+		return
 	if Input.is_action_just_released("click"):
 		_scroll_layer.remove()
 
