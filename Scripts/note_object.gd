@@ -24,6 +24,7 @@ func _generate_container() -> Container:
 	label.text = _text
 	label.label_settings = LabelSettings.new()
 	label.label_settings.font_color = Color(0,0,0)
+	label.label_settings.font_size = 20
 	margin_container.add_child(label)
 	return margin_container
 

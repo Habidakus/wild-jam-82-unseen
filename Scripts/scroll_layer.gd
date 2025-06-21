@@ -11,6 +11,20 @@ func _ready() -> void:
 func is_active() -> bool:
 	return _scroll_object != null
 
+func display_line(text : String, player : Player) -> void:
+	var label : Label = Label.new()
+	label.label_settings = LabelSettings.new()
+	label.label_settings.font_color = Color(0,0,0)
+	label.label_settings.font_size = 20
+	label.text = text
+	var margin_container: MarginContainer = MarginContainer.new()
+	margin_container.add_theme_constant_override("margin_left", 10)
+	margin_container.add_theme_constant_override("margin_right", 10)
+	margin_container.add_theme_constant_override("margin_bottom", 10)
+	margin_container.add_theme_constant_override("margin_top", 10)
+	margin_container.add_child(label)
+	display(margin_container, player)
+
 func display_series(items: Array[Control], player : Player) -> void:
 	for c :Control in items:
 		_queue.append([c, player])

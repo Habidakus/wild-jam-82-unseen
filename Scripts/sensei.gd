@@ -26,6 +26,7 @@ func generate_label(text : String) -> Control:
 	label.text = text
 	label.label_settings = LabelSettings.new()
 	label.label_settings.font_color = Color(0,0,0);
+	label.label_settings.font_size = 20
 	var margin_container: MarginContainer = MarginContainer.new()
 	margin_container.add_theme_constant_override("margin_left", 10)
 	margin_container.add_theme_constant_override("margin_right", 10)
@@ -42,6 +43,10 @@ func trigger_dialog() -> void:
 	labels.append(generate_label("Walk to my pond just to the east."))
 	labels.append(generate_label("Return when you have caught two fish."))
 	_scroll_layer.display_series(labels, _map_runner._player)
+
+func evaluate_report_card() -> bool:
+	var report_card : ReportCard = _map_runner.get_report_card()
+	return false
 
 func _process(delta: float) -> void:
 	_flip_facing_cooldown -= delta
@@ -66,6 +71,9 @@ func _on_static_body_2d_input_event(_viewport: Node, event: InputEvent, _shape_i
 		return
 
 	if not iemb.is_released():
+		return
+	
+	if evaluate_report_card():
 		return
 		
 	trigger_dialog()

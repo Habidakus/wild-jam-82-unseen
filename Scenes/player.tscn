@@ -12,7 +12,12 @@ height = 20.0
 [node name="Player" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_6t5aa")
+_speed = null
+_distance_before_advancing_a_frame = null
 _footsteps_fast = ExtResource("2_fkybt")
+_light_area_delta_speed = null
+_light_area_size_normal = null
+_light_area_size_stealthed = null
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_v0iea")

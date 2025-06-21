@@ -45,13 +45,12 @@ func _handle_mouse_click() -> void:
 	if not is_water:
 		# you cannot fish on dry land
 		return
-	
-	if _map_runner.get_report_card().must_return_to_sensei():
-		var label : Label = Label.new()
-		label.label_settings = LabelSettings.new()
-		label.label_settings.font_color = Color(0,0,0);
-		label.text = "You have caught your limit.\nReturn to the sensei."
-		_map_runner.get_scroll_layer().display(label, self)
+		
+	if _map_runner.get_report_card().have_smoke_bombed():
+		_map_runner.get_scroll_layer().display_line("You reek of smoke bomb,\nreturn to the sensei.", self)
+		return
+	if _map_runner.get_report_card().have_caught_your_limit():
+		_map_runner.get_scroll_layer().display_line("You have caught your limit;\nreturn to the sensei.", self)
 		return
 		
 	_fishing_pole = _fishing_pole_scene.instantiate() as FishingPole

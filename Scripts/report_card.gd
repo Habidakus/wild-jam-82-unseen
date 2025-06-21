@@ -9,12 +9,11 @@ var _smoke_bomb_escape : bool = false
 var _times_heard : int = 0
 var _times_seen : int = 0
 
-func must_return_to_sensei() -> bool:
-	if _smoke_bomb_escape:
-		return true
-	if _fish.size() >= 5:
-		return true
-	return false
+func have_smoke_bombed() -> bool:
+	return _smoke_bomb_escape
+	
+func have_caught_your_limit() -> bool:
+	return _fish.size() >= 5
 
 func start(rnd_seed : int) -> void:
 	_rnd = RandomNumberGenerator.new()
