@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cevkx4vevx8dt"]
+
+[ext_resource type="Texture2D" uid="uid://dl7ydpdvtyyhh" path="res://Art/MagicMarket/Background/Tilesets/Items.png" id="1_dedur"]
+
+[node name="CreepyPlant" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_dedur")
+region_enabled = true
+region_rect = Rect2(36, 161, 10, 9)

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cn66r8llsvnwa"]
+
+[ext_resource type="Texture2D" uid="uid://babl3eyp8wget" path="res://Art/MagicMarket/Background/Tilesets/TilesetNatures.png" id="1_8cu6k"]
+
+[node name="Rocks" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_8cu6k")
+region_enabled = true
+region_rect = Rect2(19, 16, 9, 11)
