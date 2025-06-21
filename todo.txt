@@ -2,7 +2,6 @@ Things I think we need before we can call it beta:
 - A - sensei (code)
 - A - report cards from sensei (categories: summary of fish caught, stealthy grade, hint for any challenges encountered but failed)
 - A - hook up a settings page
-- A - player should stop fishing and bark to return to the sensei when they have five fishes
 - A - Farthest Oni from you should start tracking you when you complete a fishing game successfully
 - A - hook up fences that vanish once a player is allowed into a particular map
 
