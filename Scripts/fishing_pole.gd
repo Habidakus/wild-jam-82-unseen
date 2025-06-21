@@ -162,7 +162,7 @@ func retract(report_failure : bool) -> void:
 	
 	if _mini_game != null:
 		if report_failure:
-			_map_runner.get_report_card().add_failure(_mini_game._fish_type)
+			_map_runner.get_report_card().add_failure(_mini_game)
 		var cell : Vector2i = _map.local_to_map(_mini_game.position)
 		_map_runner._expire_spawn_spot(cell)
 		_mini_game = null
@@ -179,7 +179,7 @@ func retract_with_fish(fish_type : Fish) -> void:
 
 func on_fish_escaped() -> void:
 	if _mini_game != null:
-		_map_runner.get_report_card().add_failure(_mini_game._fish_type)
+		_map_runner.get_report_card().add_failure(_mini_game)
 		_mini_game = null
 	_line_slack = true
 	_invoke_new_bobbing()

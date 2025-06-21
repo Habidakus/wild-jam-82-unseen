@@ -21,6 +21,9 @@ var _ring_material : Material = null
 var _circle_span : float
 var _circle_remaining_time : float = -1
 
+func get_hint(fish_name : String) -> String:
+	return "The %s is crafty, and you must be\npatient and wait until the ring is almost closed." % fish_name
+	
 func _ready() -> void:
 	$TextureRect.hide()
 	_ring_material = ($TextureRect as TextureRect).material

@@ -131,7 +131,9 @@ func evaluate_report_card() -> bool:
 	if report_card != null:
 		if report_card.has_progress():
 			report_card._finished = true
-			_scroll_layer.display_series([generate_label("Lets see how you did:"), report_card.get_as_container()], _map_runner._player)
+			var report_card_comments : Array[Control] = report_card.get_as_containers()
+			report_card_comments.insert(0, generate_label("Lets see how you did:"))
+			_scroll_layer.display_series(report_card_comments, _map_runner._player)
 			if report_card._smoke_bomb_escape == true:
 				push_smokebomb_dialog(report_card._fish.size() > 0)
 			var unlock : int = report_card.what_tier_does_report_unlock()

@@ -1,7 +1,7 @@
 class_name ReportCard extends Node
 
 var _fish : Array[Array] = []
-var _failures : Array[Fish] = []
+var _failures : Array[Array] = []
 var _rnd : RandomNumberGenerator
 var _total_time : float = -1
 var _finished : bool = false
@@ -98,7 +98,34 @@ func has_progress() -> bool:
 		return true
 	return false
 
-func get_as_container() -> Container:
+func get_as_containers() -> Array[Control]:
+	if _failures.size() == 0:
+		return [_get_as_container()]
+	else:
+		return [_get_as_container(), _hint_as_container()]
+
+func _generate_hint_text(mini_game : MiniGame) -> String:
+	var possible_hints : Array[String] = []
+	var fish : Fish = mini_game._fish_type
+	if fish.requirement_to_spawn == Fish.RequirementToSpawn.Stealth:
+		possible_hints.append("To catch the %s\nyou must be one with the SPACE BAR." % fish.player_facing_name)
+	possible_hints.append(mini_game.get_hint(fish.player_facing_name))
+	return possible_hints[_rnd.randi() % possible_hints.size()]
+
+func _hint_as_container() -> Control:
+	var index : int = _rnd.randi() % _failures.size()
+	var _fish_type : Fish = _failures[index][0]
+	var hint_text : String = _failures[index][1]
+	var hint_label : Label = get_text_as_label(hint_text)
+	var margin_container: MarginContainer = MarginContainer.new()
+	margin_container.add_theme_constant_override("margin_left", 10)
+	margin_container.add_theme_constant_override("margin_right", 10)
+	margin_container.add_theme_constant_override("margin_bottom", 10)
+	margin_container.add_theme_constant_override("margin_top", 10)
+	margin_container.add_child(hint_label)
+	return margin_container
+	
+func _get_as_container() -> Container:
 	var grid_container : GridContainer = GridContainer.new()
 	grid_container.columns = 4
 	for tuple in _fish:
@@ -145,6 +172,14 @@ func get_as_container() -> Container:
 	else:
 		score_grid.add_child(get_text_as_label("Seen"))
 	
+	score_grid.add_child(get_text_as_label("Stance:"))
+	if _failures.size() == 0:
+		score_grid.add_child(get_text_as_label("Flawless"))
+	elif _failures.size() == 1:
+		score_grid.add_child(get_text_as_label("Needs Work"))
+	else:
+		score_grid.add_child(get_text_as_label("Sloppy"))
+	
 	vbox.add_child(score_grid)
 	
 	var margin_container: MarginContainer = MarginContainer.new()
@@ -185,9 +220,8 @@ func add_seen() -> void:
 func add_smoke_bomb_escape() -> void:
 	_smoke_bomb_escape = true
 
-func add_failure(fish_type : Fish) -> void:
-	print("Player failed to catch a %s" % fish_type.player_facing_name)
-	_failures.append(fish_type)
+func add_failure(mini_game : MiniGame) -> void:
+	_failures.append([mini_game._fish_type, _generate_hint_text(mini_game)])
 
 func _generate_fish_score() -> float:
 	var ret_val : float = 10
