@@ -2,8 +2,8 @@ Things I think we need before we can call it beta:
 - A - hook up a settings page
 - A - add hints for failed fishing
 - A - Farthest Oni from you should start tracking you when you complete a fishing game successfully
-- A - hook up fences that vanish once a player is allowed into a particular map
 - A - times_seen in the report card should be seconds_seen
+- We should tell the players that they've officially won the game
 
 Stretch goals:
 - add your third map with more fish and more mini-games
