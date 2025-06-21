@@ -94,7 +94,6 @@ blend_mode = 2
 texture = ExtResource("3_c3mwy")
 
 [node name="SenseiHub" type="Control" parent="StateMachine"]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
@@ -198,6 +197,7 @@ visible = false
 color = Color(0, 0, 0, 1)
 
 [node name="AdvancedFishing" type="Control" parent="StateMachine"]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
