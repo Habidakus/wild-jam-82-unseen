@@ -6,6 +6,8 @@ class_name FishingPole extends Node2D
 @export var casting_hang_time : float = 0.75
 
 @export var _sound_floater_hits_water : AudioStream
+@export var _sound_caught_fish : AudioStream
+@export var _sound_tension_on_the_line : AudioStream
 
 const GRAVITY : Vector2 = Vector2.DOWN * 200.0
 
@@ -129,6 +131,8 @@ func on_click() -> void:
 func go_tight() -> void:
 	if _bobbing_tween != null:
 		_bobbing_tween.kill()
+	$AudioStreamPlayer2D.stream = _sound_tension_on_the_line
+	$AudioStreamPlayer2D.play()
 	create_tween().tween_method(Callable(self, "_set_bobbing_depth"), _bobbing_depth, 5, 0.25)
 	_line_slack = false
 	
@@ -167,6 +171,8 @@ func retract_with_fish(fish_type : Fish) -> void:
 	$Floater/Sprite2D.texture = fish_type.texture_image
 	$Floater/Sprite2D.region_enabled = true
 	$Floater/Sprite2D.region_rect = fish_type.texture_region
+	$AudioStreamPlayer2D.stream = _sound_caught_fish
+	$AudioStreamPlayer2D.play()
 	_bobbing_image_height = fish_type.texture_region.size.y
 	_map_runner.get_report_card().add_fish(fish_type, _map_runner.get_tier())
 	retract(false)

@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://ey4mf020uwht"]
+[gd_scene load_steps=7 format=3 uid="uid://ey4mf020uwht"]
 
 [ext_resource type="Script" uid="uid://cvchxogy6pxch" path="res://Scripts/fishing_pole.gd" id="1_k1n8e"]
 [ext_resource type="AudioStream" uid="uid://cqdtpdhastek4" path="res://Sounds/zapsplat_sport_fishing_sinker_tackle_hit_water_plop_001_13669.mp3" id="2_kxfby"]
 [ext_resource type="Texture2D" uid="uid://cukb4vabnqi5v" path="res://Art/fishing_free/global.png" id="2_lrj5g"]
+[ext_resource type="AudioStream" uid="uid://dlghhjnmsmn5u" path="res://Sounds/zapsplat_fish_caught.mp3" id="3_vcciy"]
+[ext_resource type="AudioStream" uid="uid://c7nkwry7xj7k0" path="res://Sounds/zapsplat_tension_on_line.mp3" id="4_6evas"]
 
 [sub_resource type="Curve" id="Curve_kxfby"]
 _data = [Vector2(0, 0.483146), 0.0, 0.0, 0, 0, Vector2(0.430851, 0.550562), 0.0, 0.0, 0, 0, Vector2(1, 0.292135), 0.0, 0.0, 0, 0]
@@ -11,6 +13,8 @@ point_count = 3
 [node name="FishingPole" type="Node2D"]
 script = ExtResource("1_k1n8e")
 _sound_floater_hits_water = ExtResource("2_kxfby")
+_sound_caught_fish = ExtResource("3_vcciy")
+_sound_tension_on_the_line = ExtResource("4_6evas")
 
 [node name="PoleLine" type="Line2D" parent="."]
 points = PackedVector2Array(0, 0, 16, -20)
