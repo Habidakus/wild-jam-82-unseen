@@ -112,17 +112,9 @@ _text = "Sensei's Peaceful Pond"
 position = Vector2(544, 608)
 _text = "Horseshoe Lake"
 
-[node name="HorseshoeLakeTeleporter" parent="StateMachine/SenseiHub" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
-position = Vector2(576, 671)
-destination_map = NodePath("../../AdvancedFishing")
-
 [node name="ThreePondsSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
 position = Vector2(584, 40)
 _text = "The Three Ponds"
-
-[node name="ThreePondsTeleportater" parent="StateMachine/SenseiHub" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
-position = Vector2(607, -28)
-destination_map = NodePath("../../BeginnerFishing")
 
 [node name="ArtCreditPilar" parent="StateMachine/SenseiHub" instance=ExtResource("13_k8rbf")]
 position = Vector2(472, 368)
@@ -138,6 +130,20 @@ _text = "Sprites and Art from:
 [node name="Sensei" parent="StateMachine/SenseiHub" instance=ExtResource("14_8p807")]
 position = Vector2(538, 284)
 scale = Vector2(3, 3)
+
+[node name="HorseshoeLakeTeleporter" parent="StateMachine/SenseiHub/Sensei" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
+position = Vector2(12.6667, 129)
+scale = Vector2(0.333333, 0.333333)
+destination_map = NodePath("../../../AdvancedFishing")
+tier = 2
+blocks = true
+
+[node name="ThreePondsTeleporter" parent="StateMachine/SenseiHub/Sensei" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
+position = Vector2(23, -104)
+scale = Vector2(0.333333, 0.333333)
+destination_map = NodePath("../../../BeginnerFishing")
+tier = 1
+blocks = true
 
 [node name="Darkness" type="CanvasModulate" parent="StateMachine/SenseiHub"]
 visible = false

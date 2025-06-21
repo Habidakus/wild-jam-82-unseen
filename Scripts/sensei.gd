@@ -36,6 +36,13 @@ func generate_label(text : String) -> Control:
 	margin_container.add_child(label)
 	return margin_container
 
+func remove_tier_block(tier : int) -> void:
+	for child in get_children():
+		if child is TeleportationArea:
+			var ta : TeleportationArea = child as TeleportationArea
+			if ta.get_tier() == tier:
+				ta.unblock()
+
 func send_intro_dialog() -> void:
 	var labels : Array[Control] = []
 	labels.append(generate_label("You have come to me to master ninja fishing."))
@@ -55,6 +62,7 @@ func push_three_ponds_dialog() -> void:
 	labels.append(generate_label("Practice the way of the SPACE BAR\nto be extra stealthy."))
 	_scroll_layer.display_series(labels, _map_runner._player)
 	_stage = ProgressionStage.PreHorseshoe
+	remove_tier_block(1)
 
 func push_horseshoe_dialog() -> void:
 	var labels : Array[Control] = []
@@ -63,6 +71,7 @@ func push_horseshoe_dialog() -> void:
 	labels.append(generate_label("Bring me five dank fish unruined by smoke and you will have mastered ninja fishing."))
 	_scroll_layer.display_series(labels, _map_runner._player)
 	_stage = ProgressionStage.PreGraduated
+	remove_tier_block(2)
 
 func push_graduation_dialog() -> void:
 	var labels : Array[Control] = []
@@ -161,7 +170,6 @@ func _on_static_body_2d_input_event(_viewport: Node, event: InputEvent, _shape_i
 		
 	if _stage == ProgressionStage.PreIntroduction:
 		send_intro_dialog()
-		return
 	
 	if evaluate_report_card():
 		return
