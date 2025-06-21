@@ -7,6 +7,7 @@ var _forward : bool = true
 var _falling : bool = true
 var _leave_tween : Tween = null
 var _can_leave : bool = false
+var _show_click_to_advance : bool = false
 
 func _ready() -> void:
 	pass
@@ -33,6 +34,9 @@ func _process(delta: float) -> void:
 	_light_circle.position.x -= delta * SPEED
 	if _light_circle.position.x + TEXTURE_OFFSET < _game_label.position.x:
 		_forward = true
+		if _show_click_to_advance == false:
+			_show_click_to_advance = true
+			%ScrollLayer.display_with_callback("The journey of a thousand miles\nbegins with a mouse click.", null, Callable(self, "_advance"))
 
 func _input(event : InputEvent) -> void:
 	_handle_event(event)
@@ -52,18 +56,14 @@ func _handle_event(event : InputEvent) -> void:
 		
 	if _leave_tween == null:
 		if event.is_released():
-			var next_state : String = "SenseiHub"
 			if event is InputEventKey:
-				var keycode : Key = (event as InputEventKey).keycode
-				match keycode:
-					Key.KEY_1:
-						next_state = "BeginnerFishing"
-					Key.KEY_2:
-						next_state = "AdvancedFishing"
-				our_state_machine.switch_state(next_state)
-			if event is InputEventMouseButton:
-				our_state_machine.switch_state(next_state)
+				_advance()
+			elif event is InputEventMouseButton:
+				_advance()
 
+func _advance() -> void:
+	our_state_machine.switch_state("SenseiHub")
+	
 func exit_state(next_state: StateMachineState) -> void:
 	if _leave_tween != null && _leave_tween.is_running():
 		return
