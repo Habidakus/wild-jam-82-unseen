@@ -91,9 +91,17 @@ func push_graduation_dialog() -> void:
 	_scroll_layer.display_series(labels, _map_runner._player)
 	_stage = ProgressionStage.Graduated
 
-func push_need_x_fish_dialog(required_no : int) -> void:
+func push_need_x_fish_dialog() -> void:
 	var labels : Array[Control] = []
-	labels.append(generate_label("You will need to bring me %s fish at once." % required_no))
+	match _stage:
+		ProgressionStage.PreThreePonds:
+			labels.append(generate_label("You will need to bring me\ntwo fish in a single attempt."))
+		ProgressionStage.PreHorseshoe:
+			labels.append(generate_label("You will need to bring me five fish all\ncollected from the Three Ponds in one attempt."))
+		ProgressionStage.PreGraduated:
+			labels.append(generate_label("You will need to bring me five fish all\ncollected from the Horseshoe Lake in one attempt."))
+		_:
+			labels.append(generate_label("Some times you puzzle me, young ninja."))
 	_scroll_layer.display_series(labels, _map_runner._player)
 
 func push_smokebomb_dialog(has_any_fish : bool) -> void:
@@ -141,17 +149,17 @@ func evaluate_report_card() -> bool:
 				if unlock > 0:
 					push_three_ponds_dialog()
 				else:
-					push_need_x_fish_dialog(2)
+					push_need_x_fish_dialog()
 			elif _stage == ProgressionStage.PreHorseshoe:
 				if unlock > 1:
 					push_horseshoe_dialog()
 				else:
-					push_need_x_fish_dialog(5)
+					push_need_x_fish_dialog()
 			elif _stage == ProgressionStage.PreGraduated:
 				if unlock > 2:
 					push_graduation_dialog()
 				else:
-					push_need_x_fish_dialog(5)
+					push_need_x_fish_dialog()
 			report_card.clear()
 			return true
 	return false
