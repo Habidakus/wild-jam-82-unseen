@@ -166,27 +166,6 @@ func retract_with_fish(fish_type : Fish) -> void:
 	$Floater/Sprite2D.region_rect = fish_type.texture_region
 	_bobbing_image_height = fish_type.texture_region.size.y
 	_map_runner.get_report_card().add_fish(fish_type)
-	#var label : Label = Label.new()
-	#label.text = "Caught %s" % [fish_type.player_facing_name]
-	#label.label_settings = LabelSettings.new()
-	#label.label_settings.font_color = Color(0,0,0);
-	#var margin_container: MarginContainer = MarginContainer.new()
-	#margin_container.add_theme_constant_override("margin_left", 10)
-	#margin_container.add_theme_constant_override("margin_right", 10)
-	#var container : HBoxContainer = HBoxContainer.new()
-	#var atlas : AtlasTexture = AtlasTexture.new()
-	#atlas.atlas = fish_type.texture_image
-	#atlas.region = fish_type.texture_region
-	#var image : TextureRect = TextureRect.new()
-	#image.texture = atlas
-	#image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
-	#image.custom_minimum_size = fish_type.texture_region.size
-	#image.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	#container.add_child(image)
-	#container.add_child(label)
-	#margin_container.add_child(container)
-	#margin_container.reset_size()
-	#_map_runner.get_scroll_layer().display(margin_container)
 	retract(false)
 
 func on_fish_escaped() -> void:

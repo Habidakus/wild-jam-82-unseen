@@ -11,6 +11,87 @@ var _times_seen : int = 0
 
 func have_smoke_bombed() -> bool:
 	return _smoke_bomb_escape
+
+func get_image_from_fish_type(fish_type : Fish) -> TextureRect:
+	var atlas : AtlasTexture = AtlasTexture.new()
+	atlas.atlas = fish_type.texture_image
+	atlas.region = fish_type.texture_region
+	var image : TextureRect = TextureRect.new()
+	image.texture = atlas
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	image.custom_minimum_size = fish_type.texture_region.size
+	image.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	return image
+
+func get_ounce_string(ounces : int, eighths: int) -> String:
+	if eighths == 0:
+		return "%s" % ounces
+	elif eighths == 4:
+		return "%s 1/2 " % ounces
+	elif eighths == 2:
+		return "%s 1/4 " % ounces
+	elif eighths == 6:
+		return "%s 3/4 " % ounces
+	else:
+		return "%s %s/8" % [ounces, eighths]
+	
+func get_fish_weight_label(fish_type : Fish, score : float) -> Label:
+	var pounds : float = (fish_type.max_weight_in_pounds - fish_type.min_weight_in_pounds) * score + fish_type.min_weight_in_pounds
+	var total : int = int(round(pounds * 8.0 * 16.0))
+	var eighths : int = total % 8
+	total = round((total - eighths) / 8.0)
+	var ounces : int = total % 16
+	total = round((total - ounces) / 16.0)
+	var ipounds : int = total
+	var text : String = ""
+	if ipounds > 1:
+		text = "%s pounds" % ipounds
+	elif ipounds == 1:
+		text = "1 pound"
+	if ounces > 0 or eighths > 0:
+		if text.length() > 0:
+			text += ", %s oz" % get_ounce_string(ounces, eighths)
+		else:
+			text = "%s ounces" % get_ounce_string(ounces, eighths)
+	if text.length() == 0:
+		text = "1/16 ounce"
+	return get_text_as_label(text)
+
+func get_text_as_label(text : String) -> Label:
+	var name_label : Label = Label.new()
+	name_label.label_settings = LabelSettings.new()
+	name_label.label_settings.font_color = Color(0,0,0)
+	name_label.label_settings.font_size = 20
+	name_label.text = text
+	return name_label
+
+func get_as_container() -> Container:
+	var grid_container : GridContainer = GridContainer.new()
+	grid_container.columns = 4
+	for tuple in _fish:
+		var fish_type: Fish = tuple[0]
+		var score : float = tuple[1]
+		grid_container.add_child(get_image_from_fish_type(fish_type))
+		grid_container.add_child(get_text_as_label(fish_type.player_facing_name))
+		grid_container.add_child(get_text_as_label(" - "))
+		grid_container.add_child(get_fish_weight_label(fish_type, score))
+	
+	var margin_container: MarginContainer = MarginContainer.new()
+	margin_container.add_theme_constant_override("margin_left", 10)
+	margin_container.add_theme_constant_override("margin_right", 10)
+	margin_container.add_theme_constant_override("margin_bottom", 10)
+	margin_container.add_theme_constant_override("margin_top", 10)
+	margin_container.add_child(grid_container)
+	return margin_container
+
+func clear() -> void:
+	_fish.clear()
+	_failures.clear()
+	_total_time = 0
+	_finished = false
+	_smoke_bomb_escape = false
+	_times_heard = 0
+	_times_seen = 0
 	
 func have_caught_your_limit() -> bool:
 	return _fish.size() >= 5

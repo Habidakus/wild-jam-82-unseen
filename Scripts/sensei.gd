@@ -46,6 +46,11 @@ func trigger_dialog() -> void:
 
 func evaluate_report_card() -> bool:
 	var report_card : ReportCard = _map_runner.get_report_card()
+	if report_card != null:
+		report_card._finished = true
+		_scroll_layer.display_series([generate_label("Lets see how you did:"), report_card.get_as_container()], _map_runner._player)
+		report_card.clear()
+		return true
 	return false
 
 func _process(delta: float) -> void:
