@@ -34,9 +34,17 @@ func get_ounce_string(ounces : int, eighths: int) -> String:
 		return "%s 3/4 " % ounces
 	else:
 		return "%s %s/8" % [ounces, eighths]
+
+func get_total_weight(fish_type : Fish, score : float) -> float:
+	return (fish_type.max_weight_in_pounds - fish_type.min_weight_in_pounds) * score + fish_type.min_weight_in_pounds
 	
 func get_fish_weight_label(fish_type : Fish, score : float) -> Label:
-	var pounds : float = (fish_type.max_weight_in_pounds - fish_type.min_weight_in_pounds) * score + fish_type.min_weight_in_pounds
+	var pounds : float = get_total_weight(fish_type, score)
+	return get_weight_as_label(pounds)
+
+func get_weight_as_label(pounds : float) -> Label:
+	if pounds == 0:
+		return get_text_as_label("zero")
 	var total : int = int(round(pounds * 8.0 * 16.0))
 	var eighths : int = total % 8
 	total = round((total - eighths) / 8.0)
@@ -65,6 +73,17 @@ func get_text_as_label(text : String) -> Label:
 	name_label.text = text
 	return name_label
 
+func has_progress() -> bool:
+	if _smoke_bomb_escape:
+		return true
+	if _fish.size() > 0:
+		return true
+	if _failures.size() > 0:
+		return true
+	if _times_heard + _times_seen > 0:
+		return true
+	return false
+
 func get_as_container() -> Container:
 	var grid_container : GridContainer = GridContainer.new()
 	grid_container.columns = 4
@@ -74,14 +93,52 @@ func get_as_container() -> Container:
 		grid_container.add_child(get_image_from_fish_type(fish_type))
 		grid_container.add_child(get_text_as_label(fish_type.player_facing_name))
 		grid_container.add_child(get_text_as_label(" - "))
-		grid_container.add_child(get_fish_weight_label(fish_type, score))
+		if _smoke_bomb_escape:
+			grid_container.add_child(get_text_as_label("spoiled"))
+		else:
+			grid_container.add_child(get_fish_weight_label(fish_type, score))
+	
+	var fish_weight : float = 0
+	var vbox : VBoxContainer = VBoxContainer.new()
+	vbox.add_child(get_text_as_label("Evaluation:"))
+	if grid_container.get_child_count() > 0:
+		vbox.add_child(grid_container)
+		if _smoke_bomb_escape == false:
+			for entry in _fish:
+				fish_weight += get_total_weight(entry[0], entry[1])
+	else:
+		grid_container.queue_free()
+	
+	var score_grid : GridContainer = GridContainer.new()
+	score_grid.columns = 2
+	score_grid.add_child(get_text_as_label("Total Catch:"))
+	score_grid.add_child(get_weight_as_label(fish_weight))
+	score_grid.add_child(get_text_as_label("Stealth:"))
+	if _times_heard == 0 && _times_seen == 0:
+		if fish_weight == 0:
+			score_grid.add_child(get_text_as_label("Untested"))
+		else:
+			score_grid.add_child(get_text_as_label("Perfect"))
+	elif _times_seen == 0:
+		if _times_heard == 1:
+			score_grid.add_child(get_text_as_label("Heard just once"))
+		else:
+			score_grid.add_child(get_text_as_label("Heard"))
+	elif _times_seen < 100:
+		score_grid.add_child(get_text_as_label("Glimsed"))
+	elif _times_seen > 750:
+		score_grid.add_child(get_text_as_label("Appalling"))
+	else:
+		score_grid.add_child(get_text_as_label("Seen"))
+	
+	vbox.add_child(score_grid)
 	
 	var margin_container: MarginContainer = MarginContainer.new()
 	margin_container.add_theme_constant_override("margin_left", 10)
 	margin_container.add_theme_constant_override("margin_right", 10)
 	margin_container.add_theme_constant_override("margin_bottom", 10)
 	margin_container.add_theme_constant_override("margin_top", 10)
-	margin_container.add_child(grid_container)
+	margin_container.add_child(vbox)
 	return margin_container
 
 func clear() -> void:
