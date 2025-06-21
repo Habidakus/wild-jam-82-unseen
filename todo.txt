@@ -1,14 +1,9 @@
 Things I think we need before we can call it beta:
-- D - sensei (sprite, code, dialog & dialog progression logic)
+- A - sensei (code)
 - A - report cards from sensei (categories: summary of fish caught, stealthy grade, hint for any challenges encountered but failed)
-- D - report cards from sensei - this will need art for the text to appear on
 - A - hook up a settings page
-- D - at least two more mini-games
 - A - player should stop fishing and bark to return to the sensei when they have five fishes
 - A - Farthest Oni from you should start tracking you when you complete a fishing game successfully
-- D - credit screen (something we can click on in game) - will need in map art, background for text art
-- D - unlocking fishing areas (report cards unlock progressively harder maps)
-- D - add weights to all the various fish types
 - A - hook up fences that vanish once a player is allowed into a particular map
 
 Stretch goals:
