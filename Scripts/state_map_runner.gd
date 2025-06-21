@@ -5,6 +5,7 @@ class_name MapRunner extends StateMachineState
 @export var _player_spawn_spot : Vector2i = Vector2i(7,7)
 @export var _music_track : AudioStream
 @export var _number_of_fish : int = 5
+@export var _map_tier : int = 0
 
 #var _navigation_region : NavigationRegion2D
 
@@ -26,6 +27,9 @@ var ground : Dictionary[Vector2i, int]
 	
 func _on_music_finished() -> void:
 	%MusicPlayer.play()
+
+func get_tier() -> int:
+	return _map_tier
 	
 func get_report_card() -> ReportCard:
 	var node : Node = self

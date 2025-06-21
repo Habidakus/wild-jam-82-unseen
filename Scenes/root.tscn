@@ -152,6 +152,7 @@ _fish = Array[ExtResource("6_r3lo5")]([ExtResource("11_dw4fd"), ExtResource("12_
 _enemy = Array[PackedScene]([ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog")])
 _music_track = ExtResource("12_imcog")
 _number_of_fish = 6
+_map_tier = 1
 metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="three_ponds" parent="StateMachine/BeginnerFishing" instance=ExtResource("11_fu36u")]
@@ -182,6 +183,7 @@ script = ExtResource("5_4g5cr")
 _fish = Array[ExtResource("6_r3lo5")]([ExtResource("19_k8rbf"), ExtResource("20_8p807"), ExtResource("11_20eh2"), ExtResource("22_vdqvo"), ExtResource("23_c7unf")])
 _enemy = Array[PackedScene]([ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog")])
 _music_track = ExtResource("24_64fwa")
+_map_tier = 2
 metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="horseshow_lake" parent="StateMachine/AdvancedFishing" instance=ExtResource("12_lwnbm")]

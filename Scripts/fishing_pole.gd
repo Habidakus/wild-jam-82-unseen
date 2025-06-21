@@ -165,7 +165,7 @@ func retract_with_fish(fish_type : Fish) -> void:
 	$Floater/Sprite2D.region_enabled = true
 	$Floater/Sprite2D.region_rect = fish_type.texture_region
 	_bobbing_image_height = fish_type.texture_region.size.y
-	_map_runner.get_report_card().add_fish(fish_type)
+	_map_runner.get_report_card().add_fish(fish_type, _map_runner.get_tier())
 	retract(false)
 
 func on_fish_escaped() -> void:

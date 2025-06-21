@@ -12,6 +12,20 @@ var _times_seen : int = 0
 func have_smoke_bombed() -> bool:
 	return _smoke_bomb_escape
 
+func what_tier_does_report_unlock() -> int:
+	if _smoke_bomb_escape:
+		return 0
+	if _fish.size() < 2:
+		return 0
+	if _fish.size() < 5:
+		return 1
+	var lowest_tier_caught : int = 100
+	for tuple in _fish:
+		var tier : int = tuple[2]
+		if tier < lowest_tier_caught:
+			lowest_tier_caught = tier
+	return lowest_tier_caught + 1
+
 func get_image_from_fish_type(fish_type : Fish) -> TextureRect:
 	var atlas : AtlasTexture = AtlasTexture.new()
 	atlas.atlas = fish_type.texture_image
@@ -183,6 +197,5 @@ func _generate_fish_score() -> float:
 			ret_val = v
 	return ret_val
 
-func add_fish(fish_type : Fish) -> void:
-	print("Player caught a %s" % fish_type.player_facing_name)
-	_fish.append([fish_type, _generate_fish_score()])
+func add_fish(fish_type : Fish, tier : int) -> void:
+	_fish.append([fish_type, _generate_fish_score(), tier])

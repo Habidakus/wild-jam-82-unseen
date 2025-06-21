@@ -28,7 +28,11 @@ func display_line(text : String, player : Player) -> void:
 func display_series(items: Array[Control], player : Player) -> void:
 	for c :Control in items:
 		_queue.append([c, player])
-	remove()
+	
+	if _queue.size() > 0:
+		if not is_active():
+			display(_queue[0][0], _queue[0][1])
+			_queue = _queue.slice(1)
 
 func display(item : Control, player : Player) -> void:
 	if _scroll_object != null:
