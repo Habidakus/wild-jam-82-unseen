@@ -106,14 +106,19 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 
 [node name="SenseiPondSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
 position = Vector2(695, 278)
+scale = Vector2(1.5, 1.5)
 _text = "Sensei's Peaceful Pond"
 
 [node name="HorseshoeLakeSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
-position = Vector2(544, 608)
+position = Vector2(537, 603)
+rotation = 0.53058
+scale = Vector2(1.5, 1.5)
 _text = "Horseshoe Lake"
 
 [node name="ThreePondsSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
-position = Vector2(584, 40)
+position = Vector2(566, 52)
+rotation = -0.825541
+scale = Vector2(1.5, 1.5)
 _text = "The Three Ponds"
 
 [node name="ArtCreditPilar" parent="StateMachine/SenseiHub" instance=ExtResource("13_k8rbf")]
@@ -164,8 +169,11 @@ metadata/_custom_type_script = "uid://dvltouirjdge4"
 [node name="three_ponds" parent="StateMachine/BeginnerFishing" instance=ExtResource("11_fu36u")]
 
 [node name="Sign" parent="StateMachine/BeginnerFishing" instance=ExtResource("26_642p6")]
-position = Vector2(32, 640)
+position = Vector2(68, 637)
+rotation = -0.589921
+scale = Vector2(1.5, 1.5)
 _text = "Sensei's Peaceful Pond"
+_flip_h = true
 
 [node name="TeleportationArea" parent="StateMachine/BeginnerFishing" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
 position = Vector2(-28, 674)
@@ -199,8 +207,11 @@ position = Vector2(-31, 578)
 destination_map = NodePath("../../SenseiHub")
 
 [node name="Sign" parent="StateMachine/AdvancedFishing" instance=ExtResource("26_642p6")]
-position = Vector2(24, 552)
+position = Vector2(74, 542)
+rotation = -0.413643
+scale = Vector2(1.5, 1.5)
 _text = "Sensei's Peaceful Pond"
+_flip_h = true
 
 [node name="Darkness" type="CanvasModulate" parent="StateMachine/AdvancedFishing"]
 visible = false

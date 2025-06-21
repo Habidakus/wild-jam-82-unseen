@@ -3,6 +3,7 @@ class_name NoteObject extends Node2D
 var _scroll_layer : ScrollLayer
 var _map_runner : MapRunner
 @export_multiline var _text : String
+@export var _flip_h : bool = false
 
 func _ready() -> void:
 	var node = self
@@ -13,6 +14,9 @@ func _ready() -> void:
 		return
 	_map_runner = node as MapRunner
 	_scroll_layer = _map_runner.get_scroll_layer()
+	if _flip_h == true:
+		var sprite : Sprite2D = find_child("Sprite2D") as Sprite2D
+		sprite.flip_h = true
 
 func _generate_container() -> Container:
 	var margin_container: MarginContainer = MarginContainer.new()

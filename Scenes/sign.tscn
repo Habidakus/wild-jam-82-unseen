@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bpr53r0ky47oq" path="res://Art/MagicMarket/Background/Tilesets/TilesetProps.png" id="2_m6mpx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hqvqy"]
-size = Vector2(24, 28)
+size = Vector2(32, 28)
 
 [node name="Sign" type="Node2D"]
 script = ExtResource("1_m6mpx")
@@ -13,7 +13,7 @@ script = ExtResource("1_m6mpx")
 scale = Vector2(2, 2)
 texture = ExtResource("2_m6mpx")
 region_enabled = true
-region_rect = Rect2(66, 177, 12, 14)
+region_rect = Rect2(34, 177, 13, 14)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 input_pickable = true
