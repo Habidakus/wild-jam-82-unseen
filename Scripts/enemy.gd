@@ -16,7 +16,10 @@ class_name Enemy extends Node2D
 @export var max_dist_see_player : int = 6
 ## Occassionally the Oni will stop and listen, and if the player is moving fast, they will hear them within this range
 @export var max_dist_hear_moving_fast : int = 12
+## Minimum seconds between growls when the Oni is tracking the player
+@export var _time_between_growls : float = 7.5
 
+var _growl_cooldown : float = 0
 var _next_frame_countdown : float = 0
 var _sprite : Sprite2D
 var _map_runner : MapRunner
@@ -55,7 +58,9 @@ func _get_target_cell() -> Vector2i:
 	return _map_runner.get_enemy_spawn_spot(false)
 
 func emit_growl() -> void:
-	$AudioStreamPlayer2D.play()
+	if _growl_cooldown < 0:
+		$AudioStreamPlayer2D.play()
+		_growl_cooldown = _time_between_growls
 
 func _stop_footprint() -> void:
 	_footprint_texture.hide()
@@ -63,6 +68,8 @@ func _stop_footprint() -> void:
 	footprint_player.stop()
 
 func _process(delta: float) -> void:
+	_growl_cooldown -= delta
+	
 	if _footprint == null:
 		if _radar != null:
 			_footprint = _footprint_scene.instantiate()
@@ -105,6 +112,7 @@ func _process(delta: float) -> void:
 	var our_cell : Vector2i = _map_runner.get_map().local_to_map(position)
 	var player_dist : int = abs(player_cell.x - our_cell.x) + abs(player_cell.y - our_cell.y)
 	if player_dist <= max_dist_see_player:
+		emit_growl()
 		_movement_path = _map_runner.generate_move_path(our_cell, player_cell)
 		_map_runner.get_report_card().add_seen()
 	elif _movement_path == null || _movement_path.size() == 0:
