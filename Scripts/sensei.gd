@@ -194,3 +194,9 @@ func _on_static_body_2d_input_event(_viewport: Node, event: InputEvent, _shape_i
 	
 	if evaluate_report_card():
 		return
+
+func _on_static_body_2d_mouse_entered() -> void:
+	Input.set_default_cursor_shape(Input.CURSOR_HELP)
+
+func _on_static_body_2d_mouse_exited() -> void:
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)

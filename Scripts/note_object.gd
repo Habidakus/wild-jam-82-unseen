@@ -47,3 +47,9 @@ func _on_area_2d_input_event(_viewport: Node, event: InputEvent, _shape_idx: int
 		return
 	
 	_scroll_layer.display(_generate_container(), _map_runner._player)
+
+func _on_static_body_2d_mouse_entered() -> void:
+	Input.set_default_cursor_shape(Input.CURSOR_HELP)
+
+func _on_static_body_2d_mouse_exited() -> void:
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)

@@ -40,3 +40,10 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 			return
 	 
 	_our_state_machine = (node as StateMachineState).our_state_machine
+
+func _on_static_body_2d_mouse_entered() -> void:
+	if blocks:
+		Input.set_default_cursor_shape(Input.CURSOR_FORBIDDEN)
+
+func _on_static_body_2d_mouse_exited() -> void:
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
