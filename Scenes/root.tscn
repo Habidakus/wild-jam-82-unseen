@@ -94,10 +94,12 @@ blend_mode = 2
 texture = ExtResource("3_c3mwy")
 
 [node name="SenseiHub" type="Control" parent="StateMachine"]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
 _fish = Array[ExtResource("6_r3lo5")]([ExtResource("7_qtxxq"), ExtResource("8_qtxxq")])
+_player_spawn_spot = Vector2i(3, 9)
 _music_track = ExtResource("9_qtxxq")
 _number_of_fish = 1
 metadata/_custom_type_script = "uid://dvltouirjdge4"
@@ -132,6 +134,11 @@ _text = "Sprites and Art from:
 - https://govfx.itch.io/realistic-smoke-fx-free-pack-v2
 "
 
+[node name="ThisWayToSenseiSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
+position = Vector2(127, 259)
+scale = Vector2(1.5, 1.5)
+_text = "This way to Sensei"
+
 [node name="Sensei" parent="StateMachine/SenseiHub" instance=ExtResource("14_8p807")]
 position = Vector2(538, 284)
 scale = Vector2(3, 3)
@@ -161,6 +168,7 @@ anchors_preset = 0
 script = ExtResource("5_4g5cr")
 _fish = Array[ExtResource("6_r3lo5")]([ExtResource("11_dw4fd"), ExtResource("12_642p6"), ExtResource("7_hv1ua"), ExtResource("14_18fmr"), ExtResource("15_lb85r")])
 _enemy = Array[PackedScene]([ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog")])
+_player_spawn_spot = Vector2i(3, 21)
 _music_track = ExtResource("12_imcog")
 _number_of_fish = 6
 _map_tier = 1
@@ -190,12 +198,12 @@ visible = false
 color = Color(0, 0, 0, 1)
 
 [node name="AdvancedFishing" type="Control" parent="StateMachine"]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
 _fish = Array[ExtResource("6_r3lo5")]([ExtResource("19_k8rbf"), ExtResource("20_8p807"), ExtResource("11_20eh2"), ExtResource("22_vdqvo"), ExtResource("23_c7unf")])
 _enemy = Array[PackedScene]([ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog")])
+_player_spawn_spot = Vector2i(3, 18)
 _music_track = ExtResource("24_64fwa")
 _map_tier = 2
 metadata/_custom_type_script = "uid://dvltouirjdge4"
