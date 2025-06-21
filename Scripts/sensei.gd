@@ -47,9 +47,19 @@ func send_intro_dialog() -> void:
 	var labels : Array[Control] = []
 	labels.append(generate_label("You have come to me to master ninja fishing."))
 	labels.append(generate_label("I am California Sensei, and I am hella good at ninja fishing."))
-	labels.append(generate_label("Attend me, my dude."))
-	labels.append(generate_label("Walk to my pond just to the east."))
-	labels.append(generate_label("Return when you have caught two fish."))
+	
+	var report_card : ReportCard = _map_runner.get_report_card()
+	var direct_player_to_pond : bool = true
+	var tell_players_to_fish : bool = true
+	if report_card != null:
+		if report_card.has_progress():
+			direct_player_to_pond = false
+		if report_card.what_tier_does_report_unlock() == 1:
+			tell_players_to_fish = false
+	if direct_player_to_pond:
+			labels.append(generate_label("Attend me, my dude.\nWalk to my pond just to the East."))
+	if tell_players_to_fish:
+		labels.append(generate_label("Return when you have caught two fish."))
 	_scroll_layer.display_series(labels, _map_runner._player)
 	_stage = ProgressionStage.PreThreePonds
 
@@ -106,6 +116,7 @@ func push_smokebomb_dialog(has_any_fish : bool) -> void:
 				labels.append(generate_label("We need gnarly fish unruined by smoke."))
 		if has_any_fish:
 			labels.append(generate_label("These fish are ruined, my dude.\nTry Again!"))
+		_scroll_layer.display_series(labels, _map_runner._player)
 	else:
 		labels.append(generate_label("Your skills will always let you evade the Oni."))
 		labels.append(generate_label("You slip away like a tech CEO evading taxes."))
