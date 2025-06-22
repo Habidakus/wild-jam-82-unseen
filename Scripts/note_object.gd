@@ -48,8 +48,17 @@ func _on_area_2d_input_event(_viewport: Node, event: InputEvent, _shape_idx: int
 	
 	_scroll_layer.display(_generate_container(), _map_runner._player)
 
+var _glow_tween : Tween
+func _run_glow_tween(color : Color) -> void:
+	if _glow_tween != null && _glow_tween.is_running():
+		_glow_tween.kill()
+	_glow_tween = create_tween()
+	_glow_tween.tween_property(self, "modulate", color, 0.25)
+
 func _on_static_body_2d_mouse_entered() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_HELP)
+	_run_glow_tween(Color(1.5, 1.5, 1.0))
 
 func _on_static_body_2d_mouse_exited() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	_run_glow_tween(Color(1.0, 1.0, 1.0))

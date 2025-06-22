@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://djv0mow8t4q7x"]
+[gd_scene load_steps=33 format=3 uid="uid://djv0mow8t4q7x"]
 
 [ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
 [ext_resource type="Script" uid="uid://dmic6pk3bjt2s" path="res://Scripts/state_intro.gd" id="2_vnucn"]
@@ -33,6 +33,10 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_8pvmw"]
 font_size = 160
+
+[sub_resource type="Environment" id="Environment_8p807"]
+background_mode = 3
+glow_enabled = true
 
 [node name="Root" type="Node2D"]
 
@@ -247,3 +251,6 @@ unique_name_in_owner = true
 [node name="ScrollLayer" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
 script = ExtResource("28_lb85r")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8p807")

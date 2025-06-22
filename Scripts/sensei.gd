@@ -59,7 +59,7 @@ func send_intro_dialog() -> void:
 	if direct_player_to_pond:
 			labels.append(generate_label("Walk to my pond just to the East."))
 	if tell_players_to_fish:
-		labels.append(generate_label("Return when you have caught two fish."))
+		labels.append(generate_label("Return when you have caught two fish\nfrom where bubbles appear on the surface."))
 	_scroll_layer.display_series(labels, _map_runner._player)
 	_stage = ProgressionStage.PreThreePonds
 
@@ -195,8 +195,17 @@ func _on_static_body_2d_input_event(_viewport: Node, event: InputEvent, _shape_i
 	if evaluate_report_card():
 		return
 
+var _glow_tween : Tween
+func _run_glow_tween(color : Color) -> void:
+	if _glow_tween != null && _glow_tween.is_running():
+		_glow_tween.kill()
+	_glow_tween = create_tween()
+	_glow_tween.tween_property(self, "modulate", color, 0.25)
+
 func _on_static_body_2d_mouse_entered() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_HELP)
+	_run_glow_tween(Color(1.3, 1.3, 1.3))
 
 func _on_static_body_2d_mouse_exited() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	_run_glow_tween(Color(1.0, 1.0, 1.0))
