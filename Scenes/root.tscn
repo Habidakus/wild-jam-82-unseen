@@ -128,14 +128,15 @@ _text = "The Three Ponds"
 
 [node name="ArtCreditPilar" parent="StateMachine/SenseiHub" instance=ExtResource("13_k8rbf")]
 position = Vector2(472, 368)
-_text = "Sprites and Art from:
+_text = "Sprites and Tile Art from:
 
-- https://danieldiggle.itch.io/sunnyside
-- https://shubibubi.itch.io/cozy-fishing
-- https://cyberrumor.itch.io/16-bit-assassin
-- https://kenmi-art.itch.io/cute-fantasy-rpg
-- https://govfx.itch.io/realistic-smoke-fx-free-pack-v2
-"
+- https://cyberrumor.itch.io
+- https://deepdivegamestudio.itch.io
+- https://gfragger.itch.io
+- https://danieldiggle.itch.io
+- https://kenmi-art.itch.io
+- https://shubibubi.itch.io
+- https://govfx.itch.io"
 
 [node name="ThisWayToSenseiSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
 position = Vector2(127, 259)
