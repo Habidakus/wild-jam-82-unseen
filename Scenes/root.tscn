@@ -194,7 +194,11 @@ destination_map = NodePath("../../SenseiHub")
 position = Vector2(600, 768)
 _text = "Thanks to our playtesters:
 
--John Hegner"
+-Mister Zeus
+-Steven (Stick) Olguin
+-Andy Collins
+-Ziro Cool
+-Oxdottir"
 
 [node name="Darkness" type="CanvasModulate" parent="StateMachine/BeginnerFishing"]
 visible = false
