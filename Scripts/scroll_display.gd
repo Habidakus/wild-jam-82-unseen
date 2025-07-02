@@ -1,8 +1,7 @@
-class_name ScrollDisplay extends Node2D
+class_name ScrollDisplay extends ScrollDisplayBase
 
 var _scroll_layer : ScrollLayer
 var _click_cooldown : float = 0.1;
-var _callback : Callable
 var _regular_vertical_size : float = -1
 var _hover_vertical_size : float
 var _label : Control
@@ -42,7 +41,11 @@ func _process(delta: float) -> void:
         return
 
     if Input.is_action_just_released("click"):
-        _scroll_layer.remove()
+        if _must_be_clicked:
+            if _hover:
+                _scroll_layer.remove()
+        else:
+            _scroll_layer.remove()
 
 func do_callback() -> void:
     if _callback.is_valid():
@@ -52,9 +55,14 @@ func _ready() -> void:
     _label = $MarginContainer/ContentsContainer
     assert(_label != null)
 
-func init(scroll_layer : ScrollLayer, callback : Callable) -> void:
+func init(scroll_layer : ScrollLayer, item : Control, callback : Callable) -> void:
     _scroll_layer = scroll_layer
     _callback = callback
+    var contents_container : Container = find_child("ContentsContainer")
+    for child in contents_container.get_children():
+        contents_container.remove_child(child)
+    contents_container.add_child(item)
+    contents_container.reset_size()
 
 func _on_margin_container_mouse_entered() -> void:
     if _must_be_clicked:

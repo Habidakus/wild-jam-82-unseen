@@ -19,6 +19,7 @@ var _spawned_fish : Dictionary[Vector2i, Node2D] = {}
 var _spawned_enemy : Array[Enemy] = []
 var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
 var _last_mini_game_spot : Vector2i = Vector2i.MAX / 2
+var _use_oni : bool = true
 
 var shallows : Array[Vector2i]
 var medium : Array[Vector2i]
@@ -53,6 +54,9 @@ func exit_state(next_state: StateMachineState) -> void:
         %MusicPlayer.finished.disconnect(_on_music_finished)
     
     _player.queue_free()
+    
+    if next_state is MapRunner:
+        (next_state as MapRunner)._use_oni = _use_oni
     
     for fish : Node2D in _spawned_fish.values():
         fish.queue_free()
@@ -140,6 +144,8 @@ func get_vector_from_player_to_local(local : Vector2) -> Vector2:
 
 func _spawn_enemies() -> void:
     _spawned_enemy.clear()
+    if _use_oni == false:
+        return
     for enemy_scene in _enemy:
         var enemy = enemy_scene.instantiate() as Enemy
         enemy.set_map_runner(self, %Radar)
