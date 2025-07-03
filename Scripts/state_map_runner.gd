@@ -301,6 +301,22 @@ func _process(_delta: float) -> void:
         expire_tween.tween_interval(_rnd.randf_range(fish_type.min_duration_in_seconds, fish_type.max_duration_in_seconds))
         expire_tween.tween_callback(Callable.create(self, "_expire_spawn_spot_if_not_being_played").bind(spawn_spot))
 
+func summon_oni_to_player() -> void:
+    if _spawned_enemy.is_empty():
+        return
+    
+    var farthest_dist : int = -1
+    var best_enemy_to_move : Enemy = null
+    var player_cell : Vector2i = _map.local_to_map(_player.position)
+    for enemy : Enemy in _spawned_enemy:
+        var enemy_cell : Vector2i = _map.local_to_map(enemy.position)
+        var dist : int = generate_move_path(enemy_cell, player_cell).size()
+        if dist > farthest_dist:
+            best_enemy_to_move = enemy
+            farthest_dist = dist
+    if best_enemy_to_move != null:
+        best_enemy_to_move.set_new_target(player_cell)
+
 func mark_mini_game_removed(mini_game : MiniGame) -> void:
     var mini_game_cell : Vector2i = _map.local_to_map(mini_game.position)
     _spawned_fish.erase(mini_game_cell)

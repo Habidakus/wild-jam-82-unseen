@@ -39,6 +39,7 @@ func register_pole(pole : FishingPole) -> bool:
     if not close_enough(distance):
         return false
     
+    _handle_summon_oni(Fish.SummonsOni.OnStart)
     _pole = pole
     _nibble_wait = _rnd.randf_range(min_nibble_seconds, max_nibble_seconds)
     _fish_dash_normal = Vector2(_rnd.randf_range(-1, 1), _rnd.randf_range(-1, 1)).normalized()
@@ -51,12 +52,15 @@ func on_click() -> void:
     if _nibble_wait > 0:
         _map_runner.mark_mini_game_removed(self)
         _pole.retract(true)
+        _handle_summon_oni(Fish.SummonsOni.OnFailure)
         return
 
     var circle_fraction : float = _circle_span - _circle_remaining_time
     if circle_fraction >= min_player_accuracy:
         _pole.retract_with_fish(_fish_type)
+        _handle_summon_oni(Fish.SummonsOni.OnSuccess)
     else:
+        _handle_summon_oni(Fish.SummonsOni.OnFailure)
         _pole.retract(true)
     
 func _process(delta: float) -> void:
@@ -68,6 +72,7 @@ func _process(delta: float) -> void:
         if _circle_remaining_time <= 0:
             _map_runner.mark_mini_game_removed(self)
             _pole.on_fish_escaped()
+            _handle_summon_oni(Fish.SummonsOni.OnFailure)
         else:
             var circle_fraction : float = (_circle_span - _circle_remaining_time) / _circle_span
             _ring_material.set_shader_parameter("fraction", circle_fraction)

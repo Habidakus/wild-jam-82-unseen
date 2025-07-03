@@ -67,6 +67,11 @@ func _stop_footprint() -> void:
     var footprint_player : AudioStreamPlayer2D = (_footprint.find_child("AudioStreamPlayer2D") as AudioStreamPlayer2D)
     footprint_player.stop()
 
+func set_new_target(target_cell : Vector2i) -> void:
+    emit_growl()
+    var our_cell : Vector2i = _map_runner.get_map().local_to_map(position)
+    _movement_path = _map_runner.generate_move_path(our_cell, target_cell)
+
 func _process(delta: float) -> void:
     _growl_cooldown -= delta
     

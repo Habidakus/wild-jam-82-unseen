@@ -13,6 +13,9 @@ enum DistanceFromShore { Shallows, Medium, Far, Anywhere }
 enum RequirementToSpawn { None, Stealth }
 @export var requirement_to_spawn : RequirementToSpawn = RequirementToSpawn.None
 
+enum SummonsOni { Never, OnSuccess, OnFailure, OnSuccessOrFailure, OnStart }
+@export var summons_oni : SummonsOni = SummonsOni.Never
+
 @export_range(5.0,120.0) var min_duration_in_seconds : float = 25
 @export_range(10.0,240.0) var max_duration_in_seconds : float = 45
 

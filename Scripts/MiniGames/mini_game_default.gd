@@ -31,6 +31,7 @@ func register_pole(pole : FishingPole) -> bool:
     if not close_enough(distance):
         return false
     
+    _handle_summon_oni(Fish.SummonsOni.OnStart)
     _pole = pole
     _nibble_wait = _rnd.randf_range(min_nibble_seconds, max_nibble_seconds)
     if distance > medium_distance:
@@ -42,13 +43,16 @@ func on_click() -> void:
     if _nibble_wait > 0:
         _map_runner.mark_mini_game_removed(self)
         _pole.retract(true)
+        _handle_summon_oni(Fish.SummonsOni.OnFailure)
         return
     
     if _failure_countdown < 0:
         print("How is mini-game getting a click after it's failure countdown has expired?")
         _pole.retract(true)
+        _handle_summon_oni(Fish.SummonsOni.OnFailure)
     else:
         _pole.retract_with_fish(_fish_type)
+        _handle_summon_oni(Fish.SummonsOni.OnSuccess)
         
     _map_runner.mark_mini_game_removed(self)
     
@@ -58,6 +62,7 @@ func _process(delta: float) -> void:
         if _failure_countdown < 0:
             _map_runner.mark_mini_game_removed(self)
             _pole.on_fish_escaped()
+            _handle_summon_oni(Fish.SummonsOni.OnFailure)
             return
             
     if _nibble_wait < 0:
@@ -70,4 +75,3 @@ func _process(delta: float) -> void:
     if _pole != null:
         _pole.go_tight()
         _failure_countdown = failure_time
-    

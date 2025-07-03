@@ -33,6 +33,7 @@ func register_pole(pole : FishingPole) -> bool:
     if not close_enough(distance):
         return false
     
+    _handle_summon_oni(Fish.SummonsOni.OnStart)
     _pole = pole
     _nibble_wait = _rnd.randf_range(min_nibble_seconds, max_nibble_seconds)
     _fish_dash_normal = Vector2(_rnd.randf_range(-1, 1), _rnd.randf_range(-1, 1)).normalized()
@@ -45,11 +46,13 @@ func on_click() -> void:
     if _nibble_wait > 0:
         _map_runner.mark_mini_game_removed(self)
         _pole.retract(true)
+        _handle_summon_oni(Fish.SummonsOni.OnFailure)
         return
     
     if _failure_countdown < 0:
         print("How is mini-game getting a click after it's failure countdown has expired?")
         _pole.retract(true)
+        _handle_summon_oni(Fish.SummonsOni.OnFailure)
         return
 
     var mouse_click_pos : Vector2 = _map_runner.get_map().get_local_mouse_position()
@@ -58,8 +61,10 @@ func on_click() -> void:
     var caught_fish : bool = click_dot > min_player_accuracy
     if caught_fish:
         _pole.retract_with_fish(_fish_type)
+        _handle_summon_oni(Fish.SummonsOni.OnSuccess)
     else:
         _pole.retract(true)
+        _handle_summon_oni(Fish.SummonsOni.OnFailure)
 
 func get_fish_offset() -> Vector2:
     return _fish_dash_normal * (failure_time - _failure_countdown) * fish_speed
@@ -73,6 +78,7 @@ func _process(delta: float) -> void:
         if _failure_countdown < 0:
             _map_runner.mark_mini_game_removed(self)
             _pole.on_fish_escaped()
+            _handle_summon_oni(Fish.SummonsOni.OnFailure)
         else:
             _pole.update_floater_offset(get_fish_offset())
         return
