@@ -71,16 +71,16 @@ func _process_input():
     
     # Get input (example using Input Map)
     if Input.is_action_pressed("move_right"):
-        velocity.x = speed
+        velocity.x = Input.get_action_strength("move_right") * speed
     elif Input.is_action_pressed("move_left"):
-        velocity.x = -speed
+        velocity.x = 0 - Input.get_action_strength("move_left") * speed
     else:
         velocity.x = 0
 
     if Input.is_action_pressed("move_down"):
-        velocity.y = speed
+        velocity.y = Input.get_action_strength("move_down") * speed
     elif Input.is_action_pressed("move_up"):
-        velocity.y = -speed
+        velocity.y = 0 - Input.get_action_strength("move_up") * speed
     else:
         velocity.y = 0
     
