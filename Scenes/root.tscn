@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://djv0mow8t4q7x"]
+[gd_scene load_steps=40 format=3 uid="uid://djv0mow8t4q7x"]
 
 [ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
 [ext_resource type="Script" uid="uid://dmic6pk3bjt2s" path="res://Scripts/state_intro.gd" id="2_vnucn"]
@@ -8,7 +8,11 @@
 [ext_resource type="Script" uid="uid://dvdud1wowap44" path="res://Scripts/fish.gd" id="6_r3lo5"]
 [ext_resource type="Resource" uid="uid://dybu0pvl86njo" path="res://Data/Fish/celestial_minnow.tres" id="7_c7unf"]
 [ext_resource type="Resource" uid="uid://bx40i6jks7g37" path="res://Data/Fish/sea_spider.tres" id="7_hv1ua"]
+[ext_resource type="Resource" uid="uid://chlgcysxe1xy" path="res://Data/Fish/minnow.tres" id="7_qtxxq"]
+[ext_resource type="Resource" uid="uid://xhaa5gadhj1f" path="res://Data/Fish/starfish.tres" id="7_vdqvo"]
 [ext_resource type="Resource" uid="uid://dgxi8c1hkpvfc" path="res://Data/Fish/celestial_snail.tres" id="8_64fwa"]
+[ext_resource type="Resource" uid="uid://ctb1n7uk5u2v" path="res://Data/Fish/snail.tres" id="8_qtxxq"]
+[ext_resource type="Resource" uid="uid://dpf1u2k5lh8p2" path="res://Data/Fish/junonia.tres" id="8_vdqvo"]
 [ext_resource type="PackedScene" uid="uid://lv2uevjg6ya2" path="res://Scenes/Enemies/pit_balor.tscn" id="9_imcog"]
 [ext_resource type="AudioStream" uid="uid://5oavg5indflt" path="res://Sounds/2021-01-14_-_A_Geishas_Lament_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="9_qtxxq"]
 [ext_resource type="PackedScene" uid="uid://ck5e66wko1l40" path="res://Maps/sensei_map.tscn" id="10_8fnbn"]
@@ -29,6 +33,7 @@
 [ext_resource type="AudioStream" uid="uid://rg2c28p5omto" path="res://Sounds/2021-01-14_-_Modern_Samurai_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="24_64fwa"]
 [ext_resource type="PackedScene" uid="uid://bupptcogatnsi" path="res://Scenes/sign.tscn" id="26_642p6"]
 [ext_resource type="PackedScene" uid="uid://ujhe778ee4d0" path="res://Scenes/teleportation_area.tscn" id="27_18fmr"]
+[ext_resource type="Resource" uid="uid://dw685b701x51e" path="res://Data/Fish/celestial_shark.tres" id="27_rx7ou"]
 [ext_resource type="Script" uid="uid://dp6xbjnlivkmq" path="res://Scripts/scroll_layer.gd" id="28_lb85r"]
 [ext_resource type="AudioStream" uid="uid://daic1vaikce6m" path="res://Sounds/2021-03-17_-_Peaceful_Koi_Pond_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="30_c7unf"]
 [ext_resource type="PackedScene" uid="uid://d2k1qhokp5r06" path="res://Maps/penninsula_ponds.tscn" id="30_vdqvo"]
@@ -103,7 +108,7 @@ texture = ExtResource("3_c3mwy")
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
-_fish = Array[ExtResource("6_r3lo5")]([ExtResource("7_c7unf"), ExtResource("8_64fwa")])
+_fish = Array[ExtResource("6_r3lo5")]([ExtResource("7_qtxxq"), ExtResource("12_642p6")])
 _player_spawn_spot = Vector2i(3, 9)
 _music_track = ExtResource("9_qtxxq")
 _number_of_fish = 1
@@ -185,7 +190,7 @@ visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
-_fish = Array[ExtResource("6_r3lo5")]([ExtResource("11_dw4fd"), ExtResource("12_642p6"), ExtResource("7_hv1ua"), ExtResource("14_18fmr"), ExtResource("15_lb85r")])
+_fish = Array[ExtResource("6_r3lo5")]([ExtResource("11_dw4fd"), ExtResource("20_8p807"), ExtResource("19_k8rbf"), ExtResource("7_c7unf"), ExtResource("7_hv1ua")])
 _enemy = Array[PackedScene]([ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog")])
 _player_spawn_spot = Vector2i(3, 21)
 _music_track = ExtResource("12_imcog")
@@ -226,7 +231,7 @@ visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
-_fish = Array[ExtResource("6_r3lo5")]([ExtResource("19_k8rbf"), ExtResource("20_8p807"), ExtResource("11_20eh2"), ExtResource("22_vdqvo"), ExtResource("23_c7unf")])
+_fish = Array[ExtResource("6_r3lo5")]([ExtResource("8_qtxxq"), ExtResource("8_vdqvo"), ExtResource("14_18fmr"), ExtResource("11_20eh2"), ExtResource("27_rx7ou")])
 _enemy = Array[PackedScene]([ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog")])
 _player_spawn_spot = Vector2i(3, 18)
 _music_track = ExtResource("24_64fwa")
@@ -266,7 +271,7 @@ visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("5_4g5cr")
-_fish = Array[ExtResource("6_r3lo5")]([ExtResource("19_k8rbf"), ExtResource("20_8p807"), ExtResource("11_20eh2"), ExtResource("22_vdqvo"), ExtResource("23_c7unf")])
+_fish = Array[ExtResource("6_r3lo5")]([ExtResource("22_vdqvo"), ExtResource("23_c7unf"), ExtResource("8_64fwa"), ExtResource("7_vdqvo"), ExtResource("15_lb85r")])
 _enemy = Array[PackedScene]([ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog")])
 _player_spawn_spot = Vector2i(37, 3)
 _music_track = ExtResource("30_c7unf")

@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://dy8cji7l7sk64"]
+
+[ext_resource type="Script" uid="uid://bn5brik5i8sn0" path="res://Scripts/MiniGames/mini_game_orbits.gd" id="1_tugdd"]
+[ext_resource type="Shader" uid="uid://d06nmffroodtk" path="res://Art/Shaders/planet_alignment.gdshader" id="2_51aem"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bfjsw"]
+shader = ExtResource("2_51aem")
+shader_parameter/time = 0.0
+shader_parameter/alignment = 0.0
+shader_parameter/ring1_speed = -1.0
+shader_parameter/ring2_speed = 2.0
+shader_parameter/ring3_speed = 3.0
+shader_parameter/ring4_speed = -5.0
+shader_parameter/ring5_speed = 7.0
+
+[sub_resource type="Gradient" id="Gradient_baa3a"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_k7gxe"]
+gradient = SubResource("Gradient_baa3a")
+
+[node name="MiniGameOribt" type="Node2D"]
+script = ExtResource("1_tugdd")
+max_cycle_span = 5.5
+min_nibble_seconds = 3.0
+max_nibble_seconds = 12.0
+max_orbit_speed = 30.0
+min_player_accuracy = 0.175
+
+[node name="TextureRect" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_bfjsw")
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 48.0
+offset_bottom = 48.0
+scale = Vector2(0.5, 0.5)
+texture = SubResource("GradientTexture2D_k7gxe")
