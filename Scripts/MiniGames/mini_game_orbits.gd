@@ -9,6 +9,8 @@ class_name MiniGame_Orbits extends MiniGame
 @export var min_nibble_seconds : float = 2
 ## maximum time the player will have to wait before the nibbles start
 @export var max_nibble_seconds : float = 10
+## what the maximum orbit speed is of each bubble ring
+@export var max_orbit_speed : float = 15.0
 ## how close to alignment the player needs to be (on either side of alignment)
 @export_range(0, 1) var min_player_accuracy : float = 0.25
 
@@ -26,10 +28,10 @@ var _ring2_speed : float = -1
 var _ring3_speed : float = -1
 var _ring4_speed : float = -1
 var _ring5_speed : float = -1
-const SLOWNESS : float = 100.0
+const SLOWNESS : float = 10.0
 
 func get_hint(fish_name : String) -> String:
-    return "The %s is celestrial - observe its\norbital nature and await alignment." % fish_name
+    return "The %s is celestial - observe its\norbital nature and await alignment." % fish_name
     
 func _ready() -> void:
     #$TextureRect.hide()
@@ -37,27 +39,21 @@ func _ready() -> void:
     _total_nibble_time = _rnd.randf_range(min_nibble_seconds, max_nibble_seconds)
     _total_alignment_time = _rnd.randf_range(min_cycle_span, max_cycle_span)
     _current_orbit_time = _total_nibble_time + _total_alignment_time
-    _pole_down_time = _current_orbit_time + _total_nibble_time
-
+    _pole_down_time = _current_orbit_time + _total_nibble_time / SLOWNESS
     
-    #_ring1_speed = _rnd.randf_range(-1.0, 1.0)
-    #_ring2_speed = _rnd.randf_range(-2.0, 2.0) * 1.5;
-    #_ring3_speed = _rnd.randf_range(-3.0, 3.0) * 2.0;
-    #_ring4_speed = _rnd.randf_range(-4.0, 4.0) * 2.5;
-    #_ring5_speed = _rnd.randf_range(-5.0, 5.0) * 3.0;
+    _ring1_speed = _rnd.randf_range(-1.0, 1.0) * max_orbit_speed;
+    _ring2_speed = _rnd.randf_range(-1.0, 1.0) * max_orbit_speed;
+    _ring3_speed = _rnd.randf_range(-1.0, 1.0) * max_orbit_speed;
+    _ring4_speed = _rnd.randf_range(-1.0, 1.0) * max_orbit_speed;
+    _ring5_speed = _rnd.randf_range(-1.0, 1.0) * max_orbit_speed;
     
-    _ring1_speed = _rnd.randf_range(-15.0, 15.0);
-    _ring2_speed = _rnd.randf_range(-15.0, 15.0);
-    _ring3_speed = _rnd.randf_range(-15.0, 15.0);
-    _ring4_speed = _rnd.randf_range(-15.0, 15.0);
-    _ring5_speed = _rnd.randf_range(-15.0, 15.0);
     _ring_material.set_shader_parameter("time", _pole_down_time)
     _ring_material.set_shader_parameter("alignment", _rnd.randf_range(0.0, 2.0 * PI))
-    _ring_material.set_shader_parameter("ring1_speed", _ring1_speed / SLOWNESS)
-    _ring_material.set_shader_parameter("ring2_speed", _ring2_speed / SLOWNESS)
-    _ring_material.set_shader_parameter("ring3_speed", _ring3_speed / SLOWNESS)
-    _ring_material.set_shader_parameter("ring4_speed", _ring4_speed / SLOWNESS)
-    _ring_material.set_shader_parameter("ring5_speed", _ring5_speed / SLOWNESS)
+    _ring_material.set_shader_parameter("ring1_speed", _ring1_speed)
+    _ring_material.set_shader_parameter("ring2_speed", _ring2_speed)
+    _ring_material.set_shader_parameter("ring3_speed", _ring3_speed)
+    _ring_material.set_shader_parameter("ring4_speed", _ring4_speed)
+    _ring_material.set_shader_parameter("ring5_speed", _ring5_speed)
 
 func is_being_played() -> bool:
     return _pole != null
@@ -70,7 +66,6 @@ func register_pole(pole : FishingPole) -> bool:
     if not close_enough(distance):
         return false
     
-    print("pole down: ring1=" + str(_ring1_speed / SLOWNESS))
     _handle_summon_oni(Fish.SummonsOni.OnStart)
     _pole = pole
     _nibble_wait = _total_nibble_time
@@ -110,39 +105,18 @@ func _process(delta: float) -> void:
     if _nibble_wait < 0:
         _current_orbit_time -= delta
         _ring_material.set_shader_parameter("time", _current_orbit_time)
-        if _pole != null:
-            print("setting nibble expired time: " + str(_current_orbit_time))
         return
         
     _nibble_wait -= delta
     if _nibble_wait > 0:
-        var lrp : float = _nibble_wait / _total_nibble_time
+        var lrp : float = 1.0 - _nibble_wait / _total_nibble_time
+        lrp = lrp * lrp
         
-        var tm : float = lerpf(_current_orbit_time, _pole_down_time, lrp)
+        var tm : float = lerpf(_pole_down_time, _current_orbit_time, lrp)
         _ring_material.set_shader_parameter("time", tm)
-        
-        var r1 : float = lerpf(_ring1_speed, _ring1_speed / SLOWNESS, lrp)
-        if _pole != null:
-            print("setting nibble wait time: " + str(tm) + " (lerp=" + str(lrp) + ") ring1=" + str(r1))
-        _ring_material.set_shader_parameter("ring1_speed", r1)
-        var r2 : float = lerpf(_ring2_speed, _ring2_speed / SLOWNESS, lrp)
-        _ring_material.set_shader_parameter("ring2_speed", r2)
-        var r3 : float = lerpf(_ring3_speed, _ring3_speed / SLOWNESS, lrp)
-        _ring_material.set_shader_parameter("ring3_speed", r3)
-        var r4 : float = lerpf(_ring4_speed, _ring4_speed / SLOWNESS, lrp)
-        _ring_material.set_shader_parameter("ring4_speed", r4)
-        var r5 : float = lerpf(_ring5_speed, _ring5_speed / SLOWNESS, lrp)
-        _ring_material.set_shader_parameter("ring5_speed", r5)
         return
 
-    if _pole != null:
-        print("setting nibble expired time: " + str(_current_orbit_time) + ") ring1=" + str(_ring1_speed))
     _ring_material.set_shader_parameter("time", _current_orbit_time)
-    _ring_material.set_shader_parameter("ring1_speed", _ring1_speed)
-    _ring_material.set_shader_parameter("ring2_speed", _ring2_speed)
-    _ring_material.set_shader_parameter("ring3_speed", _ring3_speed)
-    _ring_material.set_shader_parameter("ring4_speed", _ring4_speed)
-    _ring_material.set_shader_parameter("ring5_speed", _ring5_speed)
     
     if _pole != null:
         _pole.go_tight()

@@ -171,6 +171,7 @@ func retract_with_fish(fish_type : Fish) -> void:
     $Floater/Sprite2D.texture = fish_type.texture_image
     $Floater/Sprite2D.region_enabled = true
     $Floater/Sprite2D.region_rect = fish_type.texture_region
+    $Floater/Sprite2D.flip_h = fish_type.texture_flipped
     $AudioStreamPlayer2D.stream = _sound_caught_fish
     $AudioStreamPlayer2D.play()
     _bobbing_image_height = fish_type.texture_region.size.y

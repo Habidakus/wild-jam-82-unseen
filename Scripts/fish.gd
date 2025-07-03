@@ -4,6 +4,7 @@ class_name Fish extends Resource
 @export var player_facing_name : String
 @export var texture_image : Texture
 @export var texture_region : Rect2
+@export var texture_flipped : bool = false
 
 @export var mini_game : PackedScene = preload("res://Scenes/MiniGames/mini_game_default_easy.tscn")
 

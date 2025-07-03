@@ -35,6 +35,7 @@ func get_image_from_fish_type(fish_type : Fish) -> TextureRect:
     image.texture = atlas
     image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
     image.custom_minimum_size = fish_type.texture_region.size
+    image.flip_h = fish_type.texture_flipped
     image.size_flags_vertical = Control.SIZE_SHRINK_CENTER
     return image
 
