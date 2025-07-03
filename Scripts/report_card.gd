@@ -8,6 +8,7 @@ var _finished : bool = false
 var _smoke_bomb_escape : bool = false
 var _times_heard : int = 0
 var _times_seen : int = 0
+var _use_oni : bool = true
 
 func have_smoke_bombed() -> bool:
     return _smoke_bomb_escape
@@ -154,23 +155,24 @@ func _get_as_container() -> Container:
     score_grid.columns = 2
     score_grid.add_child(get_text_as_label("Total Catch:"))
     score_grid.add_child(get_weight_as_label(fish_weight))
-    score_grid.add_child(get_text_as_label("Stealth:"))
-    if _times_heard == 0 && _times_seen == 0:
-        if fish_weight == 0:
-            score_grid.add_child(get_text_as_label("Untested"))
+    if _use_oni:
+        score_grid.add_child(get_text_as_label("Stealth:"))
+        if _times_heard == 0 && _times_seen == 0:
+            if fish_weight == 0:
+                score_grid.add_child(get_text_as_label("Untested"))
+            else:
+                score_grid.add_child(get_text_as_label("Perfect"))
+        elif _times_seen == 0:
+            if _times_heard == 1:
+                score_grid.add_child(get_text_as_label("Heard just once"))
+            else:
+                score_grid.add_child(get_text_as_label("Heard"))
+        elif _times_seen < 100:
+            score_grid.add_child(get_text_as_label("Glimsed"))
+        elif _times_seen > 750:
+            score_grid.add_child(get_text_as_label("Appalling"))
         else:
-            score_grid.add_child(get_text_as_label("Perfect"))
-    elif _times_seen == 0:
-        if _times_heard == 1:
-            score_grid.add_child(get_text_as_label("Heard just once"))
-        else:
-            score_grid.add_child(get_text_as_label("Heard"))
-    elif _times_seen < 100:
-        score_grid.add_child(get_text_as_label("Glimsed"))
-    elif _times_seen > 750:
-        score_grid.add_child(get_text_as_label("Appalling"))
-    else:
-        score_grid.add_child(get_text_as_label("Seen"))
+            score_grid.add_child(get_text_as_label("Seen"))
     
     score_grid.add_child(get_text_as_label("Stance:"))
     if _failures.size() == 0:
@@ -202,10 +204,11 @@ func clear() -> void:
 func have_caught_your_limit() -> bool:
     return _fish.size() >= 5
 
-func start(rnd_seed : int) -> void:
+func start(rnd_seed : int, use_oni : bool) -> void:
     _rnd = RandomNumberGenerator.new()
     _rnd.seed = rnd_seed
     _total_time = 0
+    _use_oni = use_oni
     
 func _process(delta: float) -> void:
     if not _finished:

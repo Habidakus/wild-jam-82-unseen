@@ -39,13 +39,13 @@ func get_report_card() -> ReportCard:
         if node == null:
             print("Why don't we have a report card storage area?")
             var tmp_card : ReportCard = ReportCard.new()
-            tmp_card.start(_rnd.randi())
+            tmp_card.start(_rnd.randi(), _use_oni)
             return tmp_card
     for child in node.get_children():
         if child is ReportCard:
             return child as ReportCard
     var report_card : ReportCard = ReportCard.new()
-    report_card.start(_rnd.randi())
+    report_card.start(_rnd.randi(), _use_oni)
     node.add_child(report_card)
     return report_card
 

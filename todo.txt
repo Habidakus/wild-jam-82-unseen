@@ -1,5 +1,5 @@
 
-Stretch goals:
+Post game-jam goals:
 - Farthest Oni from you should start tracking you when you complete a fishing game successfully
 - times_seen in the report card should be seconds_seen
 - We should tell the players that they've officially won the game
@@ -8,4 +8,3 @@ Stretch goals:
 - when mouse clicking on land, it's a thrown rock to distract Oni
 - add Options screen
 - Add controller support (but, how do we target fishes? I'm not certain a controller yoke can aim cursor)
-- 

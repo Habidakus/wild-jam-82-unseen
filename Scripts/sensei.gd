@@ -87,9 +87,11 @@ func push_horseshoe_dialog() -> void:
 func push_graduation_dialog() -> void:
     var labels : Array[Control] = []
     labels.append(generate_label("You have mastered ninja fishing."))
-    labels.append(generate_label("You are legit."))
+    labels.append(generate_label("All ponds are now open to you."))
+    labels.append(generate_label("For you are legit."))
     labels.append(generate_label("... and also rad."))
     _scroll_layer.display_series(labels, _map_runner._player)
+    remove_tier_block(3)
     _stage = ProgressionStage.Graduated
 
 func push_need_x_fish_dialog() -> void:

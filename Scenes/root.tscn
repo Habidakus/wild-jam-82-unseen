@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://djv0mow8t4q7x"]
+[gd_scene load_steps=35 format=3 uid="uid://djv0mow8t4q7x"]
 
 [ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
 [ext_resource type="Script" uid="uid://dmic6pk3bjt2s" path="res://Scripts/state_intro.gd" id="2_vnucn"]
@@ -30,6 +30,8 @@
 [ext_resource type="PackedScene" uid="uid://bupptcogatnsi" path="res://Scenes/sign.tscn" id="26_642p6"]
 [ext_resource type="PackedScene" uid="uid://ujhe778ee4d0" path="res://Scenes/teleportation_area.tscn" id="27_18fmr"]
 [ext_resource type="Script" uid="uid://dp6xbjnlivkmq" path="res://Scripts/scroll_layer.gd" id="28_lb85r"]
+[ext_resource type="AudioStream" uid="uid://daic1vaikce6m" path="res://Sounds/2021-03-17_-_Peaceful_Koi_Pond_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="30_c7unf"]
+[ext_resource type="PackedScene" uid="uid://d2k1qhokp5r06" path="res://Maps/penninsula_ponds.tscn" id="30_vdqvo"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8pvmw"]
 font_size = 160
@@ -143,6 +145,12 @@ position = Vector2(127, 259)
 scale = Vector2(1.5, 1.5)
 _text = "This way to Sensei"
 
+[node name="PenninsulaPondsSign" parent="StateMachine/SenseiHub" instance=ExtResource("26_642p6")]
+position = Vector2(80, 786)
+scale = Vector2(1.5, 1.5)
+_text = "Penninsula Ponds
+      (DANGER)"
+
 [node name="Sensei" parent="StateMachine/SenseiHub" instance=ExtResource("14_8p807")]
 position = Vector2(538, 284)
 scale = Vector2(3, 3)
@@ -159,6 +167,13 @@ position = Vector2(23, -104)
 scale = Vector2(0.333333, 0.333333)
 destination_map = NodePath("../../../BeginnerFishing")
 tier = 1
+blocks = true
+
+[node name="PenninsulaPondsTeleporter" parent="StateMachine/SenseiHub/Sensei" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
+position = Vector2(-125.667, 162.333)
+scale = Vector2(0.333333, 0.333333)
+destination_map = NodePath("../../../GraduateFishing")
+tier = 3
 blocks = true
 
 [node name="Darkness" type="CanvasModulate" parent="StateMachine/SenseiHub"]
@@ -245,6 +260,36 @@ Various in game SFX from https://zapsplat.com
 position = Vector2(216, 656)
 _text = "Fonts from https://www.fontspace.com/gang-of-three-font-f46138
 "
+
+[node name="GraduateFishing" type="Control" parent="StateMachine"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("5_4g5cr")
+_fish = Array[ExtResource("6_r3lo5")]([ExtResource("19_k8rbf"), ExtResource("20_8p807"), ExtResource("11_20eh2"), ExtResource("22_vdqvo"), ExtResource("23_c7unf")])
+_enemy = Array[PackedScene]([ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog"), ExtResource("9_imcog")])
+_player_spawn_spot = Vector2i(37, 3)
+_music_track = ExtResource("30_c7unf")
+_number_of_fish = 6
+_map_tier = 3
+metadata/_custom_type_script = "uid://dvltouirjdge4"
+
+[node name="Penninsula" parent="StateMachine/GraduateFishing" instance=ExtResource("30_vdqvo")]
+
+[node name="TeleportationArea" parent="StateMachine/GraduateFishing" node_paths=PackedStringArray("destination_map") instance=ExtResource("27_18fmr")]
+position = Vector2(1216, -59)
+destination_map = NodePath("../../SenseiHub")
+
+[node name="Sign" parent="StateMachine/GraduateFishing" instance=ExtResource("26_642p6")]
+position = Vector2(1165, 55)
+rotation = -0.413643
+scale = Vector2(1.5, 1.5)
+_text = "Sensei's Peaceful Pond"
+_flip_h = true
+
+[node name="Darkness" type="CanvasModulate" parent="StateMachine/GraduateFishing"]
+visible = false
+color = Color(0, 0, 0, 1)
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
