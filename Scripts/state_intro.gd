@@ -88,7 +88,7 @@ func _play_without_oni(_was_clicked_on : bool) -> void:
 
 func _show_credits(_was_clicked_on : bool) -> void:
     if _was_clicked_on:
-        var series : Array[Control] = []
+        var series : Array[Node] = []
         series.append(generate_label("Sprites and Tile Art from:\n\n- https://cyberrumor.itch.io\n- https://deepdivegamestudio.itch.io\n- https://gfragger.itch.io\n- https://danieldiggle.itch.io\n- https://kenmi-art.itch.io\n- https://shubibubi.itch.io\n- https://govfx.itch.io"))
         series.append(generate_label("Map Music was from https://www.FesliyanStudios.com\nVarious in game SFX from https://zapsplat.com"))
         series.append(generate_label("Fonts from https://www.fontspace.com/gang-of-three-font-f46138"))

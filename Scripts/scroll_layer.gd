@@ -29,7 +29,7 @@ func display_with_callback(text : String, player : Player, callback : Callable) 
 func display_line(text : String, player : Player) -> void:
     display_with_callback(text, player, Callable())
 
-func display_series_with_callback(items: Array[Control], player : Player, callable : Callable) -> void:
+func display_series_with_callback(items: Array[Node], player : Player, callable : Callable) -> void:
     for i in range(0, items.size()):
         if i < items.size() - 1:
             _queue.append([items[i], player])
@@ -41,7 +41,7 @@ func display_series_with_callback(items: Array[Control], player : Player, callab
             display(_queue[0][0], _queue[0][1])
             _queue = _queue.slice(1)
 
-func display_series(items: Array[Control], player : Player) -> void:
+func display_series(items: Array[Node], player : Player) -> void:
     for c :Control in items:
         _queue.append([c, player])
     
@@ -50,8 +50,8 @@ func display_series(items: Array[Control], player : Player) -> void:
             display(_queue[0][0], _queue[0][1])
             _queue = _queue.slice(1)
 
-func display(item : Control, player : Player) -> void:
-    _display_internal(item, player, Callable())
+func display(node : Node, player : Player) -> void:
+    _display_internal(node, player, Callable())
 
 func display_choices(array : Array, player : Player) -> void:
     assert(_scroll_object == null)
@@ -68,13 +68,17 @@ func display_choices(array : Array, player : Player) -> void:
     _scroll_object.position = area / 2
     show()
 
-func _display_internal(item : Control, player : Player, callable : Callable) -> void:
+func _display_internal(node : Node, player : Player, callable : Callable) -> void:
     #if _scroll_object != null:
         #_scroll_object.queue_free()
     if _scroll_object == null:
         _player = player
-        _scroll_object = _scroll_scene.instantiate()
-        _scroll_object.init(self, item, callable)
+        if node is ScrollDisplayBase:
+            _scroll_object = node
+            _scroll_object.init(self, null, callable)
+        else:
+            _scroll_object = _scroll_scene.instantiate()
+            _scroll_object.init(self, node, callable)
         add_child(_scroll_object)
         _scroll_object.position = get_viewport().get_visible_rect().size / 2
         show()

@@ -84,6 +84,9 @@ func _process_input():
     else:
         velocity.y = 0
     
+    if _map_runner.get_scroll_layer().is_active():
+        velocity = Vector2.ZERO
+    
     if velocity.x != 0:
         _sprite.frame_coords.y = 2 + _sprite_y_increase_if_running
         _sprite.flip_h = velocity.x >= 0

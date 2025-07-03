@@ -7,10 +7,7 @@ Post game-jam goals:
 - add high score tracker (sensei will first need to ask you your name)
 - when mouse clicking on land, it's a thrown rock to distract Oni
 - add Options screen
-
-Bug:
-
-- don't let the user warp to another map while a scroll is still up on the screen - can cause a crash
+- have sensei mention where the graduate map is
 
 Not going to add:
 

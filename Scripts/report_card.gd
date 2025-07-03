@@ -5,13 +5,26 @@ var _failures : Array[Array] = []
 var _rnd : RandomNumberGenerator
 var _total_time : float = -1
 var _finished : bool = false
+var _player_name : String = ""
 var _smoke_bomb_escape : bool = false
 var _times_heard : int = 0
 var _times_seen : int = 0
 var _use_oni : bool = true
+const SAVE_PATH : String = "user://playername.txt"
 
 func have_smoke_bombed() -> bool:
     return _smoke_bomb_escape
+
+func has_player_name() -> bool:
+    return not _player_name.is_empty()
+
+func set_player_name(text : String) -> void:
+    _player_name = text
+    if has_player_name():
+        var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+        if file != null:
+            file.store_string(_player_name)
+            file.close()
 
 func what_tier_does_report_unlock() -> int:
     if _smoke_bomb_escape:
@@ -100,7 +113,7 @@ func has_progress() -> bool:
         return true
     return false
 
-func get_as_containers() -> Array[Control]:
+func get_as_containers() -> Array[Node]:
     if _failures.size() == 0:
         return [_get_as_container()]
     else:
@@ -210,6 +223,11 @@ func start(rnd_seed : int, use_oni : bool) -> void:
     _rnd.seed = rnd_seed
     _total_time = 0
     _use_oni = use_oni
+    var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
+    if file != null:
+        _player_name = file.get_as_text()
+        file.close()
+        print("Loaded: " + _player_name)
     
 func _process(delta: float) -> void:
     if not _finished:

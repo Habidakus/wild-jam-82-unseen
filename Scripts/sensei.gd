@@ -7,6 +7,7 @@ var _sprite : Sprite2D
 var _player_has_smokebombed : bool = false
 var _map_runner : MapRunner
 var _scroll_layer : ScrollLayer
+var _input_scene : PackedScene = preload("res://Scenes/input_scroll.tscn")
 
 enum ProgressionStage { PreIntroduction, PreThreePonds, PreHorseshoe, PreGraduated, Graduated }
 var _stage : ProgressionStage = ProgressionStage.PreIntroduction
@@ -21,6 +22,25 @@ func _ready() -> void:
         return
     _map_runner = node as MapRunner
     _scroll_layer = _map_runner.get_scroll_layer()
+
+#func generate_text_question(text : String) -> Control:
+    #var label : Label = Label.new()
+    #label.text = text
+    #label.label_settings = LabelSettings.new()
+    #label.label_settings.font_color = Color(0,0,0);
+    #label.label_settings.font_size = 20
+    #var answer_field : TextEdit = TextEdit.new()
+    #answer_field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    #var vbox : VBoxContainer = VBoxContainer.new();
+    #vbox.add_child(label)
+    #vbox.add_child(answer_field)
+    #var margin_container: MarginContainer = MarginContainer.new()
+    #margin_container.add_theme_constant_override("margin_left", 10)
+    #margin_container.add_theme_constant_override("margin_right", 10)
+    #margin_container.add_theme_constant_override("margin_bottom", 10)
+    #margin_container.add_theme_constant_override("margin_top", 10)
+    #margin_container.add_child(vbox)
+    #return margin_container
 
 func generate_label(text : String) -> Control:
     var label : Label = Label.new()
@@ -44,7 +64,7 @@ func remove_tier_block(tier : int) -> void:
                 ta.unblock()
 
 func send_intro_dialog() -> void:
-    var labels : Array[Control] = []
+    var labels : Array[Node] = []
     labels.append(generate_label("Attend me, my dude."))
     labels.append(generate_label("You have come to me to master ninja fishing."))
     labels.append(generate_label("I am California Sensei, and I am hella good at ninja fishing."))
@@ -64,7 +84,7 @@ func send_intro_dialog() -> void:
     _stage = ProgressionStage.PreThreePonds
 
 func push_three_ponds_dialog() -> void:
-    var labels : Array[Control] = []
+    var labels : Array[Node] = []
     labels.append(generate_label("The real journey now begins."))
     labels.append(generate_label("Head north to Three Ponds area."))
     labels.append(generate_label("Catch five fish and return."))
@@ -76,7 +96,7 @@ func push_three_ponds_dialog() -> void:
     remove_tier_block(1)
 
 func push_horseshoe_dialog() -> void:
-    var labels : Array[Control] = []
+    var labels : Array[Node] = []
     labels.append(generate_label("It is now time to cruise south and fish horseshoe lake."))
     labels.append(generate_label("It is hella difficult."))
     labels.append(generate_label("Bring me five dank fish unruined by smoke and you will have mastered ninja fishing."))
@@ -85,7 +105,7 @@ func push_horseshoe_dialog() -> void:
     remove_tier_block(2)
 
 func push_graduation_dialog() -> void:
-    var labels : Array[Control] = []
+    var labels : Array[Node] = []
     labels.append(generate_label("You have mastered ninja fishing."))
     labels.append(generate_label("All ponds are now open to you."))
     labels.append(generate_label("For you are legit."))
@@ -95,7 +115,7 @@ func push_graduation_dialog() -> void:
     _stage = ProgressionStage.Graduated
 
 func push_need_x_fish_dialog() -> void:
-    var labels : Array[Control] = []
+    var labels : Array[Node] = []
     match _stage:
         ProgressionStage.PreThreePonds:
             labels.append(generate_label("You will need to bring me\ntwo fish in a single attempt."))
@@ -107,8 +127,19 @@ func push_need_x_fish_dialog() -> void:
             labels.append(generate_label("Some times you puzzle me, young ninja."))
     _scroll_layer.display_series(labels, _map_runner._player)
 
+func push_query_name() -> void:
+    var input_node : InputScrollDisplay = _input_scene.instantiate()
+    input_node.set_question("What do they call you?")
+    var labels : Array[Node] = [input_node]
+    var callable : Callable = Callable(self, "_register_name")
+    assert(callable.is_valid())
+    _scroll_layer.display_series_with_callback(labels, _map_runner._player, callable)
+
+func _register_name(text : String) -> void:
+    _map_runner.get_report_card().set_player_name(text)
+
 func push_smokebomb_dialog(has_any_fish : bool) -> void:
-    var labels : Array[Control] = []
+    var labels : Array[Node] = []
     if _player_has_smokebombed:
         match _rnd.randi() % 7:
             0:
@@ -142,7 +173,9 @@ func evaluate_report_card() -> bool:
     if report_card != null:
         if report_card.has_progress():
             report_card._finished = true
-            var report_card_comments : Array[Control] = report_card.get_as_containers()
+            if not report_card.has_player_name():
+                push_query_name()
+            var report_card_comments : Array[Node] = report_card.get_as_containers()
             report_card_comments.insert(0, generate_label("Lets see how you did:"))
             _scroll_layer.display_series(report_card_comments, _map_runner._player)
             if report_card._smoke_bomb_escape == true:
