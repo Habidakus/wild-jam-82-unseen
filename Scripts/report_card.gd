@@ -227,7 +227,6 @@ func start(rnd_seed : int, use_oni : bool) -> void:
     if file != null:
         _player_name = file.get_as_text()
         file.close()
-        print("Loaded: " + _player_name)
     
 func _process(delta: float) -> void:
     if not _finished:
