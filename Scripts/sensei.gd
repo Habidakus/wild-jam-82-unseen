@@ -136,7 +136,19 @@ func push_query_name() -> void:
     _scroll_layer.display_series_with_callback(labels, _map_runner._player, callable)
 
 func _register_name(text : String) -> void:
-    _map_runner.get_report_card().set_player_name(text)
+    var report_card : ReportCard = _map_runner.get_report_card()
+    report_card.set_player_name(text)
+    _save_high_score(report_card)
+
+func _save_high_score(report_card : ReportCard) -> void:
+    if not report_card.has_player_name():
+        print("Skipping save of report card")
+        return
+    
+    var metadata : Dictionary = report_card.get_highscore_metadata()
+    var score : float = report_card.get_score()
+    SilentWolf.Scores.save_score(report_card._player_name, score, "main", metadata)
+
 
 func push_smokebomb_dialog(has_any_fish : bool) -> void:
     var labels : Array[Node] = []
@@ -175,6 +187,8 @@ func evaluate_report_card() -> bool:
             report_card._finished = true
             if not report_card.has_player_name():
                 push_query_name()
+            else:
+                _save_high_score(report_card)
             var report_card_comments : Array[Node] = report_card.get_as_containers()
             report_card_comments.insert(0, generate_label("Lets see how you did:"))
             _scroll_layer.display_series(report_card_comments, _map_runner._player)

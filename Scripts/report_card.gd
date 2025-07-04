@@ -8,7 +8,7 @@ var _finished : bool = false
 var _player_name : String = ""
 var _smoke_bomb_escape : bool = false
 var _times_heard : int = 0
-var _times_seen : int = 0
+var _seconds_seen : float = 0
 var _use_oni : bool = true
 const SAVE_PATH : String = "user://playername.txt"
 
@@ -69,11 +69,11 @@ func get_total_weight(fish_type : Fish, score : float) -> float:
     
 func get_fish_weight_label(fish_type : Fish, score : float) -> Label:
     var pounds : float = get_total_weight(fish_type, score)
-    return get_weight_as_label(pounds)
+    return get_text_as_label(get_weight_as_text(pounds))
 
-func get_weight_as_label(pounds : float) -> Label:
+func get_weight_as_text(pounds : float) -> String:
     if pounds == 0:
-        return get_text_as_label("zero")
+        return "zero"
     var total : int = int(round(pounds * 8.0 * 16.0))
     var eighths : int = total % 8
     total = round((total - eighths) / 8.0)
@@ -92,7 +92,7 @@ func get_weight_as_label(pounds : float) -> Label:
             text = "%s ounces" % get_ounce_string(ounces, eighths)
     if text.length() == 0:
         text = "1/16 ounce"
-    return get_text_as_label(text)
+    return text
 
 func get_text_as_label(text : String) -> Label:
     var name_label : Label = Label.new()
@@ -109,7 +109,7 @@ func has_progress() -> bool:
         return true
     if _failures.size() > 0:
         return true
-    if _times_heard + _times_seen > 0:
+    if _times_heard + _seconds_seen > 0:
         return true
     return false
 
@@ -139,6 +139,67 @@ func _hint_as_container() -> Control:
     margin_container.add_theme_constant_override("margin_top", 10)
     margin_container.add_child(hint_label)
     return margin_container
+
+func get_highscore_metadata() -> Dictionary:
+    
+    var fish_weight : float = 0
+    var fish_types : Dictionary = {}
+    for entry in _fish:
+        fish_weight += get_total_weight(entry[0], entry[1])
+        if not fish_types.has(entry[0]):
+            fish_types[entry[0]] = true
+        
+    var metadata : Dictionary = {}
+    metadata["spoiled"] = _smoke_bomb_escape
+    metadata["total_weight"] = fish_weight
+    metadata["oni_guards"] = _use_oni
+    metadata["unique_fish"] = fish_types.size()
+    metadata["missed_fish"] = _failures.size()
+    metadata["witnessed"] = get_time_seen_as_text()
+    return metadata
+
+func get_time_seen_as_text() -> String:
+    if _seconds_seen == 0:
+        return "unseen"
+    if _seconds_seen < 1.0:
+        return "glimsed"
+    if _seconds_seen < 3.0:
+        return "witnessed"
+    if _seconds_seen < 6.0:
+        return "identified"
+    return "studied"
+
+func get_score() -> float:
+    if _smoke_bomb_escape:
+        return 0
+        
+    var fish_weight : float = 0
+    var fish_types : Dictionary = {}
+    for entry in _fish:
+        fish_weight += get_total_weight(entry[0], entry[1])
+        if not fish_types.has(entry[0]):
+            fish_types[entry[0]] = true
+
+    # If the user gets all the same fish, they get a base score
+    # but if they get all different types, they get x2 to their score
+    # all other values between the two extremes scale.
+    var power : float = (fish_types.size() - 1) / 4.0
+    var score : float = fish_weight * pow(1.25, power)
+    
+    # no failures also increases the score
+    power = 4 - _failures.size()
+    if power < 0:
+        power = 0
+    score = score * pow(1.25, power / 4)
+    
+    # if never seen, another bonus
+    if _use_oni:
+        if _seconds_seen == 0:
+            score = score * 1.25
+    else:
+        score = score / 32.0
+
+    return score
     
 func _get_as_container() -> Container:
     var grid_container : GridContainer = GridContainer.new()
@@ -168,25 +229,21 @@ func _get_as_container() -> Container:
     var score_grid : GridContainer = GridContainer.new()
     score_grid.columns = 2
     score_grid.add_child(get_text_as_label("Total Catch:"))
-    score_grid.add_child(get_weight_as_label(fish_weight))
+    score_grid.add_child(get_text_as_label(get_weight_as_text(fish_weight)))
     if _use_oni:
         score_grid.add_child(get_text_as_label("Stealth:"))
-        if _times_heard == 0 && _times_seen == 0:
+        if _times_heard == 0 && _seconds_seen == 0:
             if fish_weight == 0:
                 score_grid.add_child(get_text_as_label("Untested"))
             else:
                 score_grid.add_child(get_text_as_label("Perfect"))
-        elif _times_seen == 0:
+        elif _seconds_seen == 0:
             if _times_heard == 1:
                 score_grid.add_child(get_text_as_label("Heard just once"))
             else:
                 score_grid.add_child(get_text_as_label("Heard"))
-        elif _times_seen < 100:
-            score_grid.add_child(get_text_as_label("Glimsed"))
-        elif _times_seen > 750:
-            score_grid.add_child(get_text_as_label("Appalling"))
         else:
-            score_grid.add_child(get_text_as_label("Seen"))
+            score_grid.add_child(get_text_as_label(get_time_seen_as_text()))
     
     score_grid.add_child(get_text_as_label("Stance:"))
     if _failures.size() == 0:
@@ -213,7 +270,7 @@ func clear() -> void:
     _finished = false
     _smoke_bomb_escape = false
     _times_heard = 0
-    _times_seen = 0
+    _seconds_seen = 0
     
 func have_caught_your_limit() -> bool:
     return _fish.size() >= 5
@@ -235,8 +292,8 @@ func _process(delta: float) -> void:
 func add_heard() -> void:
     _times_heard += 1
 
-func add_seen() -> void:
-    _times_seen += 1
+func add_seen(delta : float) -> void:
+    _seconds_seen += delta
 
 func add_smoke_bomb_escape() -> void:
     _smoke_bomb_escape = true

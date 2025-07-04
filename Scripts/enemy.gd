@@ -53,7 +53,7 @@ func _get_target_cell() -> Vector2i:
     if player_dist < max_dist_hear_moving_fast:
         if player_move_state == Player.MoveState.Moving && player._stealth_state == false:
             emit_growl()
-            _map_runner.get_report_card().add_seen()
+            _map_runner.get_report_card().add_heard()
             return player_cell
     return _map_runner.get_enemy_spawn_spot(false)
 
@@ -119,7 +119,7 @@ func _process(delta: float) -> void:
     if player_dist <= max_dist_see_player:
         emit_growl()
         _movement_path = _map_runner.generate_move_path(our_cell, player_cell)
-        _map_runner.get_report_card().add_seen()
+        _map_runner.get_report_card().add_seen(delta)
     elif _movement_path == null || _movement_path.size() == 0:
         var target_cell = _get_target_cell()
         _movement_path = _map_runner.generate_move_path(our_cell, target_cell)

@@ -11,8 +11,21 @@ var _show_click_to_advance : bool = false
 var _use_oni : bool = true
 
 func _ready() -> void:
-    pass
-
+    var sw_resource : String = "res://Data/SilentWolfId.tres"
+    if ResourceLoader.exists(sw_resource):
+        var swid_data : SilentWolfId = ResourceLoader.load(sw_resource)
+        if !swid_data.api_key.is_empty():
+            SilentWolf.configure({
+                "api_key": swid_data.api_key,
+                "game_id": swid_data.game_id,
+                "log_level": 1
+            })
+            
+            var sw_result: Dictionary = await SilentWolf.Scores.get_scores(10).sw_get_scores_complete
+            if sw_result.has("scores"):
+                for entry in sw_result["scores"]:
+                    print(str(entry["player_name"]) + ": " + str(entry["score"]) + ", " + str(entry["metadata"]))
+                
 func _process(delta: float) -> void:
     const TEXTURE_OFFSET : float = 64 * 2
     var frac : float = (_light_circle.position.x + TEXTURE_OFFSET - _game_label.position.x) / _game_label.size.x
