@@ -9,6 +9,7 @@ var _leave_tween : Tween = null
 var _can_leave : bool = false
 var _show_click_to_advance : bool = false
 var _use_oni : bool = true
+var _high_score_enabled : bool = false
 
 func _ready() -> void:
     var sw_resource : String = "res://Data/SilentWolfId.tres"
@@ -21,10 +22,7 @@ func _ready() -> void:
                 "log_level": 1
             })
             
-            var sw_result: Dictionary = await SilentWolf.Scores.get_scores(10).sw_get_scores_complete
-            if sw_result.has("scores"):
-                for entry in sw_result["scores"]:
-                    print(str(entry["player_name"]) + ": " + str(entry["score"]) + ", " + str(entry["metadata"]))
+            _high_score_enabled = true
                 
 func _process(delta: float) -> void:
     const TEXTURE_OFFSET : float = 64 * 2
@@ -57,6 +55,8 @@ func _show_buttons() -> void:
         choices.append(["Play\nWith Oni", Callable(self, "_play_with_oni")])
         choices.append(["Play\nCasual", Callable(self, "_play_without_oni")])
         choices.append(["Credits", Callable(self, "_show_credits")])
+        if _high_score_enabled:
+            choices.append(["High\nScores", Callable(self, "_show_high_scores")])
         %ScrollLayer.display_choices(choices, null)
         #%ScrollLayer.display_with_callback("The journey of a thousand miles\nbegins with a mouse click.", null, Callable(self, "_advance"))
 
@@ -99,6 +99,39 @@ func _play_without_oni(_was_clicked_on : bool) -> void:
         _use_oni = false
         our_state_machine.switch_state("SenseiHub")
 
+func _show_high_scores(_was_clicked_on : bool) -> void:
+    if not _was_clicked_on:
+        return
+                
+    var series : Array[Node] = []
+    var sw_result: Dictionary = await SilentWolf.Scores.get_scores(500).sw_get_scores_complete
+    if not sw_result.has("scores"):
+        series.append(generate_label("An error has occured fetching the high scores."))
+        %ScrollLayer.display_series_with_callback(series, null, Callable(self, "_on_credits_done"))
+        return
+
+    var local_player_name : String = ReportCard.read_local_player_name()
+    var track_player_with_oni : Dictionary = {}
+    var track_player_casual : Dictionary = {}
+    var scores_with_oni : Array = []
+    var scores_casual : Array = []
+    for entry in sw_result["scores"]:
+        var player_name : String = entry["player_name"]
+        if entry["metadata"]["oni_guards"]:
+            if not track_player_with_oni.has(player_name):
+                track_player_with_oni[player_name] = true
+                scores_with_oni.append([player_name, entry["score"], entry["metadata"]])
+        else:
+            if not track_player_casual.has(player_name):
+                track_player_casual[player_name] = true
+                scores_casual.append([player_name, entry["score"], entry["metadata"]])
+
+    if not scores_with_oni.is_empty():
+        series.append(generate_scoreboard(true, scores_with_oni, local_player_name))
+    if not scores_casual.is_empty():
+        series.append(generate_scoreboard(false, scores_casual, local_player_name))
+    %ScrollLayer.display_series_with_callback(series, null, Callable(self, "_on_credits_done"))
+
 func _show_credits(_was_clicked_on : bool) -> void:
     if _was_clicked_on:
         var series : Array[Node] = []
@@ -107,7 +140,81 @@ func _show_credits(_was_clicked_on : bool) -> void:
         series.append(generate_label("Fonts from https://www.fontspace.com/gang-of-three-font-f46138"))
         series.append(generate_label("Thanks to our playtesters:\n\n-Mister Zeus\n-dredwngs\n-Steven (Stick) Olguin\n-Andy Collins\n-Ziro Cool\n-Oxdottir"))
         %ScrollLayer.display_series_with_callback(series, null, Callable(self, "_on_credits_done"))
+
+func _generate_label(text : String) -> Label:
+    var label : Label = Label.new()
+    label.text = text
+    label.label_settings = LabelSettings.new()
+    label.label_settings.font_color = Color(0,0,0);
+    label.label_settings.font_size = 20
+    return label
+
+func _generate_score_notes(notes : Dictionary) -> String:
+    var ret_val : String = ""
+    var unique_fish = int(round(notes["unique_fish"]))
+    if unique_fish < 2:
+        ret_val = "same fish"
+    else:
+        ret_val = str(unique_fish) + " unique fish"
+    if notes["witnessed"] == "unseen" && notes["oni_guards"]:
+        ret_val += ", unseen"
+    if notes["missed_fish"] == 0:
+        ret_val += ", prefect stance"
+    if notes["spoiled"]:
+        ret_val += ", spoiled"
+    return ret_val
+
+func generate_scoreboard(with_oni : bool, scores: Array, local_player_name : String) -> Control:
+    var vbox : VBoxContainer = VBoxContainer.new()
+    var label : Label
+    if with_oni:
+        label = _generate_label("Against Oni Guards")
+    else:
+        label = _generate_label("Casual Fishing")
+    vbox.add_child(label)
+
+    var bar : HSeparator = HSeparator.new()
+    vbox.add_child(bar)
+
+    var grid : GridContainer = GridContainer.new()    
+    grid.columns = 4
+    
+    grid.add_child(_generate_label("Score"))
+    grid.add_child(_generate_label("Name"))
+    grid.add_child(_generate_label("Weight"))
+    grid.add_child(_generate_label("Notes"))
+            
+    var i : int = 0
+    var seen_local_player : int = 0
+    while i < 10 and not scores.is_empty():
+        var entry : Array = scores[0]
+        scores = scores.slice(1)
         
+        if entry[0] == local_player_name:
+            grid.add_child(_generate_label(str(round(entry[1]))))
+            grid.add_child(_generate_label(local_player_name))
+            var weight : float = entry[2]["total_weight"]
+            grid.add_child(_generate_label(ReportCard.get_weight_as_text(weight)))
+            grid.add_child(_generate_label(_generate_score_notes(entry[2])))
+            seen_local_player = 1
+            i += 1
+        elif i < 9 + seen_local_player:
+            grid.add_child(_generate_label(str(round(entry[1]))))
+            grid.add_child(_generate_label(entry[0]))
+            var weight : float = entry[2]["total_weight"]
+            grid.add_child(_generate_label(ReportCard.get_weight_as_text(weight)))
+            grid.add_child(_generate_label(_generate_score_notes(entry[2])))
+            i += 1
+    vbox.add_child(grid)
+    
+    var margin_container: MarginContainer = MarginContainer.new()
+    margin_container.add_theme_constant_override("margin_left", 10)
+    margin_container.add_theme_constant_override("margin_right", 10)
+    margin_container.add_theme_constant_override("margin_bottom", 10)
+    margin_container.add_theme_constant_override("margin_top", 10)
+    margin_container.add_child(vbox)
+    return margin_container
+
 func generate_label(text : String) -> Control:
     var label : Label = Label.new()
     label.text = text

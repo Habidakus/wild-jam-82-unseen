@@ -3,7 +3,6 @@ Post game-jam goals:
 
 - We should tell the players that they've officially won the game
 - Populate third map with a more challenging Oni
-- add high score tracker
 - when mouse clicking on land, it's a thrown rock to distract Oni
 - add Options screen
 - have sensei mention where the graduate map is

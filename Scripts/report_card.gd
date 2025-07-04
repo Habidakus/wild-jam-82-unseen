@@ -52,7 +52,7 @@ func get_image_from_fish_type(fish_type : Fish) -> TextureRect:
     image.size_flags_vertical = Control.SIZE_SHRINK_CENTER
     return image
 
-func get_ounce_string(ounces : int, eighths: int) -> String:
+static func get_ounce_string(ounces : int, eighths: int) -> String:
     if eighths == 0:
         return "%s" % ounces
     elif eighths == 4:
@@ -71,7 +71,7 @@ func get_fish_weight_label(fish_type : Fish, score : float) -> Label:
     var pounds : float = get_total_weight(fish_type, score)
     return get_text_as_label(get_weight_as_text(pounds))
 
-func get_weight_as_text(pounds : float) -> String:
+static func get_weight_as_text(pounds : float) -> String:
     if pounds == 0:
         return "zero"
     var total : int = int(round(pounds * 8.0 * 16.0))
@@ -196,8 +196,6 @@ func get_score() -> float:
     if _use_oni:
         if _seconds_seen == 0:
             score = score * 1.25
-    else:
-        score = score / 32.0
 
     return score
     
@@ -275,15 +273,20 @@ func clear() -> void:
 func have_caught_your_limit() -> bool:
     return _fish.size() >= 5
 
+static func read_local_player_name() -> String:
+    var player_name : String = ""
+    var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
+    if file != null:
+        player_name = file.get_as_text()
+        file.close()
+    return player_name
+
 func start(rnd_seed : int, use_oni : bool) -> void:
     _rnd = RandomNumberGenerator.new()
     _rnd.seed = rnd_seed
     _total_time = 0
     _use_oni = use_oni
-    var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
-    if file != null:
-        _player_name = file.get_as_text()
-        file.close()
+    _player_name = read_local_player_name()
     
 func _process(delta: float) -> void:
     if not _finished:

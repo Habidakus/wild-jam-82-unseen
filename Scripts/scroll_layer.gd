@@ -38,7 +38,10 @@ func display_series_with_callback(items: Array[Node], player : Player, callable 
     
     if _queue.size() > 0:
         if not is_active():
-            display(_queue[0][0], _queue[0][1])
+            if _queue[0].size() > 2:
+                _display_internal(_queue[0][0], _queue[0][1], _queue[0][2])
+            else:
+                display(_queue[0][0], _queue[0][1])
             _queue = _queue.slice(1)
 
 func display_series(items: Array[Node], player : Player) -> void:
@@ -47,7 +50,10 @@ func display_series(items: Array[Node], player : Player) -> void:
     
     if _queue.size() > 0:
         if not is_active():
-            display(_queue[0][0], _queue[0][1])
+            if _queue[0].size() > 2:
+                _display_internal(_queue[0][0], _queue[0][1], _queue[0][2])
+            else:
+                display(_queue[0][0], _queue[0][1])
             _queue = _queue.slice(1)
 
 func display(node : Node, player : Player) -> void:
