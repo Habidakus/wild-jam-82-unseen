@@ -62,11 +62,11 @@ func _process_input():
     var _sprite_y_increase_if_running : int = 0
     var speed = _speed
 
-    if Input.is_action_pressed("walk"):
-        _stealth_state = true
+    if Input.is_action_just_released("walk"):
+        _stealth_state = !_stealth_state
+    if _stealth_state:
         speed = _speed / 3.5
     else:
-        _stealth_state = false
         _sprite_y_increase_if_running = 3
     
     # Get input (example using Input Map)
@@ -168,8 +168,10 @@ func _process(delta: float) -> void:
     
     if $AudioStreamPlayer.stream != movement_sound:
         $AudioStreamPlayer.stream = movement_sound
+        $AudioStreamPlayer.pitch_scale = _map_runner._rnd.randf_range(0.85, 1.15)
         $AudioStreamPlayer.play()
     elif $AudioStreamPlayer.playing == false:
+        $AudioStreamPlayer.pitch_scale = _map_runner._rnd.randf_range(0.85, 1.15)
         $AudioStreamPlayer.play()
     
     var current_scale : float = $LightCircle/PointLight2D.scale.x
