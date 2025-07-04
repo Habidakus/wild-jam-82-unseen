@@ -147,8 +147,7 @@ func _save_high_score(report_card : ReportCard) -> void:
     
     var metadata : Dictionary = report_card.get_highscore_metadata()
     var score : float = report_card.get_score()
-    SilentWolf.Scores.save_score(report_card._player_name, score, "main", metadata)
-
+    _map_runner.save_high_score(report_card._player_name, score, metadata)
 
 func push_smokebomb_dialog(has_any_fish : bool) -> void:
     var labels : Array[Node] = []

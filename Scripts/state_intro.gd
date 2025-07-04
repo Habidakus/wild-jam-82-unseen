@@ -238,7 +238,9 @@ func exit_state(next_state: StateMachineState) -> void:
         return
     
     if next_state is MapRunner:
-        (next_state as MapRunner)._use_oni = _use_oni
+        var map_runner : MapRunner = next_state as MapRunner
+        map_runner._use_oni = _use_oni
+        map_runner._high_score_enabled = _high_score_enabled        
 
     _leave_tween = get_tree().create_tween()
     _leave_tween.tween_property(_light_circle.get_child(0), "scale", Vector2.ZERO, 1)

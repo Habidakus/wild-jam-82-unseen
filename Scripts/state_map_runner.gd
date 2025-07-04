@@ -20,6 +20,7 @@ var _spawned_enemy : Array[Enemy] = []
 var _rnd : RandomNumberGenerator = RandomNumberGenerator.new()
 var _last_mini_game_spot : Vector2i = Vector2i.MAX / 2
 var _use_oni : bool = true
+var _high_score_enabled : bool = false
 
 var shallows : Array[Vector2i]
 var medium : Array[Vector2i]
@@ -56,7 +57,9 @@ func exit_state(next_state: StateMachineState) -> void:
     _player.queue_free()
     
     if next_state is MapRunner:
-        (next_state as MapRunner)._use_oni = _use_oni
+        var map_runner : MapRunner = next_state as MapRunner
+        map_runner._use_oni = _use_oni
+        map_runner._high_score_enabled = _high_score_enabled
     
     for fish : Node2D in _spawned_fish.values():
         fish.queue_free()
@@ -138,6 +141,10 @@ func get_enemy_spawn_spot(avoid_player : bool) -> Vector2i:
         valid_spots.append(cell)
     
     return valid_spots[_rnd.randi() % valid_spots.size()]
+
+func save_high_score(player_name : String, score : float, metadata : Dictionary) -> void:
+    if _high_score_enabled:
+        SilentWolf.Scores.save_score(player_name, score, "main", metadata)
 
 func get_vector_from_player_to_local(local : Vector2) -> Vector2:
     return _player.position - local
