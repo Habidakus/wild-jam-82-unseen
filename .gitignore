@@ -2,3 +2,7 @@
 .godot/
 /Export_Web/
 /android/
+
+# These two files contain the secret access key to our highscore list, don't upload to github
+silentwolf.txt
+Data/SilentWolfId.tres
