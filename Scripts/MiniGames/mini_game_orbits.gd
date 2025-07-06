@@ -98,7 +98,8 @@ func _process(delta: float) -> void:
 
     if _current_orbit_time < (0 - min_player_accuracy * _total_alignment_time):
             _map_runner.mark_mini_game_removed(self)
-            _pole.on_fish_escaped()
+            if _pole != null:
+                _pole.on_fish_escaped()
             _handle_summon_oni(Fish.SummonsOni.OnFailure)
             return
             

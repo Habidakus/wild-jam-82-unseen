@@ -71,7 +71,8 @@ func _process(delta: float) -> void:
         _circle_remaining_time -= delta
         if _circle_remaining_time <= 0:
             _map_runner.mark_mini_game_removed(self)
-            _pole.on_fish_escaped()
+            if _pole != null:
+                _pole.on_fish_escaped()
             _handle_summon_oni(Fish.SummonsOni.OnFailure)
         else:
             var circle_fraction : float = (_circle_span - _circle_remaining_time) / _circle_span
