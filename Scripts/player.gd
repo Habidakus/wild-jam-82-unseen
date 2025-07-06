@@ -135,15 +135,6 @@ func is_in_light_area(global_pos : Vector2) -> bool:
     var radius : float = (f.texture.get_size() * f.scale).x
     return (global_pos - global_position).length() < radius
 
-var _sprite_pulser_tween : Tween = null
-func _pulse_sprite() -> void:
-    _sprite_pulser_tween = self.create_tween()
-    _sprite_pulser_tween.tween_property(_sprite, "modulate", Color(1.1,1.1,1.1), 0.1)
-    _sprite_pulser_tween.tween_property(_sprite, "modulate", Color(1,1,1), 0.1)
-    _sprite_pulser_tween.tween_property(_sprite, "modulate", Color(0.5,0.5,0.5), 1)
-    _sprite_pulser_tween.tween_interval(0.5)
-    _sprite_pulser_tween.tween_property(_sprite, "modulate", Color(1,1,1), 1)
-    _sprite_pulser_tween.tween_callback(Callable(self, "_pulse_sprite"))
 
 func _process(delta: float) -> void:
     _inhibit_mouse_release_cooldown -= delta
@@ -152,14 +143,6 @@ func _process(delta: float) -> void:
         _goal_light_size = _light_area_size_stealthed
     else:
         _goal_light_size = _light_area_size_normal
-
-    if _sprite_pulser_tween == null || not _sprite_pulser_tween.is_valid():
-        if _map_runner.get_report_card().have_caught_your_limit():
-            _pulse_sprite()
-    elif not _map_runner.get_report_card().have_caught_your_limit():
-        _sprite_pulser_tween.kill()
-        _sprite_pulser_tween = null
-        _sprite.modulate = Color(1,1,1)
 
     if _fishing_pole != null:
         if _stealth_state == false:

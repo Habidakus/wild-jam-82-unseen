@@ -309,6 +309,20 @@ bus = &"Music"
 [node name="Radar" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
 
+[node name="FishBasket" type="HBoxContainer" parent="Radar"]
+custom_minimum_size = Vector2(105, 16)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -105.0
+offset_top = -17.0
+offset_bottom = -1.0
+grow_horizontal = 0
+grow_vertical = 0
+alignment = 2
+
 [node name="ScrollLayer" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
 script = ExtResource("28_lb85r")

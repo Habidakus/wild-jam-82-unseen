@@ -2,6 +2,7 @@ class_name ReportCard extends Node
 
 var _fish : Array[Array] = []
 var _failures : Array[Array] = []
+var _fish_basket : Control = null
 var _rnd : RandomNumberGenerator
 var _total_time : float = -1
 var _finished : bool = false
@@ -269,6 +270,22 @@ func clear() -> void:
     _smoke_bomb_escape = false
     _times_heard = 0
     _seconds_seen = 0
+    _empty_fish_basket()
+    
+var _sprite_pulser_tween : Tween = null
+func _pulse_sprite() -> void:
+    _sprite_pulser_tween = self.create_tween()
+    _sprite_pulser_tween.tween_property(_fish_basket, "modulate", Color(1,1,1,0.1), 0.5)
+    _sprite_pulser_tween.tween_property(_fish_basket, "modulate", Color(1,1,1,1), 0.5)
+    _sprite_pulser_tween.tween_interval(1.5)
+    _sprite_pulser_tween.tween_callback(Callable(self, "_pulse_sprite"))
+
+func _empty_fish_basket() -> void:
+    for child in _fish_basket.get_children():
+        child.queue_free()
+
+func _put_fish_in_basket(fish_type : Fish) -> void:
+    _fish_basket.add_child(get_image_from_fish_type(fish_type))
     
 func have_caught_your_limit() -> bool:
     return _fish.size() >= 5
@@ -281,16 +298,26 @@ static func read_local_player_name() -> String:
         file.close()
     return player_name
 
-func start(rnd_seed : int, use_oni : bool) -> void:
+func start(rnd_seed : int, use_oni : bool, fish_basket : Control) -> void:
     _rnd = RandomNumberGenerator.new()
     _rnd.seed = rnd_seed
     _total_time = 0
     _use_oni = use_oni
     _player_name = read_local_player_name()
+    _fish_basket = fish_basket
+    _empty_fish_basket()
     
 func _process(delta: float) -> void:
     if not _finished:
         _total_time += delta
+
+    if _sprite_pulser_tween == null || not _sprite_pulser_tween.is_valid():
+        if _fish.size() >= 5:
+            _pulse_sprite()
+    elif _fish.size() < 5:
+        _sprite_pulser_tween.kill()
+        _sprite_pulser_tween = null
+        _fish_basket.modulate = Color(1,1,1,1)
     
 func add_heard() -> void:
     _times_heard += 1
@@ -314,3 +341,4 @@ func _generate_fish_score() -> float:
 
 func add_fish(fish_type : Fish, tier : int) -> void:
     _fish.append([fish_type, _generate_fish_score(), tier])
+    _put_fish_in_basket(fish_type)
