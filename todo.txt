@@ -6,7 +6,6 @@ Post game-jam goals:
 - when mouse clicking on land, it's a thrown rock to distract Oni
 - add Options screen
   - volume sliders
-- have sensei mention where the graduate map is
 
 Not going to add:
 
