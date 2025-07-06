@@ -45,7 +45,7 @@ func display_series_with_callback(items: Array[Node], player : Player, callable 
             _queue = _queue.slice(1)
 
 func display_series(items: Array[Node], player : Player) -> void:
-    for c :Control in items:
+    for c :Node in items:
         _queue.append([c, player])
     
     if _queue.size() > 0:

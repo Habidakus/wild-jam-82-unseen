@@ -40,6 +40,8 @@ func _handle_mouse_click() -> void:
 
     var map_cell = _terrain.local_to_map(_terrain.get_local_mouse_position())
     var tile_data : TileData = _terrain.get_cell_tile_data(map_cell)
+    if tile_data == null:
+        return
     var water_data = tile_data.get_custom_data("Water")
     var is_water : bool = water_data != null && (water_data as bool) == true
     if not is_water:
@@ -63,7 +65,8 @@ func _process_input():
     var speed = _speed
 
     if Input.is_action_just_released("walk"):
-        _stealth_state = !_stealth_state
+        if not _map_runner.get_scroll_layer().is_active():
+            _stealth_state = !_stealth_state
     if _stealth_state:
         speed = _speed / 3.5
     else:
