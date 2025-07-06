@@ -198,19 +198,11 @@ static func generate_scoreboard(with_oni : bool, scores: Array, local_player_nam
         scores = scores.slice(1)
         
         if entry[0] == local_player_name:
-            grid.add_child(_generate_label(str(round(entry[1]))))
-            grid.add_child(_generate_label(local_player_name))
-            var weight : float = entry[2]["total_weight"]
-            grid.add_child(_generate_label(ReportCard.get_weight_as_text(weight)))
-            grid.add_child(_generate_label(_generate_score_notes(entry[2])))
+            _add_entry_to_grid(grid, entry)
             seen_local_player = 1
             i += 1
         elif i < 9 + seen_local_player:
-            grid.add_child(_generate_label(str(round(entry[1]))))
-            grid.add_child(_generate_label(entry[0]))
-            var weight : float = entry[2]["total_weight"]
-            grid.add_child(_generate_label(ReportCard.get_weight_as_text(weight)))
-            grid.add_child(_generate_label(_generate_score_notes(entry[2])))
+            _add_entry_to_grid(grid, entry)
             i += 1
     vbox.add_child(grid)
     
@@ -221,6 +213,23 @@ static func generate_scoreboard(with_oni : bool, scores: Array, local_player_nam
     margin_container.add_theme_constant_override("margin_top", 10)
     margin_container.add_child(vbox)
     return margin_container
+
+static func _add_entry_to_grid(grid : GridContainer, entry : Array) -> void:
+    if entry[1] == 0:
+        grid.add_child(_generate_label("-na-"))
+        grid.add_child(_generate_label(entry[0]))
+        var weight : float = entry[2]["total_weight"]
+        if weight > 0:
+            grid.add_child(_generate_label(ReportCard.get_weight_as_text(weight)))
+        else:
+            grid.add_child(_generate_label("-na-"))
+        grid.add_child(_generate_label("Sensei's Pond"))
+    else:
+        grid.add_child(_generate_label(str(round(entry[1]))))
+        grid.add_child(_generate_label(entry[0]))
+        var weight : float = entry[2]["total_weight"]
+        grid.add_child(_generate_label(ReportCard.get_weight_as_text(weight)))
+        grid.add_child(_generate_label(_generate_score_notes(entry[2])))
 
 func generate_label(text : String) -> Control:
     var label : Label = Label.new()
