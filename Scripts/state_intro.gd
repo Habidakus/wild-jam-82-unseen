@@ -1,4 +1,4 @@
-extends StateMachineState
+class_name StateIntro extends StateMachineState
 
 @onready var _light_circle : Node2D = $LightCircle
 @onready var _game_label : Label = $Label
@@ -99,18 +99,11 @@ func _play_without_oni(_was_clicked_on : bool) -> void:
         _use_oni = false
         our_state_machine.switch_state("SenseiHub")
 
-func _show_high_scores(_was_clicked_on : bool) -> void:
-    if not _was_clicked_on:
-        return
-                
-    var series : Array[Node] = []
+static func generate_high_score_dictionaries() -> Array:
     var sw_result: Dictionary = await SilentWolf.Scores.get_scores(500).sw_get_scores_complete
     if not sw_result.has("scores"):
-        series.append(generate_label("An error has occured fetching the high scores."))
-        %ScrollLayer.display_series_with_callback(series, null, Callable(self, "_on_credits_done"))
-        return
+        return [[], []]
 
-    var local_player_name : String = ReportCard.read_local_player_name()
     var track_player_with_oni : Dictionary = {}
     var track_player_casual : Dictionary = {}
     var scores_with_oni : Array = []
@@ -125,11 +118,25 @@ func _show_high_scores(_was_clicked_on : bool) -> void:
             if not track_player_casual.has(player_name):
                 track_player_casual[player_name] = true
                 scores_casual.append([player_name, entry["score"], entry["metadata"]])
+    
+    return [scores_with_oni, scores_casual]
 
+func _show_high_scores(_was_clicked_on : bool) -> void:
+    if not _was_clicked_on:
+        return
+                
+    var series : Array[Node] = []
+    var local_player_name : String = ReportCard.read_local_player_name()
+    var high_score_pair : Array = await generate_high_score_dictionaries()
+    var scores_with_oni : Array = high_score_pair[0]
+    var scores_casual : Array = high_score_pair[1]
+    
     if not scores_with_oni.is_empty():
         series.append(generate_scoreboard(true, scores_with_oni, local_player_name))
     if not scores_casual.is_empty():
         series.append(generate_scoreboard(false, scores_casual, local_player_name))
+    if series.is_empty():
+        series.append(generate_label("An error has occured fetching the high scores."))
     %ScrollLayer.display_series_with_callback(series, null, Callable(self, "_on_credits_done"))
 
 func _show_credits(_was_clicked_on : bool) -> void:
@@ -141,7 +148,7 @@ func _show_credits(_was_clicked_on : bool) -> void:
         series.append(generate_label("Thanks to our playtesters:\n\n-Mister Zeus\n-dredwngs\n-Steven (Stick) Olguin\n-Andy Collins\n-Ziro Cool\n-Oxdottir"))
         %ScrollLayer.display_series_with_callback(series, null, Callable(self, "_on_credits_done"))
 
-func _generate_label(text : String) -> Label:
+static func _generate_label(text : String) -> Label:
     var label : Label = Label.new()
     label.text = text
     label.label_settings = LabelSettings.new()
@@ -149,7 +156,7 @@ func _generate_label(text : String) -> Label:
     label.label_settings.font_size = 20
     return label
 
-func _generate_score_notes(notes : Dictionary) -> String:
+static func _generate_score_notes(notes : Dictionary) -> String:
     var ret_val : String = ""
     var unique_fish = int(round(notes["unique_fish"]))
     if unique_fish < 2:
@@ -164,7 +171,7 @@ func _generate_score_notes(notes : Dictionary) -> String:
         ret_val += ", spoiled"
     return ret_val
 
-func generate_scoreboard(with_oni : bool, scores: Array, local_player_name : String) -> Control:
+static func generate_scoreboard(with_oni : bool, scores: Array, local_player_name : String) -> Control:
     var vbox : VBoxContainer = VBoxContainer.new()
     var label : Label
     if with_oni:

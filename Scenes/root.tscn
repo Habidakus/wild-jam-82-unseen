@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://djv0mow8t4q7x"]
+[gd_scene load_steps=41 format=3 uid="uid://djv0mow8t4q7x"]
 
 [ext_resource type="Script" uid="uid://de448uhhi023d" path="res://addons/statemachine/StateMachine.gd" id="1_8pvmw"]
 [ext_resource type="Script" uid="uid://dmic6pk3bjt2s" path="res://Scripts/state_intro.gd" id="2_vnucn"]
@@ -23,6 +23,7 @@
 [ext_resource type="AudioStream" uid="uid://cvcfqdhmiy5n5" path="res://Sounds/2021-02-19_-_Zen_Garden_-_www.FesliyanStudios.com_Steve_Oxen.mp3" id="12_imcog"]
 [ext_resource type="PackedScene" uid="uid://2glo55xmcr8q" path="res://Maps/horseshoe_lake.tscn" id="12_lwnbm"]
 [ext_resource type="PackedScene" uid="uid://de2t3k6gwibaa" path="res://Scenes/note_object.tscn" id="13_k8rbf"]
+[ext_resource type="PackedScene" uid="uid://dwlqvcj3mywoy" path="res://Scenes/high_score_pilar.tscn" id="13_mb0cg"]
 [ext_resource type="PackedScene" uid="uid://dathvu7pw5fj0" path="res://Scenes/sensei.tscn" id="14_8p807"]
 [ext_resource type="Resource" uid="uid://car1sin8stexd" path="res://Data/Fish/golden_tench.tres" id="14_18fmr"]
 [ext_resource type="Resource" uid="uid://ckn5gldc4reja" path="res://Data/Fish/clownfish.tres" id="15_lb85r"]
@@ -155,6 +156,10 @@ position = Vector2(80, 786)
 scale = Vector2(1.5, 1.5)
 _text = "Penninsula Ponds
       (DANGER)"
+
+[node name="HighScorePillar" parent="StateMachine/SenseiHub" instance=ExtResource("13_mb0cg")]
+position = Vector2(678, 67)
+_highscore_object = true
 
 [node name="Sensei" parent="StateMachine/SenseiHub" instance=ExtResource("14_8p807")]
 position = Vector2(538, 284)

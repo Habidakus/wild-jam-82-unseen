@@ -88,6 +88,7 @@ func push_three_ponds_dialog() -> void:
     labels.append(generate_label("The real journey now begins."))
     labels.append(generate_label("Head north to Three Ponds area."))
     labels.append(generate_label("Catch five fish and return."))
+    labels.append(generate_label("You can compare your skill\nagainst my previous students on\nthe high score pillar just to the North."))
     if _map_runner._use_oni:
         labels.append(generate_label("But beware the patrolling Oni,\nalways listen for their approach."))
     labels.append(generate_label("Practice the way of the SPACE BAR\nto be extra stealthy."))
@@ -107,7 +108,7 @@ func push_horseshoe_dialog() -> void:
 func push_graduation_dialog() -> void:
     var labels : Array[Node] = []
     labels.append(generate_label("You have mastered ninja fishing."))
-    labels.append(generate_label("All ponds are now open to you."))
+    labels.append(generate_label("You can now fish Penninsula Ponds for most awesome fish."))
     labels.append(generate_label("For you are legit."))
     labels.append(generate_label("... and also rad."))
     _scroll_layer.display_series(labels, _map_runner._player)
